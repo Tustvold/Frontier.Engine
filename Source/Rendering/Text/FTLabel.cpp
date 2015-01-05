@@ -4,12 +4,12 @@
 #include <Rendering/Shader/FTFontShader.h>
 #include "FTFontCache.h"
 
-FTLabel::FTLabel(const char* fontpath, const wchar_t* text) : FTIndexedTexturedMesh(new FTTransformPosition(), FTShaderCache::getSharedInstance()->getShaderProgram<FTFontShader>()) {
+FTLabel::FTLabel(const char* fontpath, const wchar_t* text, int fontsize) : FTIndexedTexturedMesh(new FTTransformPosition(), FTShaderCache::getSharedInstance()->getShaderProgram<FTFontShader>()) {
 	transform_->release();
 
 	FTFont* font = FTFontCache::getSharedInstance()->getFont("Fonts/Vera.ttf");
 
-	auto data = font->generateMeshForString(text, 32, label_size_);
+	auto data = font->generateMeshForString(text, fontsize, label_size_);
 
 	FTTexture* texture = font->getTexture();
 

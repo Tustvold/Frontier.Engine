@@ -4,7 +4,7 @@
 
 class FTLabel : public FTIndexedTexturedMesh<FTVertexColorTexture,uint16_t> {
 public:
-	FTLabel(const char* fontpath, const wchar_t* text);
+	FTLabel(const char* fontpath, const wchar_t* text, int fontsize);
 	virtual ~FTLabel();
 
 	void setPosition(const glm::vec2& pos);
