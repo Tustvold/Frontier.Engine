@@ -1,0 +1,60 @@
+#pragma once
+
+#include <ThirdParty/Signals/Signal.h>
+#include "Scene/FTScene.h"
+class FTCamera;
+struct GLFWwindow;
+
+// Class which manages drawing the world
+// This class is not thread safe and should only be called from the OpenGL thread
+class FTDirector {
+	friend class FTEngine;
+public:
+	int run();
+
+	static FTDirector* getSharedInstance();
+
+	Gallant::Signal1<float>* getPreDrawEventHandler() {
+		return &pre_draw_event_handler_;
+	}
+
+	glm::vec2 getWindowSize() {
+		return window_size_;
+	}
+
+	Gallant::Signal2<float, float>* getWindowSizeChangeEventHandler() {
+		return &window_size_change_event_handler_;
+	}
+
+	void setCurrentScene(FTScene* scene) {
+		if (scene_ != nullptr)
+			scene_->release();
+		scene_ = scene;
+		scene_->retain();
+	}
+
+private:
+	FTDirector();
+	~FTDirector();
+
+	int setup();
+
+	void loadDefaultShaderPrograms();
+
+	void loadDefaultFonts();
+
+	void windowSizeChange(GLFWwindow* window, int width, int height);
+
+	static inline void windowSizeChangeCallback(GLFWwindow* window, int width, int height) {
+		getSharedInstance()->windowSizeChange(window, width, height);
+	}
+
+	FTScene* scene_;
+	GLFWwindow* window_;
+	glm::vec2 window_size_;
+
+	double last_tick_time_;
+
+	Gallant::Signal1<float> pre_draw_event_handler_;
+	Gallant::Signal2<float, float> window_size_change_event_handler_;
+};
