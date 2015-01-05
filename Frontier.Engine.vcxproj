@@ -205,8 +205,17 @@
     <ClCompile Include="Source\Util\FTInputManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ThirdParty\freetype2\builds\windows\vc2010\freetype.vcxproj">
+    <ProjectReference Include="ThirdParty\freetype-gl\freetype-gl.vcxproj">
+      <Project>{be94d4a8-8b8f-4057-8bf3-0e5ffe36559d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="ThirdParty\freetype2\builds\windows\vc2010\freetype.vcxproj">
       <Project>{78b079bd-9fc7-4b9e-b4a6-96da0f00248b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="ThirdParty\glew-1.11.0\build\vc12\glew_static.vcxproj">
+      <Project>{664e6f0d-6784-4760-9565-d54f8eb1edf4}</Project>
+    </ProjectReference>
+    <ProjectReference Include="ThirdParty\glfw\src\glfw.vcxproj">
+      <Project>{80136991-48d2-40df-9345-17c8afe0147d}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

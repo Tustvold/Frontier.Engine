@@ -6,15 +6,9 @@ Frontier.Engine
 A wrapper around OpenGL which provides some basic functionality (Shaders, VAO Management, Truetype Font Rendering, etc).
 It was created as part of a voxel engine and so is designed to be as lightweight as possible both in terms of CPU and memory usage.
 
-## Installation (Visual Studio 2013)
+## Usage
 
-- Run CMake in the root directories of ThirdParty/freetype-gl and ThirdParty/glfw
-- Download glew from https://sourceforge.net/projects/glew/files/glew/1.11.0/glew-1.11.0.zip/download
-- Extract glew into ThirdParty/glew-1.11.0 such that ThirdParty/glew-1.11.0/Makefile exists
-- Open Frontier.sln
-- If prompted agree to upgrade projects
-- Right click and reload any projects which failed to load
-- Build all
+For an example of how to use this library see - https://github.com/Tustvold/Frontier.Engine.DemoProject
 
 ## Still to do
 
