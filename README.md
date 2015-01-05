@@ -12,9 +12,8 @@ It was created as part of a voxel engine and so is designed to be as lightweight
 - Download glew from https://sourceforge.net/projects/glew/files/glew/1.11.0/glew-1.11.0.zip/download
 - Extract glew into ThirdParty/glew-1.11.0 such that ThirdParty/glew-1.11.0/Makefile exists
 - Open Frontier.sln
+- If prompted agree to upgrade projects
 - Right click and reload any projects which failed to load
-- Right click the freetype project and click properties
-- Under Configuration Properties > General set Platform Toolset to v120
 - Build all
 
 ## Still to do
