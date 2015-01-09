@@ -33,6 +33,7 @@ FTInputManager::FTInputManager() {
 	key_mappings_[GLFW_KEY_SPACE] = KeyNameUp;
 	key_mappings_[GLFW_KEY_LEFT_SHIFT] = KeyNameDown;
 	key_mappings_[GLFW_KEY_EQUAL] = KeyNameFreezeFrustrum;
+	key_mappings_[GLFW_KEY_LEFT_ALT] = KeyNameFreeMouse;
 
 	FTDirector* director = FTDirector::getSharedInstance();
 	director->getPreDrawEventHandler()->Connect(this, &FTInputManager::update);
@@ -57,6 +58,7 @@ void FTInputManager::registerWithWindow(GLFWwindow* window) {
 	glfwSetKeyCallback(window, &keyCallbackStatic);
 	glfwSetCursorPosCallback(window, &cursorPosCallbackStatic);
 	glfwSetCursorEnterCallback(window, &cursorEnterCallback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 
@@ -67,13 +69,21 @@ void FTInputManager::keyCallback(GLFWwindow* window, int key, int scancode, int 
 	KeyName name = key_mappings_[key];
 	if (name == KeyNameOther)
 		return;
-	button_pressed_event_handler_(name, (KeyState)action);
+	button_event_handler_(name, (KeyState)action);
 	key_down_[name] = action == GLFW_PRESS;
+	if (name == KeyNameFreeMouse) {
+		if (action == KeyStatePressed)
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		else
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
 }
 
 void FTInputManager::cursorPosCallback(GLFWwindow* window, double x, double y) {
-	glm::vec2 screensize = FTDirector::getSharedInstance()->getWindowSize();
+	if (key_down_[KeyNameFreeMouse])
+		return;
 
+	glm::vec2 screensize = FTDirector::getSharedInstance()->getWindowSize();
 
 	float delta_x = (float)(x - screensize.x / 2.0f);
 	float delta_y = (float)(screensize.y / 2.0f - y); // Change coords to be centred in the bottom left not top left

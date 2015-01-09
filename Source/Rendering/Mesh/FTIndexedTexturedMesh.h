@@ -6,7 +6,7 @@
 template <typename VertexType, typename IndexType>
 class FTIndexedTexturedMesh : public FTIndexedMesh<VertexType, IndexType> {
 public:
-	explicit FTIndexedTexturedMesh(FTTransform* transform, FTVertexTextureShaderProgram* shader_program) : FTIndexedMesh(transform, shader_program), texture_(nullptr) {
+	explicit FTIndexedTexturedMesh(FTVertexTextureShaderProgram* shader_program) : FTIndexedMesh(shader_program), texture_(nullptr) {
 	}
 
 	virtual ~FTIndexedTexturedMesh() {

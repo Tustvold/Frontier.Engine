@@ -1,10 +1,3 @@
-//
-//  FTDictionary.h
-//  Frontier
-//
-//  Created by Raphael Taylor-Davies on 10/06/2014.
-//  Copyright (c) 2014 Subterranean Software. All rights reserved.
-//
 #pragma once
 
 #include "FTObject.h"
@@ -42,6 +35,7 @@ class FTDictionary : public FTObject {
 
 };
 
+// Implementation for when Value and Key are both FTObjects
 template <typename Key, typename Value, typename Hasher, typename Comparer>
 class FTDictionary<Key, Value, Hasher, Comparer, typename std::enable_if<std::is_base_of<FTObject, Key>::value>::type, typename std::enable_if<std::is_base_of<FTObject, Value>::value>::type> : public FTObject {
 public:
@@ -104,6 +98,7 @@ private:
 	std::unordered_map<Key*, Value*, FTHasher<Key>, FTComparer<Key>> data_;
 };
 
+// Implementation for when only Value is an FTObject
 template <typename Key, typename Value, typename Hasher, typename Comparer>
 class FTDictionary<Key, Value, Hasher, Comparer, typename std::enable_if<!std::is_base_of<FTObject, Key>::value>::type, typename std::enable_if<std::is_base_of<FTObject, Value>::value>::type> : public FTObject {
 public:

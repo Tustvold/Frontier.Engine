@@ -1,5 +1,5 @@
 #pragma once
-#include "FTObject.h"
+/*#include "FTObject.h"
 
 // A fixed size array supporting insertion and deletion
 // It performs no range checks
@@ -46,3 +46,4 @@ private:
 
 	T* data_;
 };
+*/

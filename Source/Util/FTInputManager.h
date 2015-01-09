@@ -18,6 +18,7 @@ enum KeyName {
 	KeyNameUp,
 	KeyNameDown,
 	KeyNameFreezeFrustrum,
+	KeyNameFreeMouse,
 	KeyNameOther //Must be last
 };
 
@@ -28,8 +29,8 @@ class FTInputManager {
 public:
 	void registerWithWindow(GLFWwindow* window);
 
-	Gallant::Signal2<KeyName, KeyState>* getButtonPressedEventHandler() {
-		return &button_pressed_event_handler_;
+	Gallant::Signal2<KeyName, KeyState>* getButtonEventHandler() {
+		return &button_event_handler_;
 	}
 
 	Gallant::Signal2<KeyName, float>* getButtonHeldEventHandler() {
@@ -44,6 +45,10 @@ public:
 		glfwSetCursorPos(window_, (double)x, (double)y);
 	}
 
+	bool isKeyDown(KeyName key) {
+		return key_down_[key];
+	}
+
 	static FTInputManager* getSharedInstance();
 
 private:
@@ -52,7 +57,8 @@ private:
 
 	~FTInputManager() {
 		FTLOG("Input Manager destroyed");
-		FTDirector::getSharedInstance()->getPreDrawEventHandler()->Disconnect(this, &FTInputManager::update);
+		// FTDirector won't exist at this point so don't try to disconnect from it
+		// FTDirector::getSharedInstance()->getPreDrawEventHandler()->Disconnect(this, &FTInputManager::update);
 	};
 
 	static void keyCallbackStatic(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -67,8 +73,6 @@ private:
 			if (key_down_[i])
 				button_held_event_handler_((KeyName)i, dt);
 		}
-
-
 	}
 
 	KeyName key_mappings_[GLFW_KEY_LAST + 1];
@@ -76,7 +80,7 @@ private:
 	static bool trust_mouse_;
 	GLFWwindow* window_;
 
-	Gallant::Signal2<KeyName, KeyState> button_pressed_event_handler_;
+	Gallant::Signal2<KeyName, KeyState> button_event_handler_;
 	Gallant::Signal2<KeyName, float> button_held_event_handler_;
 	Gallant::Signal2<float, float> cursor_pos_update_event_handler_;
 };

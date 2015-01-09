@@ -5,6 +5,8 @@
 class FTVertexShaderProgram : public FTShaderProgram {
 public:
 
+	FTVertexShaderProgram();
+
 	virtual ~FTVertexShaderProgram();
 
 	virtual bool load() override;
@@ -18,8 +20,8 @@ protected:
 
 private:
 
-	static char* fragment_shader_source_;
-	static char* vertex_shader_source_;
+	static const char* fragment_shader_source_;
+	static const char* vertex_shader_source_;
 
 	GLuint mvp_uniform_;
 };

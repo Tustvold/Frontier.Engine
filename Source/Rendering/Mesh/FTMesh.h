@@ -9,11 +9,11 @@
 template <typename VertexType>
 class FTMeshData : public FTObject {
 public:
-	explicit FTMeshData(size_t vertexCount) : vertices_(new FTIndexedArray<VertexType>(vertexCount)) {
+	explicit FTMeshData(size_t vertex_count) : vertices_(new FTArray<VertexType>(vertex_count)) {
 
 	}
 
-	explicit FTMeshData(FTIndexedArray<VertexType>* vertices) : vertices_(vertices) {
+	explicit FTMeshData(FTArray<VertexType>* vertices) : vertices_(vertices) {
 		vertices_->retain();
 	}
 
@@ -21,53 +21,111 @@ public:
 		vertices_->release();
 	}
 
-	FTIndexedArray<VertexType>* getVertices() const {
+	FTArray<VertexType>* getVertices() const {
 		return vertices_;
 	}
 
 private:
-	FTIndexedArray<VertexType>* vertices_;
+	FTArray<VertexType>* vertices_;
 };
 
 // Renders an attached mesh - note it does not bind a shader program nor update any matrices
 template <typename VertexType>
 class FTMesh : public FTNode {
 public:
-	
-	explicit FTMesh(FTTransform* transform, FTVertexShaderProgram* shader_program) : FTNode(transform,shader_program), render_wireframe_(false), is_loaded_(false) {
-		
+
+	explicit FTMesh(FTVertexShaderProgram* shader_program) : FTNode(shader_program), primitive_type_(GL_TRIANGLES), render_wireframe_(false), is_loaded_(false), is_static_(true) {
+
 	}
 
-	// Cleanup specifies whether it should unbind the VOA after it has finished creating it
-	virtual void loadMeshData(const FTMeshData<VertexType>* data, bool cleanup) {
-		// TODO Support changing mesh data during runtime
-		FTAssert(!is_loaded_, "FTMesh already loaded!");
+	// Creates a VBO for the vertices of the specified size
+	// The mesh can then be populated using the setMeshData functions
+	virtual void loadEmptyMesh(GLuint vertex_count, bool cleanup = true) {
+		FTAssert(!is_loaded_, "Trying to load mesh data for already loaded mesh");
+		is_static_ = false;
+		max_num_vertices_ = vertex_count;
+		num_vertices_ = 0;
 
-		num_vertices_ = (GLint)data->getVertices()->getSize();
 		glGenVertexArrays(1, &vertex_array_id_);
 		glBindVertexArray(vertex_array_id_);
 
 		glGenBuffers(1, &vertex_buffer_id_);
 		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
-		glBufferData(GL_ARRAY_BUFFER, num_vertices_ * sizeof(VertexType), (float*)(data->getVertices()->getData()), GL_STATIC_DRAW);
 
+		glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), nullptr, GL_DYNAMIC_DRAW);
 
-		/*glVertexAttribPointer(
-			0, // attribute 0. No particular reason for 0, but must match the layout in the shader.
-			sizeof(VertexType) / sizeof(float), // size
-			GL_FLOAT, // type
-			GL_FALSE, // normalized?
-			0, // stride
-			(void*)0 // array buffer offset
-			);*/
+		FTVertexDescriptor<VertexType>::bind();
+		
+		if (cleanup) {
+			glBindVertexArray(0);
+			is_loaded_ = true;
+		}
+	}
+
+	// Loads a mesh described by an FTMesh object
+	// Cleanup specifies whether it should unbind the VAO after it has finished creating it
+	virtual void loadMeshData(const FTMeshData<VertexType>* data, bool is_static, bool cleanup = true) {
+		FTAssert(!is_loaded_, "Trying to load mesh data for already loaded mesh");
+		// TODO Support changing mesh data during runtime
+		is_static_ = is_static;
+
+		num_vertices_ = data->getVertices()->size();
+		max_num_vertices_ = data->getVertices()->size();
+
+		glGenVertexArrays(1, &vertex_array_id_);
+
+		
+
+		glBindVertexArray(vertex_array_id_);
+
+		glGenBuffers(1, &vertex_buffer_id_);
+		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
+
+		glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), (float*)(data->getVertices()->getData()), is_static_ ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 
 		FTVertexDescriptor<VertexType>::bind();
 
-		if (cleanup)
+		if (cleanup) {
 			glBindVertexArray(0);
-
-		is_loaded_ = true;
+			is_loaded_ = true;
+		}
 	}
+
+	void modifyVertices(GLuint start_index, GLuint num_vertices, const VertexType* data) {
+		FTAssert(is_loaded_, "Trying to set mesh data for unloaded mesh");
+		FTAssert(!is_static_, "Trying to edit mesh data for static mesh");
+		FTAssert(start_index + num_vertices <= max_num_vertices_, "Maximum buffer size exceeded!");
+		
+		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
+
+		
+		glBufferSubData(GL_ARRAY_BUFFER, start_index*sizeof(VertexType), num_vertices * sizeof(VertexType), data);
+		num_vertices_ = max(start_index + num_vertices, num_vertices_);
+	}
+
+	void resizeVertexBuffer(size_t num_vertices, const VertexType* data) {
+		FTAssert(is_loaded_, "Trying to set mesh data for unloaded mesh");
+		FTAssert(!is_static_, "Trying to edit mesh data for static mesh");
+		max_num_vertices_ = num_vertices;
+		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
+		glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), data, GL_DYNAMIC_DRAW);
+	}
+
+	virtual void setMeshData(const FTMeshData<VertexType>* data) {
+		FTAssert(is_loaded_, "Trying to set mesh data for unloaded mesh - consider using LoadMeshData instead");
+
+		// Update mesh data
+		if (max_num_vertices_ >= data->getVertices()->size()) {
+			num_vertices_ = data->getVertices()->size();
+			// We can update the existing buffer
+			modifyVertices(0, num_vertices_, data->getVertices()->getData());
+		} else {
+			num_vertices_ = data->getVertices()->size();
+			// We must re-create the buffer
+			resizeVertexBuffer(num_vertices_, data->getVertices()->getData());
+		}
+	}
+
 
 	virtual ~FTMesh() {
 		//delete[] vertices_;
@@ -85,12 +143,12 @@ public:
 
 		if (render_wireframe_)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		
+
 		glBindVertexArray(vertex_array_id_);
 	}
 
 	virtual void draw() override {
-		glDrawArrays(GL_TRIANGLES, 0, num_vertices_);	
+		glDrawArrays(primitive_type_, 0, num_vertices_);
 	}
 
 	virtual void post_draw() override {
@@ -104,12 +162,23 @@ public:
 		render_wireframe_ = render_wireframe;
 	}
 
+	void setPrimitiveType(GLenum type) {
+		primitive_type_ = type;
+	}
+
 protected:
 
 	GLuint vertex_array_id_;
 	GLuint vertex_buffer_id_;
-	GLint num_vertices_;
+
+	// The number of vertices the mesh actually contains
+	GLuint num_vertices_;
+
+	// The number of vertices the VBO has space for
+	GLuint max_num_vertices_;
+	GLenum primitive_type_;
+	
 	bool render_wireframe_;
 	bool is_loaded_;
-	int vertex_components_;
+	bool is_static_;
 };

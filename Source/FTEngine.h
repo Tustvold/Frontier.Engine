@@ -28,9 +28,9 @@ public:
 	}
 private:
 	static void cleanupSingletons() {
+		delete FTDirector::getSharedInstance(); // Must be first
 		delete FTInputManager::getSharedInstance();
 		delete FTShaderCache::getSharedInstance();
-		delete FTDirector::getSharedInstance();
 		delete FTFontCache::getSharedInstance();
 	}
 };

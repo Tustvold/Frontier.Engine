@@ -27,6 +27,7 @@ public:
 	}
 
 	void preDraw() override {
+		FTCamera::preDraw();
 		if (projection_matrix_dirty_) {
 			projection_matrix_ = glm::ortho<float>(0, (float)screen_rect_.width_, 0, (float)screen_rect_.height_, near_clipping_plane_, far_clipping_plane_);
 			projection_matrix_dirty_ = false;

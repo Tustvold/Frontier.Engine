@@ -1,8 +1,4 @@
 ﻿#include "FTFont.h"
-#include "shader.h"
-#include "vertex-buffer.h"
-#include <Rendering/Scene/Transform/FTTransformPosition.h>
-#include <Rendering/Shader/FTShaderCache.h>
 #include "freetype-gl.h"
 #include <Rendering/Mesh/FTIndexedTexturedMesh.h>
 
@@ -82,28 +78,28 @@ FTIndexedMeshData<FTVertexColorTexture, uint16_t>* FTFont::generateMeshForString
 
 			vertex.position_ = glm::vec3(x0, y0, 0);
 			vertex.uv_ = glm::vec2(s0, t0);
-			vertices->append(vertex);
+			vertices->add(vertex);
 
 			vertex.position_ = glm::vec3(x1, y0, 0);
 			vertex.uv_ = glm::vec2(s1, t0);
-			vertices->append(vertex);
+			vertices->add(vertex);
 
 			vertex.position_ = glm::vec3(x0, y1, 0);
 			vertex.uv_ = glm::vec2(s0, t1);
-			vertices->append(vertex);
+			vertices->add(vertex);
 
 			vertex.position_ = glm::vec3(x1, y1, 0);
 			vertex.uv_ = glm::vec2(s1, t1);
-			vertices->append(vertex);
+			vertices->add(vertex);
 
 			pen.x += glyph->advance_x;
 
-			indices->append(curIndex);
-			indices->append(curIndex + 2);
-			indices->append(curIndex + 1);
-			indices->append(curIndex + 2);
-			indices->append(curIndex + 3);
-			indices->append(curIndex + 1);
+			indices->add(curIndex);
+			indices->add(curIndex + 2);
+			indices->add(curIndex + 1);
+			indices->add(curIndex + 2);
+			indices->add(curIndex + 3);
+			indices->add(curIndex + 1);
 			curIndex += 4;
 		}
 	}

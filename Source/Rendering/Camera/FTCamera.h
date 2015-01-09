@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include <FTObject.h>
 #include <Util/FTRect.h>
+#include <GL/glew.h>
 
 // The base class for all cameras
 // Contains some properties common to all cameras
@@ -18,7 +19,10 @@ public:
 
 	virtual const glm::mat4& getViewProjectionMatrix() const = 0;
 
-	virtual void preDraw() = 0;
+	virtual void preDraw() {
+		glScissor(screen_rect_.x_, screen_rect_.y_, screen_rect_.width_, screen_rect_.height_);
+		glViewport(screen_rect_.x_, screen_rect_.y_, screen_rect_.width_, screen_rect_.height_);
+	}
 
 	virtual bool testBoundingBox(glm::vec3& center, glm::vec3& halfextents) const = 0;
 

@@ -57,16 +57,14 @@ static inline void FTLogError(const char* format, ...) {
 
 
 static inline void FTAssert(bool value, const char* format, ...) {
-	if (!value) {
-		va_list args;
-		va_start(args, format);
+	if (value)
+		return;
+	va_list args;
+	va_start(args, format);
+	FTLogPrint("Fatal: ", format, args);
 
-		FTLogPrint("Fatal: ", format, args);
-
-		va_end(args);
-
-		throw std::exception();
-	}
+	va_end(args);
+	throw std::exception();
 }
 
 #endif

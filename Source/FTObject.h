@@ -1,11 +1,3 @@
-//
-//  FTObject.h
-//  Frontier
-//
-//  Created by Raphael Taylor-Davies on 09/06/2014.
-//  Copyright (c) 2014 Subterranean Software. All rights reserved.
-//
-
 #pragma once
 
 #include "Frontier.h"
@@ -38,9 +30,8 @@ public:
 	}
 
 	void release() {
-		FTAssert(reference_count_ > 0, "Reference Count should be greater than 0");
-		--reference_count_;
-		if (reference_count_ <= 0) {
+		//FTAssert(reference_count_ != 0, "Reference Count should be greater than 0");
+		if (--reference_count_ == 0) {
 			delete this;
 		}
 	}

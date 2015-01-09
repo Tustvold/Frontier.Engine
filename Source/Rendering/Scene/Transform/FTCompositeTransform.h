@@ -3,9 +3,9 @@
 // Represents a composite transform
 // The transform is calculated as transform1*transform2*transform3
 // The normal order of multiplication is translation*scale*rotation
-class FTCompositeTransform : public FTTransform {
+template <typename T1, typename T2> class FTCompositeTransform : public FTTransform {
 	
-	FTCompositeTransform(FTTransform* transform1, FTTransform* transform2): transform1_(transform1),transform2_(transform2) {
+	FTCompositeTransform(T1* transform1, T2* transform2): transform1_(transform1),transform2_(transform2) {
 		transform1_->retain();
 		transform2_->retain();
 	}
@@ -21,21 +21,24 @@ class FTCompositeTransform : public FTTransform {
 
 	void updateMatrices() override {
 		if (getDirty()) {
+			transform1_->updateMatrices();
+			transform2_->updateMatrices();
 			transform_matrix = transform1_->getTransformMatrix()*transform2_->getTransformMatrix();
 		}
 	}
 
 protected:
-	FTTransform* transform1_;
-	FTTransform* transform2_;
+	T1* transform1_;
+	T2* transform2_;
 };
 
-class FTCompositeTransform3 : public FTTransform {
+template <typename T1, typename T2, typename T3> class FTCompositeTransform3 : public FTTransform {
+public:
 
-	FTCompositeTransform3(FTTransform* transform1, FTTransform* transform2, FTTransform* transform3) : transform1_(transform1), transform2_(transform2), transform3_(transform3) {
+	FTCompositeTransform3(T1* transform1, T2* transform2, T3* transform3) : transform1_(transform1), transform2_(transform2), transform3_(transform3) {
 		transform1_->retain();
 		transform2_->retain();
-		transform3->retain();
+		transform3_->retain();
 	}
 
 	virtual ~FTCompositeTransform3() {
@@ -50,12 +53,15 @@ class FTCompositeTransform3 : public FTTransform {
 
 	void updateMatrices() override {
 		if (getDirty()) {
+			transform1_->updateMatrices();
+			transform2_->updateMatrices();
+			transform3_->updateMatrices();
 			transform_matrix = transform1_->getTransformMatrix()*transform2_->getTransformMatrix()*transform3_->getTransformMatrix();
 		}
 	}
 
 protected:
-	FTTransform* transform1_;
-	FTTransform* transform2_;
-	FTTransform* transform3_;
+	T1* transform1_;
+	T2* transform2_;
+	T3* transform3_;
 };

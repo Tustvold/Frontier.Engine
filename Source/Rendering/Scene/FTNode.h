@@ -9,23 +9,24 @@
 class FTNode : public FTDrawable {
 public:
 
-	explicit FTNode(FTTransform* transform, FTVertexShaderProgram* shader_program) : transform_(transform), shader_program_(shader_program) {
+	explicit FTNode(FTVertexShaderProgram* shader_program) : shader_program_(shader_program) {
 		shader_program_->retain();
-		transform_->retain();
 	}
 
 	~FTNode() {
 		shader_program_->release();
-		transform_->release();
 	}
 
 	virtual void pre_draw() = 0;
 	virtual void post_draw() = 0;
 
+	virtual FTTransform* getTransform() = 0;
+
 	// Override to provide custom transforms, frustrum culling, children, etc
 	virtual void visit(const FTCamera* camera) {
-		transform_->updateMatrices();
-		glm::mat4 mvp = camera->getViewProjectionMatrix() * transform_->getTransformMatrix();
+		FTTransform* transform = getTransform();
+		transform->updateMatrices();
+		glm::mat4 mvp = camera->getViewProjectionMatrix() * transform->getTransformMatrix();
 		shader_program_->use();
 		shader_program_->updateMvpUniforms(&mvp[0][0]);
 		this->pre_draw();

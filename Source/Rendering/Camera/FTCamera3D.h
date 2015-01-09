@@ -3,7 +3,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <Frontier.h>
 #include <Util/FTAlignedData.h>
-#include <GL/glew.h>
 #include <Util/FTRect.h>
 #include <Rendering/Camera/FTCamera.h>
 
@@ -27,6 +26,7 @@ public:
 	}
 
 	void preDraw() override {
+		FTCamera::preDraw();
 		if (projection_matrix_dirty_) {
 			projection_matrix_ = glm::perspective(fov_, (float)screen_rect_.width_ / (float)screen_rect_.height_, near_clipping_plane_, far_clipping_plane_);
 				
@@ -49,7 +49,6 @@ public:
 			view_matrix_dirty_ = false;
 			projection_matrix_dirty_ = false;
 		}
-		glViewport(screen_rect_.x_, screen_rect_.y_, screen_rect_.width_, screen_rect_.height_);
 	}
 
 	void setUpVector(const glm::vec3& up_vector) {

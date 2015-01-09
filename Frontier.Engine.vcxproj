@@ -157,6 +157,7 @@
     <ClInclude Include="Source\Rendering\FTDrawable.h" />
     <ClInclude Include="Source\Rendering\Mesh\FTIndexedTexturedMesh.h" />
     <ClInclude Include="Source\Rendering\Mesh\FTVertex.h" />
+    <ClInclude Include="Source\Rendering\Primitives\FTCube.h" />
     <ClInclude Include="Source\Rendering\Scene\FTDrawableNode.h" />
     <ClInclude Include="Source\Rendering\Scene\FTView.h" />
     <ClInclude Include="Source\Rendering\Scene\FTNode.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Source\Rendering\Scene\Transform\FTTransformPosition.h" />
     <ClInclude Include="Source\Rendering\Scene\Transform\FTTransformRotation.h" />
     <ClInclude Include="Source\Rendering\Scene\Transform\FTTransformScale.h" />
+    <ClInclude Include="Source\Rendering\Scene\Transform\FTTransformUtil.h" />
     <ClInclude Include="Source\Rendering\Shader\FTFontShader.h" />
     <ClInclude Include="Source\Rendering\Shader\FTVertexColorShaderProgram.h" />
     <ClInclude Include="Source\Rendering\Shader\FTVertexShaderProgram.h" />
@@ -191,6 +193,7 @@
     <ClCompile Include="Source\Rendering\Camera\FTCamera3D.cpp" />
     <ClCompile Include="Source\Rendering\Camera\FTCameraFPS.cpp" />
     <ClCompile Include="Source\Rendering\FTDirector.cpp" />
+    <ClCompile Include="Source\Rendering\Primitives\FTCube.cpp" />
     <ClCompile Include="Source\Rendering\Scene\FTView.cpp" />
     <ClCompile Include="Source\Rendering\Shader\FTFontShader.cpp" />
     <ClCompile Include="Source\Rendering\Shader\FTVertexColorShaderProgram.cpp" />
@@ -205,37 +208,17 @@
     <ClCompile Include="Source\Util\FTInputManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ThirdParty\freetype-gl\freetype-gl.vcxproj">
+    <ProjectReference Include="..\freetype-gl\freetype-gl.vcxproj">
       <Project>{be94d4a8-8b8f-4057-8bf3-0e5ffe36559d}</Project>
-      <Private>true</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
-    <ProjectReference Include="..\ThirdParty\freetype2\builds\windows\vc2010\freetype.vcxproj">
+    <ProjectReference Include="..\freetype2\builds\windows\vc2010\freetype.vcxproj">
       <Project>{78b079bd-9fc7-4b9e-b4a6-96da0f00248b}</Project>
-      <Private>true</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
-    <ProjectReference Include="..\ThirdParty\glew-1.11.0\build\vc12\glew_static.vcxproj">
+    <ProjectReference Include="..\glew-1.11.0\build\vc12\glew_static.vcxproj">
       <Project>{664e6f0d-6784-4760-9565-d54f8eb1edf4}</Project>
-      <Private>true</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
-    <ProjectReference Include="..\ThirdParty\glfw\src\glfw.vcxproj">
+    <ProjectReference Include="..\glfw\src\glfw.vcxproj">
       <Project>{80136991-48d2-40df-9345-17c8afe0147d}</Project>
-      <Private>true</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

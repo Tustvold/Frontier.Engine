@@ -1,20 +1,40 @@
-//
-//  FTString.h
-//  Frontier
-//
-//  Created by Raphael Taylor-Davies on 10/06/2014.
-//  Copyright (c) 2014 Subterranean Software. All rights reserved.
-//
-
 #pragma once
 
 #include "Frontier.h"
 #include <string>
 #include <xstring>
-#include <codecvt>
 #include "FTArray.h"
 #include <sstream>
 
+
+// Supports char and wchar_t
+// Unfortunately Visual C++ doesn't properly support Unicode literals
+// And so we are stuck with the evil wchar_t
+template <typename CharacterType> class FTStringUtil{
+
+};
+
+template <> class FTStringUtil<wchar_t> {
+public:
+	static wchar_t* formatString(wchar_t* buff, size_t buf_size, wchar_t* format...) {
+		va_list args;
+		va_start(args, format);
+		vswprintf_s((wchar_t*)buff, buf_size, format, args);
+		va_end(args);
+		return buff;
+	}
+};
+
+template <> class FTStringUtil<char>{
+public:
+	static char* formatString(char* buff, size_t buf_size, char* format...) {
+		va_list args;
+		va_start(args, format);
+		vsprintf_s(buff, buf_size, format, args);
+		va_end(args);
+		return buff;
+	}
+};
 
 template <typename CharacterType> class FTString : public FTObject {
 public:
@@ -24,21 +44,14 @@ public:
 
 	}
 
-	/*explicit FTString(const CharacterType* string...) {
-		va_list args;
-		va_start(args,string);
-		setFormat(string, args);
-		va_end(args);
-	}*/
-
 	explicit FTString(const CharacterType* string) : string_(string) {
 		
 	}
 
-	static FTString* createNewFromCharString(const char* string) {
+	/*static FTString* newFromCharString(const char* string) {
 		std::wstring_convert<std::codecvt<CharacterType, char, std::mbstate_t>, CharacterType> convert;
 		return new FTString(convert.from_bytes(string));
-	}
+	}*/
 
 	virtual bool isEqual(const FTObject* a) const override {
 		const FTString<CharacterType>* string = static_cast<const FTString<CharacterType>*>(a);
@@ -85,18 +98,8 @@ public:
 		return strings;
 	}
 private:
-	static_assert(sizeof(wchar_t) == 2, "FTString requires wchar_t be 2 bytes in size");
+	
 
 	StandardString string_;
 	std::hash<std::basic_string<CharacterType>> hasher_;
-
-	/*void setFormat(const CharacterType* string, va_list list) {
-		const size_t maxSize = 1024;
-		CharacterType buff[maxSize];
-		if (sizeof(CharacterType) == 2)
-			vswprintf(buff, maxSize, (const wchar_t*)string, list);
-		else
-			vsprintf(buff, maxSize, (const char*) string, list);
-		string_ = (const CharacterType *)buff;
-	}*/
 };

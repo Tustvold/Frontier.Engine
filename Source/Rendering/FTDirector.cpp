@@ -31,9 +31,9 @@ FTDirector::FTDirector() : scene_(nullptr) {
 
 
 FTDirector::~FTDirector() {
-	FTLOG("Director destroyed");
 	if (scene_ != nullptr)
-		scene_->release();
+		scene_->release();// Must be the first thing destroyed
+	FTLOG("Director destroyed");
 }
 
 int FTDirector::setup() {
@@ -59,7 +59,7 @@ int FTDirector::setup() {
 	}
 	glfwMakeContextCurrent(window_);
 
-	glfwSwapInterval(0);
+	//glfwSwapInterval(0);
 
 	glewExperimental = true;
 
@@ -78,11 +78,9 @@ int FTDirector::setup() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
+	glEnable(GL_SCISSOR_TEST);
 
 	//Setup Misc
-	glfwSetInputMode(window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetWindowSizeCallback(window_, &windowSizeChangeCallback);
 	FTInputManager::getSharedInstance()->registerWithWindow(window_);
 	return 0;
@@ -100,6 +98,10 @@ void FTDirector::loadDefaultShaderPrograms() {
 	shader->release();
 
 	shader = new FTFontShader();
+	shaderCache->loadShaderProgram(shader);
+	shader->release();
+
+	shader = new FTVertexShaderProgram();
 	shaderCache->loadShaderProgram(shader);
 	shader->release();
 }
@@ -136,8 +138,9 @@ int FTDirector::run() {
 
 		pre_draw_event_handler_(dt);
 
-		// clear the screen
+		glDisable(GL_SCISSOR_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_SCISSOR_TEST);
 
 		scene_->draw();
 
