@@ -17,12 +17,8 @@ public:
 		transform1_->setPosition(pos);
 	}
 
-	void setRotationDegrees(const glm::vec3 pos) {
-		transform2_->setRotationDegrees(pos);
-	}
-
-	void setRotationRadians(const glm::vec3 pos) {
-		transform2_->setRotationRadians(pos);
+	void setRotationQuaternion(const glm::quat quat) {
+		transform2_->setRotationQuaterion(quat);
 	}
 
 	void setScale(const glm::vec3 pos) {

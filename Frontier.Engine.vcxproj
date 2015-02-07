@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Frontier.h" />
     <ClInclude Include="Source\FTArray.h" />
+    <ClInclude Include="Source\FTCircularBuffer.h" />
     <ClInclude Include="Source\FTDictionary.h" />
     <ClInclude Include="Source\FTDictionaryUtil.h" />
     <ClInclude Include="Source\FTIndexedArray.h" />

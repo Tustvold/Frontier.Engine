@@ -88,8 +88,8 @@ static inline void FTAssert(bool value, const char* format, ...) {
 
 
 // Maths utility functions
-#define RAD2DEG 0.01745329251f
-#define DEG2RAD 57.2957795131f
+#define DEG2RAD 0.01745329251f
+#define RAD2DEG 57.2957795131f
 
 static inline float fastabs(float f) {
 	int i = ((*(int*)&f) & 0x7fffffff);

@@ -15,6 +15,10 @@ public:
 		transform_->setPosition(position);
 	}
 
+	void setRotationQuaternion(const glm::quat quat) {
+		transform_->setRotationQuaternion(quat);
+	}
+
 protected:
 	FTTransformPositionScaleRotation* transform_;
 };

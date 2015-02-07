@@ -1,25 +1,21 @@
 #pragma once
 #include <Rendering/Scene/Transform/FTTransform.h>
+#include <glm/gtx/quaternion.hpp>
 
 class FTTransformRotation : public FTTransform {
 public:
 	virtual void updateMatrices() override {
 		if (transform_dirty_) {
-			transform_matrix = glm::eulerAngleYXZ(rotation_euler_radians_.y, rotation_euler_radians_.x, rotation_euler_radians_.z);
+			transform_matrix = glm::toMat4(rotation_quat_);
 			transform_dirty_ = false;
 		}
 	}
 
-	void setRotationRadians(const glm::vec3& rotation) {
-		rotation_euler_radians_ = rotation;
+	void setRotationQuaterion(const glm::quat& quat) {
+		rotation_quat_ = quat;
 		transform_dirty_ = true;
 	}
 
-	void setRotationDegrees(const glm::vec3& rotation) {
-		setRotationRadians(rotation * RAD2DEG);
-	}
-
 protected:
-	glm::vec3 rotation_euler_radians_;
-	
+	glm::quat rotation_quat_;
 };
