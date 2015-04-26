@@ -3,24 +3,31 @@
 #include <Rendering/Shader/FTFontShader.h>
 #include "FTFontCache.h"
 
-FTLabel::FTLabel(const char* fontpath, const wchar_t* text, int font_size, bool is_mutable) : FTIndexedTexturedMesh(FTShaderCache::getSharedInstance()->getShaderProgram<FTFontShader>()), anchor_point_(0, 0), position_(0, 0), transform_(new FTTransformPosition()), is_mutable_(is_mutable), font_size_(font_size) {
+FTLabel::FTLabel(const char* fontpath, const wchar_t* text, int font_size, bool is_mutable) : FTIndexedTexturedMesh(FTShaderCache::getSharedInstance()->getShaderProgram<FTFontShader>()), anchor_point_(0, 0), position_(0, 0), transform_(new FTTransformPosition()), is_mutable_(is_mutable), font_size_(font_size), mesh_data_(nullptr) {
 
-	FTFont* font = FTFontCache::getSharedInstance()->getFont("Fonts/Vera.ttf");
+	font_ = FTFontCache::getSharedInstance()->getFont("Fonts/Vera.ttf");
 
-	auto data = font->generateMeshForString(text, font_size, label_size_);
+	auto data = font_->generateMeshForString(text, font_size, label_size_);
 
-	FTTexture* texture = font->getTexture();
+	FTTexture* texture = font_->getTexture();
 
 	setTexture(texture);
 	loadIndexedMeshData(data, !is_mutable);
 
-	data->release();
+	if (is_mutable)
+		mesh_data_ = data;
+	else
+		data->release();
 
 	setPosition(glm::vec2(0, 0));
+
+	text_ = text;
 }
 
 FTLabel::~FTLabel() {
 	transform_->release();
+	if (mesh_data_ != nullptr)
+		mesh_data_->release();
 }
 
 void FTLabel::setPosition(const glm::vec2& pos) {
@@ -29,12 +36,18 @@ void FTLabel::setPosition(const glm::vec2& pos) {
 }
 
 void FTLabel::setString(const wchar_t* text) {
-	FTAssert(is_mutable_, "Trying to change immutable FTLabel!");
-	FTFont* font = FTFontCache::getSharedInstance()->getFont("Fonts/Vera.ttf");
+	if (text_ == text)
+		return;
 
-	auto data = font->generateMeshForString(text, font_size_, label_size_);
-	setIndexedMeshData(data);
-	data->release();
+	text_ = text;
+
+	FTAssert(is_mutable_, "Trying to change immutable FTLabel!");
+	
+	mesh_data_->getIndices()->clear();
+	mesh_data_->getVertices()->clear();
+
+	font_->populateMeshDataForString(mesh_data_, text, font_size_, label_size_);
+	setIndexedMeshData(mesh_data_);
 
 	setPosition(position_);
 }

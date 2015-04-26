@@ -1,7 +1,7 @@
 ﻿#include "FTFontShader.h"
 
 const char* FTFontShader::fragment_shader_source_ = {
-	"#version 330 core\n\
+	"#version 140\n\
 	\n\
 	in vec2 UV;\n\
 	in vec3 fragmentColor;\n\
@@ -18,7 +18,8 @@ const char* FTFontShader::fragment_shader_source_ = {
 };
 
 const char* FTFontShader::vertex_shader_source_ = {
-	"#version 330 core\n\
+	"#version 140\n\
+	#extension GL_ARB_explicit_attrib_location :require \n\
 	\n\
 	layout(location = 0) in vec3 vertexPosition_modelspace;\n\
 	layout(location = 1) in vec3 vertexColor;\n\

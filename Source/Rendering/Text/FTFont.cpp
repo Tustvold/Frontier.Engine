@@ -40,9 +40,15 @@ texture_font_t* FTFont::cacheFontSize(int size) {
 }
 
 FTIndexedMeshData<FTVertexColorTexture, uint16_t>* FTFont::generateMeshForString(const wchar_t* text, int size, glm::vec2& pen) {
-	texture_font_t* font = cacheFontSize(size);
 	size_t length = wcslen(text);
 	auto data = new FTIndexedMeshData<FTVertexColorTexture, uint16_t>(4 * length, 6 * length);
+	populateMeshDataForString(data, text, size, pen);
+	return data;
+}
+
+void FTFont::populateMeshDataForString(FTIndexedMeshData<FTVertexColorTexture, uint16_t>* data, const wchar_t* text, int size, glm::vec2& pen) {
+	texture_font_t* font = cacheFontSize(size);
+	size_t length = wcslen(text);
 	auto vertices = data->getVertices();
 	auto indices = data->getIndices();
 
@@ -103,5 +109,4 @@ FTIndexedMeshData<FTVertexColorTexture, uint16_t>* FTFont::generateMeshForString
 			curIndex += 4;
 		}
 	}
-	return data;
 }

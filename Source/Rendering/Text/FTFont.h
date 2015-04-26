@@ -20,6 +20,8 @@ public:
 
 	FTIndexedMeshData<FTVertexColorTexture, uint16_t>* generateMeshForString(const wchar_t* string, int size, glm::vec2& outputsize);
 
+	void populateMeshDataForString(FTIndexedMeshData<FTVertexColorTexture, uint16_t>* data, const wchar_t* string, int size, glm::vec2& outputsize);
+
 protected:
 	float h;
 	GLuint *textures;

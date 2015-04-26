@@ -1,7 +1,7 @@
 #include "FTVertexShaderProgram.h"
 
 const char* FTVertexShaderProgram::fragment_shader_source_ = {
-	"#version 330 core\n\
+	"#version 140\n\
 	\n\
 	out vec3 color;\n\
 	\n\
@@ -13,7 +13,8 @@ const char* FTVertexShaderProgram::fragment_shader_source_ = {
 };
 
 const char* FTVertexShaderProgram::vertex_shader_source_ = {
-	"#version 330 core\n\
+	"#version 140\n\
+	#extension GL_ARB_explicit_attrib_location :require \n\
 	\n\
 	layout(location = 0) in vec3 vertexPosition_modelspace;\n\
 	\n\

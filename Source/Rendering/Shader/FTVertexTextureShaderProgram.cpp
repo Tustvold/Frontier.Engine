@@ -1,6 +1,6 @@
 ﻿#include "FTVertexTextureShaderProgram.h"
 const char* FTVertexTextureShaderProgram::fragment_shader_source_ = {
-	"#version 330 core\n\
+	"#version 140\n\
 	\n\
 	in vec2 UV;\n\
 	\n\
@@ -16,7 +16,8 @@ const char* FTVertexTextureShaderProgram::fragment_shader_source_ = {
 };
 
 const char* FTVertexTextureShaderProgram::vertex_shader_source_ = {
-	"#version 330 core\n\
+	"#version 140\n\
+	#extension GL_ARB_explicit_attrib_location :require \n\
 	\n\
 	layout(location = 0) in vec3 vertexPosition_modelspace;\n\
 	layout(location = 2) in vec2 vertexUV;\n\
