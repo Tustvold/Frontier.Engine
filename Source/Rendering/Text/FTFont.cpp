@@ -2,12 +2,9 @@
 #include "freetype-gl.h"
 #include <Rendering/Mesh/FTIndexedTexturedMesh.h>
 
-FTFont::FTFont(FTString<char> *filename) : font_name_(filename) {
+FTFont::FTFont(const std::basic_string<char>& filename) : font_texture_(new FTFontTexture(texture_atlas_new(512, 512, 1))), font_name_(std::move(filename)) {
 	//font_name_->retain();
-	font_name_->retain();
-	texture_atlas_t* texture_atlas = texture_atlas_new(512, 512, 1);
-	font_texture_ = new FTFontTexture(texture_atlas);
-	
+
 	//FTLOG("Loaded font                : %s", filename);
 	//FTLOG("Texture occupancy          : %.2f%%", 100.0*texture_atlas->used / (float)(texture_atlas->width*texture_atlas->height));
 }
@@ -16,13 +13,10 @@ FTFont::~FTFont() {
 	for (auto it = fonts_.begin(); it != fonts_.end(); ++it) {
 		texture_font_delete(it->second);
 	}
-
-	font_name_->release();
-	font_texture_->release();
 }
 
 texture_font_t* FTFont::cacheFontSize(int size) {
-	static const wchar_t *cache = L" !\"#$%&'()*+,-./0123456789:;<=>?"
+	static auto cache = L" !\"#$%&'()*+,-./0123456789:;<=>?"
 		L"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
 		L"`abcdefghijklmnopqrstuvwxyz{|}~";
 
@@ -30,8 +24,9 @@ texture_font_t* FTFont::cacheFontSize(int size) {
 	if (it != fonts_.end())
 		return it->second;
 
-	texture_font_t* font = texture_font_new_from_file(font_texture_->getTextureAtlas(), (float)(size), font_name_->getCString());
+	texture_font_t* font = texture_font_new_from_file(font_texture_->getTextureAtlas(), (float)(size), font_name_.c_str());
 	size_t missed = texture_font_load_glyphs(font, cache);
+
 	fonts_[size] = font;
 
 	if (missed != 0)
@@ -39,16 +34,16 @@ texture_font_t* FTFont::cacheFontSize(int size) {
 	return font;
 }
 
-FTIndexedMeshData<FTVertexColorTexture, uint16_t>* FTFont::generateMeshForString(const wchar_t* text, int size, glm::vec2& pen) {
-	size_t length = wcslen(text);
-	auto data = new FTIndexedMeshData<FTVertexColorTexture, uint16_t>(4 * length, 6 * length);
+std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture, uint16_t>> FTFont::generateMeshForString(const std::basic_string<wchar_t>& text, int size, glm::vec2& pen) {
+	size_t length = text.length();
+	auto data = std::make_shared<FTIndexedMeshData<FTVertexColorTexture, uint16_t>>(4 * length, 6 * length);
 	populateMeshDataForString(data, text, size, pen);
 	return data;
 }
 
-void FTFont::populateMeshDataForString(FTIndexedMeshData<FTVertexColorTexture, uint16_t>* data, const wchar_t* text, int size, glm::vec2& pen) {
+void FTFont::populateMeshDataForString(std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture, uint16_t>>& data, const std::basic_string<wchar_t>& text, int size, glm::vec2& pen) {
 	texture_font_t* font = cacheFontSize(size);
-	size_t length = wcslen(text);
+	size_t length = text.length();
 	auto vertices = data->getVertices();
 	auto indices = data->getIndices();
 
@@ -59,14 +54,11 @@ void FTFont::populateMeshDataForString(FTIndexedMeshData<FTVertexColorTexture, u
 	FTVertexColorTexture vertex;
 	vertex.color_ = glm::vec3(0.5f, 0.5f, 0.5f);
 	//float r = color->red, g = color->green, b = color->blue, a = color->alpha;
-	for (i = 0; i < length; ++i)
-	{
-		texture_glyph_t *glyph = texture_font_get_glyph(font, text[i]);
-		if (glyph != nullptr)
-		{
+	for (i = 0; i < length; ++i) {
+		texture_glyph_t* glyph = texture_font_get_glyph(font, text[i]);
+		if (glyph != nullptr) {
 			float kerning = 0.0f;
-			if (i > 0)
-			{
+			if (i > 0) {
 				kerning = texture_glyph_get_kerning(glyph, text[i - 1]);
 			}
 			pen.x += kerning;
@@ -84,28 +76,28 @@ void FTFont::populateMeshDataForString(FTIndexedMeshData<FTVertexColorTexture, u
 
 			vertex.position_ = glm::vec3(x0, y0, 0);
 			vertex.uv_ = glm::vec2(s0, t0);
-			vertices->add(vertex);
+			vertices.push_back(vertex);
 
 			vertex.position_ = glm::vec3(x1, y0, 0);
 			vertex.uv_ = glm::vec2(s1, t0);
-			vertices->add(vertex);
+			vertices.push_back(vertex);
 
 			vertex.position_ = glm::vec3(x0, y1, 0);
 			vertex.uv_ = glm::vec2(s0, t1);
-			vertices->add(vertex);
+			vertices.push_back(vertex);
 
 			vertex.position_ = glm::vec3(x1, y1, 0);
 			vertex.uv_ = glm::vec2(s1, t1);
-			vertices->add(vertex);
+			vertices.push_back(vertex);
 
 			pen.x += glyph->advance_x;
 
-			indices->add(curIndex);
-			indices->add(curIndex + 2);
-			indices->add(curIndex + 1);
-			indices->add(curIndex + 2);
-			indices->add(curIndex + 3);
-			indices->add(curIndex + 1);
+			indices.push_back(curIndex);
+			indices.push_back(curIndex + 2);
+			indices.push_back(curIndex + 1);
+			indices.push_back(curIndex + 2);
+			indices.push_back(curIndex + 3);
+			indices.push_back(curIndex + 1);
 			curIndex += 4;
 		}
 	}

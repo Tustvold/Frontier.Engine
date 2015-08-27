@@ -20,12 +20,12 @@ public:
 #ifdef DEBUG_FT_ALLOC
 		if (FTObject::ft_object_alive_count_ != 0) {
 			FTLogError("Failed to deallocate all FTObjects - %i still alive", FTObject::ft_object_alive_count_.load());
-		}
-		else {
+		} else {
 			FTLog("All FTObjects deallocated correctly!");
 		}
 #endif
 	}
+
 private:
 	static void cleanupSingletons() {
 		delete FTDirector::getSharedInstance(); // Must be first

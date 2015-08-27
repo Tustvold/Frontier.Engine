@@ -2,31 +2,38 @@
 #include <Rendering/FTDrawable.h>
 #include <Rendering/Camera/FTCamera.h>
 #include <Rendering/Shader/FTVertexShaderProgram.h>
-#include <Rendering/Scene/Transform/FTTransform.h>
+#include <Rendering/Shader/FTShaderCache.h>
 
-// The base class of everything within the scene heirarchy
-// Manages a shader program which it populates with the camera data
-class FTNode : public FTDrawable {
+class IFTNode : public FTDrawable {
 public:
-
-	explicit FTNode(FTVertexShaderProgram* shader_program) : shader_program_(shader_program) {
-		shader_program_->retain();
-	}
-
-	~FTNode() {
-		shader_program_->release();
-	}
 
 	virtual void pre_draw() = 0;
 	virtual void post_draw() = 0;
+	virtual void visit(const std::shared_ptr<FTCamera>& camera) = 0;
 
-	virtual FTTransform* getTransform() = 0;
+};
+
+// The base class of everything within the scene heirarchy
+// Manages a shader program which it populates with the camera data
+template <typename Transform, typename ShaderProgram>
+class FTNode : public IFTNode {
+public:
+
+	explicit FTNode() :
+		transform_(new Transform()),
+		shader_program_(FTShaderCache::getSharedInstance()->getShaderProgram<ShaderProgram>()) {
+
+	}
+
+	~FTNode() {
+
+	}
+
 
 	// Override to provide custom transforms, frustrum culling, children, etc
-	virtual void visit(const FTCamera* camera) {
-		FTTransform* transform = getTransform();
-		transform->updateMatrices();
-		glm::mat4 mvp = camera->getViewProjectionMatrix() * transform->getTransformMatrix();
+	virtual void visit(const std::shared_ptr<FTCamera>& camera) override {
+		transform_->updateMatrices();
+		glm::mat4 mvp = camera->getViewProjectionMatrix() * transform_->getTransformMatrix();
 		shader_program_->use();
 		shader_program_->updateMvpUniforms(&mvp[0][0]);
 		this->pre_draw();
@@ -36,6 +43,6 @@ public:
 	}
 
 protected:
-	FTTransform* transform_;
-	FTVertexShaderProgram* shader_program_;
+	std::unique_ptr<Transform> transform_;
+	std::shared_ptr<FTVertexShaderProgram> shader_program_;
 };

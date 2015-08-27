@@ -26,11 +26,8 @@ public:
 		return &window_size_change_event_handler_;
 	}
 
-	void setCurrentScene(FTScene* scene) {
-		if (scene_ != nullptr)
-			scene_->release();
+	void setCurrentScene(std::shared_ptr<FTScene>& scene) {
 		scene_ = scene;
-		scene_->retain();
 	}
 
 private:
@@ -49,7 +46,7 @@ private:
 		getSharedInstance()->windowSizeChange(window, width, height);
 	}
 
-	FTScene* scene_;
+	std::shared_ptr<FTScene> scene_;
 	GLFWwindow* window_;
 	glm::vec2 window_size_;
 

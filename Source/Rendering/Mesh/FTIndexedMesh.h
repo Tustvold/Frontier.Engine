@@ -1,37 +1,50 @@
 #pragma once
 #include <GL/glew.h>
 #include "FTMesh.h"
-#include <FTArray.h>
 
 template <typename VertexType, typename IndexType>
 class FTIndexedMeshData : public FTMeshData<VertexType> {
 public:
 
-	FTIndexedMeshData(size_t vertexCount, size_t indexCount) : FTMeshData(vertexCount), indices_(new FTArray<IndexType>(indexCount)) {
+	FTIndexedMeshData() : index_count_(0) {
+
 	}
 
-	FTIndexedMeshData(FTArray<VertexType>* vertices, FTArray<IndexType>* indices) : FTMeshData(vertices), indices_(indices) {
-		indices_->retain();
+	FTIndexedMeshData(size_t vertexCount, size_t indexCount) : FTMeshData(vertexCount), index_count_(0) {
+		indices_.reserve(indexCount);
+	}
+
+	FTIndexedMeshData(std::vector<VertexType>& vertices, std::vector<IndexType>& indices) : FTMeshData(vertices), index_count_(0) {
+		indices_ = std::move(indices);
 	}
 
 	virtual ~FTIndexedMeshData() {
-		indices_->release();
 	}
 
-	FTArray<IndexType>* getIndices() const {
+	std::vector<IndexType>& getIndices() {
 		return indices_;
 	}
 
+	// We store the index_count separately as this allows code to bypass redundant IndexType constructor calls
+	void setIndexCount(size_t count) {
+		FTAssert(indices_.capacity() > index_count_, "Invalid Index Count");
+		index_count_ = count;
+	}
+
+	size_t getIndexCount() {
+		if (index_count_ != 0)
+			return index_count_;
+		return indices_.size();
+	}
+
 protected:
-	FTArray<IndexType>* indices_;
+	std::vector<IndexType> indices_;
+	size_t index_count_;
 };
 
-template <typename VertexType, typename IndexType>
-class FTIndexedMesh : public FTMesh<VertexType> {
+template <typename Transform, typename ShaderProgram, typename VertexType, typename IndexType>
+class FTIndexedMesh : public FTMesh<Transform, ShaderProgram, VertexType> {
 public:
-	explicit FTIndexedMesh(FTVertexShaderProgram* shader_program) : FTMesh(shader_program) {
-
-	}
 
 	// Creates empty VBOs of the passed size
 	// These can then be populated using the setIndexedMeshData functions
@@ -50,16 +63,16 @@ public:
 		}
 	}
 
-	void loadIndexedMeshData(const FTIndexedMeshData<VertexType, IndexType>* data, bool is_static, bool cleanup = true) {
-		loadMeshData(data, is_static, false);
+	void loadIndexedMeshData(const std::shared_ptr<FTIndexedMeshData<VertexType, IndexType>>& data, bool is_static, bool cleanup = true) {
+		loadMeshData(std::static_pointer_cast<FTMeshData<VertexType>>(data), is_static, false);
 
-		num_indices_ = data->getIndices()->size();
+		num_indices_ = data->getIndexCount();
 		max_num_inidices_ = num_indices_;
 		glGenBuffers(1, &index_buffer_id_);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id_);
 
 
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, max_num_inidices_ * sizeof(IndexType), data->getIndices()->getData(), is_static ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, max_num_inidices_ * sizeof(IndexType), data->getIndices().data(), is_static ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 
 		if (cleanup) {
 			glBindVertexArray(0);
@@ -67,20 +80,20 @@ public:
 		}
 	}
 
-	virtual void setIndexedMeshData(const FTIndexedMeshData<VertexType, IndexType>* data) {
-		setMeshData(data);
+	virtual void setIndexedMeshData(const std::shared_ptr<FTIndexedMeshData<VertexType, IndexType>>& data) {
+		setMeshData(std::static_pointer_cast<FTMeshData<VertexType>>(data));
 		// Update mesh data
-		if (max_num_inidices_ >= data->getIndices()->size()) {
-			num_indices_ = data->getIndices()->size();
+		if (max_num_inidices_ >= data->getIndexCount()) {
+			num_indices_ = data->getIndexCount();
 			// We can update the existing buffer
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id_);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, num_indices_ * sizeof(IndexType), data->getIndices()->getData());
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, num_indices_ * sizeof(IndexType), data->getIndices().data());
 		} else {
-			num_indices_ = data->getIndices()->size();
+			num_indices_ = data->getIndexCount();
 			max_num_inidices_ = num_indices_;
 			// We must re-create the buffer
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id_);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices_ * sizeof(IndexType), data->getIndices()->getData(), GL_DYNAMIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices_ * sizeof(IndexType), data->getIndices().data(), GL_DYNAMIC_DRAW);
 		}
 	}
 
@@ -104,11 +117,11 @@ protected:
 	GLuint index_buffer_id_;
 
 private:
-	virtual void loadMeshData(const FTMeshData<VertexType>* data, bool is_static, bool cleanup) override {
+	virtual void loadMeshData(const std::shared_ptr<FTMeshData<VertexType>>& data, bool is_static, bool cleanup) override {
 		FTMesh::loadMeshData(data, is_static, cleanup);
 	}
 
-	virtual void setMeshData(const FTMeshData<VertexType>* data) override {
+	virtual void setMeshData(const std::shared_ptr<FTMeshData<VertexType>>& data) override {
 		FTMesh::setMeshData(data);
 	}
 

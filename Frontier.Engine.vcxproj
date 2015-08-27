@@ -88,6 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\freetype-gl;$(SolutionDir)ThirdParty\freetype2\include;$(ProjectDir)Source;$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\glew-1.11.0\include;$(SolutionDir)ThirdParty\glfw\include\GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_MBCS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -100,6 +101,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\freetype-gl;$(SolutionDir)ThirdParty\freetype2\include;$(ProjectDir)Source;$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\glew-1.11.0\include;$(SolutionDir)ThirdParty\glfw\include\GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_MBCS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -114,6 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\freetype-gl;$(SolutionDir)ThirdParty\freetype2\include;$(ProjectDir)Source;$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\glew-1.11.0\include;$(SolutionDir)ThirdParty\glfw\include\GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_MBCS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -130,6 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\freetype-gl;$(SolutionDir)ThirdParty\freetype2\include;$(ProjectDir)Source;$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\glew-1.11.0\include;$(SolutionDir)ThirdParty\glfw\include\GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_MBCS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -139,17 +143,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Source\Frontier.h" />
-    <ClInclude Include="Source\FTArray.h" />
     <ClInclude Include="Source\FTCircularBuffer.h" />
-    <ClInclude Include="Source\FTDictionary.h" />
-    <ClInclude Include="Source\FTDictionaryUtil.h" />
-    <ClInclude Include="Source\FTIndexedArray.h" />
     <ClInclude Include="Source\FTEngine.h" />
     <ClInclude Include="Source\FTObject.h" />
     <ClInclude Include="Source\FTPtr.h" />
     <ClInclude Include="Source\FTString.h" />
     <ClInclude Include="Source\FTTimer.h" />
-    <ClInclude Include="Source\FTValue.h" />
     <ClInclude Include="Source\Rendering\Camera\FTCamera.h" />
     <ClInclude Include="Source\Rendering\Camera\FTCamera2D.h" />
     <ClInclude Include="Source\Rendering\Camera\FTCamera3D.h" />
@@ -209,17 +208,17 @@
     <ClCompile Include="Source\Util\FTInputManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\freetype-gl\freetype-gl.vcxproj">
-      <Project>{be94d4a8-8b8f-4057-8bf3-0e5ffe36559d}</Project>
+    <ProjectReference Include="..\ThirdParty\freetype-gl\freetype-gl.vcxproj">
+      <Project>{3bda66c4-a45c-4e45-a4df-8a4e53759ea3}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\freetype2\builds\windows\vc2010\freetype.vcxproj">
+    <ProjectReference Include="..\ThirdParty\freetype2\builds\windows\vc2010\freetype.vcxproj">
       <Project>{78b079bd-9fc7-4b9e-b4a6-96da0f00248b}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\glew-1.11.0\build\vc12\glew_static.vcxproj">
+    <ProjectReference Include="..\ThirdParty\glew-1.11.0\build\vc12\glew_static.vcxproj">
       <Project>{664e6f0d-6784-4760-9565-d54f8eb1edf4}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\glfw\src\glfw.vcxproj">
-      <Project>{80136991-48d2-40df-9345-17c8afe0147d}</Project>
+    <ProjectReference Include="..\ThirdParty\glfw\src\glfw.vcxproj">
+      <Project>{5e6334a0-4cc1-42e4-a370-27f8aca3c3e9}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

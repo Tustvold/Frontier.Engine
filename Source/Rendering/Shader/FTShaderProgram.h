@@ -12,7 +12,7 @@ public:
 
 	virtual ~FTShaderProgram() {
 		if (program_id_ != 0)
-			glDeleteProgram(program_id_);
+		glDeleteProgram(program_id_);
 	}
 
 	virtual bool load() = 0;
@@ -22,7 +22,7 @@ public:
 	}
 
 	virtual void cleanup() {
-		
+
 	}
 
 protected:
@@ -87,7 +87,7 @@ private:
 		if (result != GL_TRUE) {
 			std::vector<char> vertex_shader_error_message(info_log_length + 1);
 			glGetShaderInfoLog(vertex_shader_id, info_log_length, NULL, &vertex_shader_error_message[0]);
-			FTAssert(false,"Vertex shader compilation failed with error: %s", &vertex_shader_error_message[0]);
+			FTAssert(false, "Vertex shader compilation failed with error: %s", &vertex_shader_error_message[0]);
 			return false;
 		}
 
@@ -103,7 +103,7 @@ private:
 		if (result != GL_TRUE) {
 			std::vector<char> FragmentShaderErrorMessage(info_log_length + 1);
 			glGetShaderInfoLog(fragment_shader_id, info_log_length, NULL, &FragmentShaderErrorMessage[0]);
-			FTAssert(false,"Fragment shader compilation failed with error: %s", &FragmentShaderErrorMessage[0]);
+			FTAssert(false, "Fragment shader compilation failed with error: %s", &FragmentShaderErrorMessage[0]);
 			return false;
 		}
 

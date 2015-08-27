@@ -3,31 +3,29 @@
 #include <Rendering/Mesh/FTIndexedMesh.h>
 #include <Rendering/Textures/FTTexture.h>
 
-template <typename VertexType, typename IndexType>
-class FTIndexedTexturedMesh : public FTIndexedMesh<VertexType, IndexType> {
+template <typename Transform, typename ShaderProgram, typename VertexType, typename IndexType>
+class FTIndexedTexturedMesh : public FTIndexedMesh<Transform, ShaderProgram, VertexType, IndexType> {
 public:
-	explicit FTIndexedTexturedMesh(FTVertexTextureShaderProgram* shader_program) : FTIndexedMesh(shader_program), texture_(nullptr) {
+	explicit FTIndexedTexturedMesh() : FTIndexedMesh() {
+
 	}
 
 	virtual ~FTIndexedTexturedMesh() {
-		texture_->release();
+
 	}
 
-	void setTexture(FTTexture* texture) {
-		if (texture_ != nullptr)
-			texture_->release();
+	void setTexture(std::shared_ptr<FTTexture> texture) {
 		texture_ = texture;
-		texture_->retain();
 	}
 
 	void draw() override {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture_->getTextureId());
-		glUniform1i(((FTVertexTextureShaderProgram*)shader_program_)->getTextureUniformId(), 0);
+		glUniform1i(((FTVertexTextureShaderProgram*)shader_program_.get())->getTextureUniformId(), 0);
 		FTIndexedMesh::draw();
 	}
 
 protected:
 	GLuint uv_buffer_id_;
-	FTTexture* texture_;
+	std::shared_ptr<FTTexture> texture_;
 };

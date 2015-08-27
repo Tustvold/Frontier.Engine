@@ -27,8 +27,8 @@ const char* FTVertexShaderProgram::vertex_shader_source_ = {
 	}"
 };
 
-FTVertexShaderProgram::FTVertexShaderProgram() : FTShaderProgram(vertex_shader_source_,fragment_shader_source_) {
-	
+FTVertexShaderProgram::FTVertexShaderProgram() : FTShaderProgram(vertex_shader_source_, fragment_shader_source_) {
+
 }
 
 FTVertexShaderProgram::~FTVertexShaderProgram() {
@@ -42,4 +42,3 @@ bool FTVertexShaderProgram::load() {
 void FTVertexShaderProgram::updateMvpUniforms(const GLfloat* mvp) {
 	glUniformMatrix4fv(mvp_uniform_, 1, GL_FALSE, mvp);
 }
-

@@ -29,7 +29,7 @@ public:
 		FTCamera::preDraw();
 		if (projection_matrix_dirty_) {
 			projection_matrix_ = glm::perspective(fov_, (float)screen_rect_.width_ / (float)screen_rect_.height_, near_clipping_plane_, far_clipping_plane_);
-				
+
 		}
 		if (view_matrix_dirty_) {
 			if (rotation_dirty_) {

@@ -1,10 +1,9 @@
 #pragma once
 #include <Frontier.h>
 #include <GL/glew.h>
-
-#include <FTDictionary.h>
-#include <FTDictionaryUtil.h>
 #include "FTShaderProgram.h"
+#include <typeindex>
+#include <unordered_map>
 
 // Caches the GLPrograms allowing their reuse across the application
 class FTShaderCache {
@@ -14,19 +13,22 @@ public:
 	static FTShaderCache* getSharedInstance();
 
 	template <typename Type>
-	Type* getShaderProgram() {
-		return (Type*)shader_store_->get(&(typeid(Type)));
+	std::shared_ptr<Type> getShaderProgram() {
+		auto it = shader_store_.find(typeid(Type));
+		FTAssert(it != shader_store_.end(), "Shader %s not found", typeid(Type).name());
+
+		return std::static_pointer_cast<Type>(it->second);
 	}
 
-	bool loadShaderProgram(FTShaderProgram* shader_program);
+	bool loadShaderProgram(const std::shared_ptr<FTShaderProgram>& shader_program);
 
 	void unloadAllShaders() {
-		shader_store_->clear();
+		shader_store_.clear();
 	}
 
 private:
 	FTShaderCache();
 	~FTShaderCache();
 
-	FTDictionary<const std::type_info*, FTShaderProgram, TypeInfoHasher, TypeInfoComparer>* shader_store_;
+	std::unordered_map<std::type_index, std::shared_ptr<FTShaderProgram>> shader_store_;
 };

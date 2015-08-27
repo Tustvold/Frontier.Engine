@@ -1,22 +1,22 @@
 ﻿#pragma once
 #include <Rendering/Text/FTFont.h>
-#include <FTDictionary.h>
+
 
 class FTFontCache {
 	friend class FTEngine;
 public:
 	static FTFontCache* getSharedInstance();
 
-	bool loadFont(const char* name);
+	bool loadFont(const std::basic_string<char>& name);
 
-	FTFont* getFont(const char* string) {
-		FTString<char> tester(string);
-		return loaded_fonts_->get(&tester);
+	std::shared_ptr<FTFont>& getFont(const std::basic_string<char>& string) {
+		auto it = loaded_fonts_.find(string);
+		return it->second;
 	}
 
 protected:
-	FTDictionary<FTString<char>, FTFont>* loaded_fonts_;
-	
+	std::unordered_map<std::basic_string<char>, std::shared_ptr<FTFont>> loaded_fonts_;
+
 	FTFontCache();
 	~FTFontCache();
 };

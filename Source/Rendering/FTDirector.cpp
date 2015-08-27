@@ -20,20 +20,20 @@
 #include "Shader/FTVertexTextureShaderProgram.h"
 #include "Shader/FTFontShader.h"
 #include "Text/FTFontCache.h"
+#include <sstream>
 
 FTDirector* FTDirector::getSharedInstance() {
 	static FTDirector* instance = new FTDirector();
 	return instance;
 }
 
-FTDirector::FTDirector() : scene_(nullptr) {
+FTDirector::FTDirector() {
 }
 
 
 FTDirector::~FTDirector() {
-	if (scene_ != nullptr)
-		scene_->release();// Must be the first thing destroyed
 	FTLOG("Director destroyed");
+	scene_.reset();
 }
 
 int FTDirector::setup() {
@@ -87,27 +87,23 @@ int FTDirector::setup() {
 }
 
 void FTDirector::loadDefaultShaderPrograms() {
-	FTShaderCache* shaderCache = FTShaderCache::getSharedInstance();
+	auto shaderCache = FTShaderCache::getSharedInstance();
 
-	FTShaderProgram* shader = new FTVertexColorShaderProgram();
+	auto shader = std::static_pointer_cast<FTShaderProgram>(std::make_shared<FTVertexColorShaderProgram>());
 	shaderCache->loadShaderProgram(shader);
-	shader->release();
 
-	shader = new FTVertexTextureShaderProgram();
+	shader = std::static_pointer_cast<FTShaderProgram>(std::make_shared<FTVertexTextureShaderProgram>());
 	shaderCache->loadShaderProgram(shader);
-	shader->release();
 
-	shader = new FTFontShader();
+	shader = std::static_pointer_cast<FTShaderProgram>(std::make_shared<FTFontShader>());
 	shaderCache->loadShaderProgram(shader);
-	shader->release();
 
-	shader = new FTVertexShaderProgram();
+	shader = std::static_pointer_cast<FTShaderProgram>(std::make_shared<FTVertexShaderProgram>());
 	shaderCache->loadShaderProgram(shader);
-	shader->release();
 }
 
 void FTDirector::loadDefaultFonts() {
-	FTFontCache* fontCache = FTFontCache::getSharedInstance();
+	auto fontCache = FTFontCache::getSharedInstance();
 
 	fontCache->loadFont("Fonts/Vera.ttf");
 }

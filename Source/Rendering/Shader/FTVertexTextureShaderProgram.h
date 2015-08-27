@@ -14,7 +14,7 @@ public:
 
 protected:
 	FTVertexTextureShaderProgram(const char* vertex_shader, const char* fragment_shader) : FTVertexShaderProgram(vertex_shader, fragment_shader) {
-		
+
 	}
 
 	static const char* vertex_shader_source_;

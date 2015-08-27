@@ -5,12 +5,11 @@
 #include "FTTransformRotation.h"
 #include "FTCompositeTransform.h"
 
+
 class FTTransformPositionScaleRotation : public FTCompositeTransform3<FTTransformPosition, FTTransformRotation, FTTransformScale> {
 public:
-	FTTransformPositionScaleRotation() : FTCompositeTransform3(new FTTransformPosition(), new FTTransformRotation(), new FTTransformScale()) {
-		transform1_->release();
-		transform2_->release();
-		transform3_->release();
+	FTTransformPositionScaleRotation() : FTCompositeTransform3() {
+
 	}
 
 	void setPosition(const glm::vec3 pos) {

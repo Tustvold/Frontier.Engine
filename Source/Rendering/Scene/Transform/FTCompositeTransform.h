@@ -3,16 +3,15 @@
 // Represents a composite transform
 // The transform is calculated as transform1*transform2*transform3
 // The normal order of multiplication is translation*scale*rotation
-template <typename T1, typename T2> class FTCompositeTransform : public FTTransform {
-	
-	FTCompositeTransform(T1* transform1, T2* transform2): transform1_(transform1),transform2_(transform2) {
-		transform1_->retain();
-		transform2_->retain();
+template <typename T1, typename T2>
+class FTCompositeTransform : public FTTransform {
+
+	FTCompositeTransform(std::unique_ptr<T1>& transform1, std::unique_ptr<T2>& transform2): transform1_(std::move(transform1)),transform2_(std::move(transform2)) {
+
 	}
 
 	virtual ~FTCompositeTransform() {
-		transform1_->release();
-		transform2_->release();
+
 	}
 
 	bool getDirty() override {
@@ -23,28 +22,27 @@ template <typename T1, typename T2> class FTCompositeTransform : public FTTransf
 		if (getDirty()) {
 			transform1_->updateMatrices();
 			transform2_->updateMatrices();
-			transform_matrix = transform1_->getTransformMatrix()*transform2_->getTransformMatrix();
+			transform_matrix = transform1_->getTransformMatrix() * transform2_->getTransformMatrix();
 		}
 	}
 
 protected:
-	T1* transform1_;
-	T2* transform2_;
+	std::unique_ptr<T1> transform1_;
+	std::unique_ptr<T2> transform2_;
 };
 
-template <typename T1, typename T2, typename T3> class FTCompositeTransform3 : public FTTransform {
+template <typename T1, typename T2, typename T3>
+class FTCompositeTransform3 : public FTTransform {
 public:
 
-	FTCompositeTransform3(T1* transform1, T2* transform2, T3* transform3) : transform1_(transform1), transform2_(transform2), transform3_(transform3) {
-		transform1_->retain();
-		transform2_->retain();
-		transform3_->retain();
+	FTCompositeTransform3() :
+		transform1_(new T1()),
+		transform2_(new T2()),
+		transform3_(new T3()) {
 	}
 
 	virtual ~FTCompositeTransform3() {
-		transform1_->release();
-		transform2_->release();
-		transform3_->release();
+
 	}
 
 	bool getDirty() override {
@@ -56,12 +54,12 @@ public:
 			transform1_->updateMatrices();
 			transform2_->updateMatrices();
 			transform3_->updateMatrices();
-			transform_matrix = transform1_->getTransformMatrix()*transform2_->getTransformMatrix()*transform3_->getTransformMatrix();
+			transform_matrix = transform1_->getTransformMatrix() * transform2_->getTransformMatrix() * transform3_->getTransformMatrix();
 		}
 	}
 
 protected:
-	T1* transform1_;
-	T2* transform2_;
-	T3* transform3_;
+	std::unique_ptr<T1> transform1_;
+	std::unique_ptr<T2> transform2_;
+	std::unique_ptr<T3> transform3_;
 };

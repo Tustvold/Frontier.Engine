@@ -55,7 +55,7 @@ void FTCameraFPS::keyHeld(KeyName key, float dt) {
 }
 
 void FTCameraFPS::cursorPosChange(float x, float y) {
-	FTLOG("%f %f", rotation_euler_radians.x, rotation_euler_radians.y);
+	//FTLOG("%f %f", rotation_euler_radians.x, rotation_euler_radians.y);
 
 	rotation_euler_radians.x += x * rotation_speed_;
 	rotation_euler_radians.y += y * rotation_speed_;

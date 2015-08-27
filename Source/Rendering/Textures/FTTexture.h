@@ -14,7 +14,7 @@ public:
 
 protected:
 	FTTexture() {
-		
+
 	}
 
 	unsigned int width_;

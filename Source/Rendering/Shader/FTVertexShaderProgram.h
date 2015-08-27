@@ -14,8 +14,8 @@ public:
 	void updateMvpUniforms(const GLfloat* mvp);
 
 protected:
-	FTVertexShaderProgram(const char* vertex_shader, const char* fragment_shader) : FTShaderProgram(vertex_shader,fragment_shader) {
-		
+	FTVertexShaderProgram(const char* vertex_shader, const char* fragment_shader) : FTShaderProgram(vertex_shader, fragment_shader) {
+
 	}
 
 private:

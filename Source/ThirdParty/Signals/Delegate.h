@@ -75,7 +75,9 @@
 #endif // _MSC_VER > 1000
 
 
+
 #include <memory.h> // to allow <,> comparisons
+
 
 #include <cstring>
 
@@ -108,6 +110,7 @@
 
 #if (_MSC_VER <1300) // Many workarounds are required for VC6.
 
+
 #define FASTDLGT_VC6
 #pragma warning(disable:4786) // disable this ridiculous warning
 #endif
@@ -130,6 +133,7 @@
 // Does it allow function declarator syntax? The following compilers are known to work:
 #if defined(FASTDLGT_ISMSVC) && (_MSC_VER >= 1310) // VC 7.1
 
+
 #define FASTDELEGATE_ALLOW_FUNCTION_TYPE_SYNTAX
 #endif
 
@@ -144,6 +148,7 @@
 #endif
 
 #ifdef __GNUC__ // Workaround GCC bug #8271
+
 
 // At present, GCC doesn't recognize constness of MFPs in templates
 #define FASTDELEGATE_GCC_BUG_8271
@@ -167,9 +172,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-namespace Gallant {
-
-	namespace detail { // we'll hide the implementation details in a nested namespace.
+namespace Gallant
+{
+	namespace detail
+	{ // we'll hide the implementation details in a nested namespace.
 
 		//		implicit_cast< >
 		// I believe this was originally going to be in the C++ standard but
@@ -549,8 +555,8 @@ namespace Gallant {
 #endif // MSVC 7 and greater
 
 
-#endif // MS/Intel hacks
 
+#endif // MS/Intel hacks
 
 	} // namespace detail
 
@@ -643,6 +649,7 @@ namespace Gallant {
 #else // Evil Method
 
 
+
 		inline bool IsEqual(const DelegateMemento& x) const {
 			return m_pthis == x.m_pthis && m_pFunction == x.m_pFunction;
 		}
@@ -726,8 +733,8 @@ namespace Gallant {
 	// necessary typedefs.
 	// This class does everything else.
 
-	namespace detail {
-
+	namespace detail
+	{
 		template <class GenericMemFunc, class StaticFuncPtr, class UnvoidStaticFuncPtr>
 		class ClosurePtr : public DelegateMemento {
 		public:
@@ -759,6 +766,7 @@ namespace Gallant {
 			}
 
 #ifdef FASTDELEGATE_GCC_BUG_8271 // At present, GCC doesn't recognize constness of MFPs in templates
+
 
 
 			template < class X, class XMemFunc>
@@ -882,6 +890,7 @@ namespace Gallant {
 #endif // !defined(FASTDELEGATE_USESTATICFUNCTIONHACK)
 
 
+
 			// Does the closure contain this static function?
 			inline bool IsEqualToStaticFuncPtr(StaticFuncPtr funcptr) {
 				if (funcptr == 0)
@@ -892,8 +901,6 @@ namespace Gallant {
 					return funcptr == reinterpret_cast<StaticFuncPtr>(GetStaticFunction());
 			}
 		};
-
-
 	} // namespace detail
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -2583,6 +2590,7 @@ namespace Gallant {
 #endif //FASTDELEGATE_ALLOW_FUNCTION_TYPE_SYNTAX
 
 
+
 	////////////////////////////////////////////////////////////////////////////////
 	//						Fast Delegates, part 5:
 	//
@@ -2715,7 +2723,6 @@ namespace Gallant {
 
 	// clean up after ourselves...
 #undef FASTDLGT_RETTYPE
-
 } // namespace
 
 #endif //_DELEGATES_H_

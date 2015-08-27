@@ -9,25 +9,25 @@ struct texture_font_t;
 
 class FTFont : public FTObject {
 public:
-	explicit FTFont(FTString<char>* filename);
+	explicit FTFont(const std::basic_string<char>& filename);
 	virtual ~FTFont();
 
-	FTTexture* getTexture() {
+	std::shared_ptr<FTFontTexture>& getTexture() {
 		return font_texture_;
 	}
 
 	texture_font_t* cacheFontSize(int size);
 
-	FTIndexedMeshData<FTVertexColorTexture, uint16_t>* generateMeshForString(const wchar_t* string, int size, glm::vec2& outputsize);
+	std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture, uint16_t>> generateMeshForString(const std::basic_string<wchar_t>& string, int size, glm::vec2& outputsize);
 
-	void populateMeshDataForString(FTIndexedMeshData<FTVertexColorTexture, uint16_t>* data, const wchar_t* string, int size, glm::vec2& outputsize);
+	void populateMeshDataForString(std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture, uint16_t>>& data, const std::basic_string<wchar_t>& string, int size, glm::vec2& outputsize);
 
 protected:
 	float h;
-	GLuint *textures;
+	GLuint* textures;
 	GLuint list_base;
 
-	FTFontTexture* font_texture_;
-	FTString<char>* font_name_;
+	std::shared_ptr<FTFontTexture> font_texture_;
+	std::basic_string<char> font_name_;
 	std::unordered_map<int, texture_font_t*> fonts_;
 };

@@ -6,24 +6,18 @@ FTFontCache* FTFontCache::getSharedInstance() {
 	return instance;
 }
 
-FTFontCache::FTFontCache() : loaded_fonts_(new FTDictionary<FTString<char>,FTFont>()) {
+FTFontCache::FTFontCache() {
 	FTLOG("FTFontCache Init");
 }
 
 FTFontCache::~FTFontCache() {
 	FTLOG("FTFontCache Destroyed");
-	loaded_fonts_->release();
 }
 
-bool FTFontCache::loadFont(const char* filename) {
-	auto string = new FTString<char>(filename);
-	if (loaded_fonts_->contains(string)) {
-		string->release();
+bool FTFontCache::loadFont(const std::basic_string<char>& filename) {
+	if (loaded_fonts_.find(filename) != loaded_fonts_.end()) {
 		return false;
 	}
-	FTFont* font = new FTFont(string);
-	loaded_fonts_->add(string, font);
-	string->release();
-	font->release();
+	loaded_fonts_[filename] = std::make_shared<FTFont>(filename);
 	return true;
 }

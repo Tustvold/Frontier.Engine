@@ -35,7 +35,7 @@ const char* FTVertexTextureShaderProgram::vertex_shader_source_ = {
 	}"
 };
 
-FTVertexTextureShaderProgram::FTVertexTextureShaderProgram() : FTVertexShaderProgram(vertex_shader_source_,fragment_shader_source_){
+FTVertexTextureShaderProgram::FTVertexTextureShaderProgram() : FTVertexShaderProgram(vertex_shader_source_, fragment_shader_source_) {
 }
 
 FTVertexTextureShaderProgram::~FTVertexTextureShaderProgram() {

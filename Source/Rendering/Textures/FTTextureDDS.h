@@ -3,8 +3,8 @@
 
 class FTTextureDDS : public FTTexture {
 public:
-	
-	explicit FTTextureDDS(const char* filename);
+
+	explicit FTTextureDDS(const std::basic_string<char>& filename);
 	virtual ~FTTextureDDS();
 
 	GLuint getTextureId() override {
@@ -14,5 +14,5 @@ public:
 protected:
 	GLuint texture_id_;
 private:
-	GLuint loadDDS(const char* filename);
+	GLuint loadDDS(const std::basic_string<char>& filename);
 };

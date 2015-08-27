@@ -2,14 +2,15 @@
 #include <Rendering/Scene/FTNode.h>
 
 // A FTNode which renders a provided FTDrawable
-class FTDrawableNode : public FTNode {
+template <typename Transform, typename ShaderProgram>
+class FTDrawableNode : public FTNode<Transform, ShaderProgram> {
 public:
-	FTDrawableNode(FTTransform *transform, FTVertexShaderProgram* shader, FTDrawable* drawable) : FTNode(transform, shader), drawable_(drawable) {
-		drawable_->retain();
+	explicit FTDrawableNode(std::unique_ptr<FTDrawable> drawable) : FTNode(), drawable_(std::move(drawable)) {
+
 	}
 
 	virtual ~FTDrawableNode() {
-		drawable_->release();
+
 	}
 
 	virtual void draw() override {
@@ -17,5 +18,5 @@ public:
 	}
 
 protected:
-	FTDrawable* drawable_;
+	std::unique_ptr<FTDrawable> drawable_;
 };

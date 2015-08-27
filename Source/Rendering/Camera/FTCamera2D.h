@@ -4,7 +4,7 @@
 #include <Util/FTAlignedData.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-class FTCamera2D : public FTCamera{
+class FTCamera2D : public FTCamera {
 public:
 	FTCamera2D() {
 		setClippingPlanes(0, 1);
