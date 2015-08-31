@@ -66,7 +66,7 @@ public:
 	void loadIndexedMeshData(const std::shared_ptr<FTIndexedMeshData<VertexType, IndexType>>& data, bool is_static, bool cleanup = true) {
 		loadMeshData(std::static_pointer_cast<FTMeshData<VertexType>>(data), is_static, false);
 
-		num_indices_ = data->getIndexCount();
+		num_indices_ = (GLuint)data->getIndexCount();
 		max_num_inidices_ = num_indices_;
 		glGenBuffers(1, &index_buffer_id_);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id_);
@@ -84,12 +84,12 @@ public:
 		setMeshData(std::static_pointer_cast<FTMeshData<VertexType>>(data));
 		// Update mesh data
 		if (max_num_inidices_ >= data->getIndexCount()) {
-			num_indices_ = data->getIndexCount();
+			num_indices_ = (GLuint)data->getIndexCount();
 			// We can update the existing buffer
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id_);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, num_indices_ * sizeof(IndexType), data->getIndices().data());
 		} else {
-			num_indices_ = data->getIndexCount();
+			num_indices_ = (GLuint)data->getIndexCount();
 			max_num_inidices_ = num_indices_;
 			// We must re-create the buffer
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id_);

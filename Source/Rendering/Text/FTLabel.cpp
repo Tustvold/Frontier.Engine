@@ -5,7 +5,7 @@
 
 FTLabel::FTLabel(const std::basic_string<char>& fontpath, const std::basic_string<wchar_t>& text, int font_size, bool is_mutable) : FTIndexedTexturedMesh(), anchor_point_(0, 0), position_(0, 0), is_mutable_(is_mutable), font_size_(font_size) {
 
-	font_ = FTFontCache::getSharedInstance()->getFont("Fonts/Vera.ttf");
+	font_ = FTFontCache::getSharedInstance()->getFont(fontpath);
 
 	auto data = font_->generateMeshForString(text, font_size, label_size_);
 

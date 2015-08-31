@@ -1,7 +1,7 @@
 ﻿#include "FTFontTexture.h"
 #include "freetype-gl.h"
 
-FTFontTexture::FTFontTexture(texture_atlas_t* texture_atlas) : texture_atlas_(texture_atlas) {
+FTFontTexture::FTFontTexture(ftgl::texture_atlas_t* texture_atlas) : texture_atlas_(texture_atlas) {
 }
 
 FTFontTexture::~FTFontTexture() {

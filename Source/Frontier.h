@@ -11,7 +11,7 @@
 
 #define USE_VS_CONSOLE
 
-static inline void FTLogPrint(const char* prefix, const char* format, va_list args) {
+static void FTLogPrint(const char* prefix, const char* format, va_list args) {
 #ifdef USE_VS_CONSOLE
 	char buff[1024];
 
@@ -28,7 +28,7 @@ static inline void FTLogPrint(const char* prefix, const char* format, va_list ar
 #endif
 }
 
-static inline void FTLog(const char* format, ...) {
+static void FTLog(const char* format, ...) {
 	va_list args;
 	va_start(args, format);
 

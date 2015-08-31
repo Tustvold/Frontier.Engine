@@ -1,0 +1,12 @@
+add_subdirectory(Transform)
+
+set (SOURCES ${SOURCES}
+    
+    PARENT_SCOPE)
+
+set (HEADERS ${HEADERS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTDrawableNode.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTNode.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTScene.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTView.h
+    PARENT_SCOPE)

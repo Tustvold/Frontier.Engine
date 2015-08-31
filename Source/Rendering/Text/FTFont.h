@@ -5,6 +5,10 @@
 #include <FTString.h>
 #include <unordered_map>
 
+namespace ftgl{
+	struct texture_font_t;
+}
+
 struct texture_font_t;
 
 class FTFont : public FTObject {
@@ -16,7 +20,7 @@ public:
 		return font_texture_;
 	}
 
-	texture_font_t* cacheFontSize(int size);
+	ftgl::texture_font_t* cacheFontSize(int size);
 
 	std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture, uint16_t>> generateMeshForString(const std::basic_string<wchar_t>& string, int size, glm::vec2& outputsize);
 
@@ -29,5 +33,5 @@ protected:
 
 	std::shared_ptr<FTFontTexture> font_texture_;
 	std::basic_string<char> font_name_;
-	std::unordered_map<int, texture_font_t*> fonts_;
+	std::unordered_map<int, ftgl::texture_font_t*> fonts_;
 };

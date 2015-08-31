@@ -105,7 +105,7 @@ void FTDirector::loadDefaultShaderPrograms() {
 void FTDirector::loadDefaultFonts() {
 	auto fontCache = FTFontCache::getSharedInstance();
 
-	fontCache->loadFont("Fonts/Vera.ttf");
+	fontCache->loadFont("Resources/Fonts/Vera.ttf");
 }
 
 

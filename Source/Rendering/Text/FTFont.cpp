@@ -15,7 +15,7 @@ FTFont::~FTFont() {
 	}
 }
 
-texture_font_t* FTFont::cacheFontSize(int size) {
+ftgl::texture_font_t* FTFont::cacheFontSize(int size) {
 	static auto cache = L" !\"#$%&'()*+,-./0123456789:;<=>?"
 		L"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
 		L"`abcdefghijklmnopqrstuvwxyz{|}~";
@@ -24,7 +24,7 @@ texture_font_t* FTFont::cacheFontSize(int size) {
 	if (it != fonts_.end())
 		return it->second;
 
-	texture_font_t* font = texture_font_new_from_file(font_texture_->getTextureAtlas(), (float)(size), font_name_.c_str());
+	ftgl::texture_font_t* font = texture_font_new_from_file(font_texture_->getTextureAtlas(), (float)(size), font_name_.c_str());
 	size_t missed = texture_font_load_glyphs(font, cache);
 
 	fonts_[size] = font;
@@ -42,7 +42,7 @@ std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture, uint16_t>> FTFont::gener
 }
 
 void FTFont::populateMeshDataForString(std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture, uint16_t>>& data, const std::basic_string<wchar_t>& text, int size, glm::vec2& pen) {
-	texture_font_t* font = cacheFontSize(size);
+	ftgl::texture_font_t* font = cacheFontSize(size);
 	size_t length = text.length();
 	auto vertices = data->getVertices();
 	auto indices = data->getIndices();

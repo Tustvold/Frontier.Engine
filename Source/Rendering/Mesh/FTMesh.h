@@ -83,8 +83,8 @@ public:
 		// TODO Support changing mesh data during runtime
 		is_static_ = is_static;
 
-		num_vertices_ = data->getVertexCount();
-		max_num_vertices_ = data->getVertexCount();
+		num_vertices_ = (GLuint)data->getVertexCount();
+		max_num_vertices_ = (GLuint)data->getVertexCount();
 
 		glGenVertexArrays(1, &vertex_array_id_);
 
@@ -119,7 +119,7 @@ public:
 	void resizeVertexBuffer(size_t num_vertices, const VertexType* data) {
 		FTAssert(is_loaded_, "Trying to set mesh data for unloaded mesh");
 		FTAssert(!is_static_, "Trying to edit mesh data for static mesh");
-		max_num_vertices_ = num_vertices;
+		max_num_vertices_ = (GLuint)num_vertices;
 		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
 		glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), data, GL_DYNAMIC_DRAW);
 	}
@@ -129,11 +129,11 @@ public:
 
 		// Update mesh data
 		if (max_num_vertices_ >= data->getVertexCount()) {
-			num_vertices_ = data->getVertexCount();
+			num_vertices_ = (GLuint)data->getVertexCount();
 			// We can update the existing buffer
 			modifyVertices(0, num_vertices_, data->getVertices().data());
 		} else {
-			num_vertices_ = data->getVertexCount();
+			num_vertices_ = (GLuint)data->getVertexCount();
 			// We must re-create the buffer
 			resizeVertexBuffer(num_vertices_, data->getVertices().data());
 		}
@@ -150,7 +150,7 @@ public:
 
 	virtual void pre_draw() override {
 		if (!is_loaded_) {
-			FTLogError("Trying to mesh before calling load!");
+			FTLogError("Trying to draw mesh before calling load!");
 			return;
 		}
 
