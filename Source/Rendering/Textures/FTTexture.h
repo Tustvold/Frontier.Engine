@@ -12,10 +12,24 @@ public:
 
 	}
 
+	unsigned int getWidth() const {
+		return width_;
+	}
+
+	unsigned int getHeight() const {
+		return height_;
+	}
+
+	unsigned int getMipMapCount() const {
+		return mipmap_count_;
+	}
+
 protected:
 	FTTexture() {
 
 	}
+
+
 
 	unsigned int width_;
 	unsigned int height_;

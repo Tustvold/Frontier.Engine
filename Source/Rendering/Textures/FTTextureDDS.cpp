@@ -20,17 +20,15 @@ GLuint FTTextureDDS::loadDDS(const std::basic_string<char>& imagepath) {
 
 	/* try to open the file */
 	auto err = fopen_s(&fp, imagepath.c_str(), "rb");
-	if (err != 0) {
-		FTLogError("%s could not be opened!", imagepath);
-		getchar();
-		return 0;
-	}
+	FTAssert(err == 0, "%s could not be opened!", imagepath);
+	
 
 	/* verify the type of file */
 	char filecode[4];
 	fread(filecode, 1, 4, fp);
 	if (strncmp(filecode, "DDS ", 4) != 0) {
 		fclose(fp);
+		FTAssert(false, "Not a DDS texture");
 		return 0;
 	}
 
@@ -67,6 +65,7 @@ GLuint FTTextureDDS::loadDDS(const std::basic_string<char>& imagepath) {
 			break;
 		default:
 			free(buffer);
+			FTAssert(false, "File read error");
 			return 0;
 	}
 
@@ -81,21 +80,23 @@ GLuint FTTextureDDS::loadDDS(const std::basic_string<char>& imagepath) {
 	unsigned int blockSize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
 	unsigned int offset = 0;
 
+	int height = height_;
+	int width = width_;
+
 	/* load the mipmaps */
-	for (unsigned int level = 0; level < mipmap_count_ && (width_ || height_); ++level) {
-		unsigned int size = ((width_ + 3) / 4) * ((height_ + 3) / 4) * blockSize;
-		glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width_, height_,
+	for (unsigned int level = 0; level < mipmap_count_ && (width || height); ++level) {
+		unsigned int size = ((width + 3) / 4) * ((height + 3) / 4) * blockSize;
+		glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height,
 		                                    0, size, buffer + offset);
 
 		offset += size;
-		width_ /= 2;
-		height_ /= 2;
+		width /= 2;
+		height /= 2;
 
-		// Deal with Non-Power-Of-Two textures. This code is not included in the webpage to reduce clutter.
-		if (width_ < 1)
-			width_ = 1;
-		if (height_ < 1)
-			height_ = 1;
+		if (width < 1)
+			width = 1;
+		if (height < 1)
+			height = 1;
 
 	}
 

@@ -1,0 +1,2 @@
+add_subdirectory(glmock)
+add_subdirectory(glewmock)

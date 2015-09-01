@@ -21,6 +21,8 @@ add_subdirectory(ThirdParty/freetype2)
 add_subdirectory(ThirdParty/glew)
 add_subdirectory(ThirdParty/freetype-gl)
 add_subdirectory(ThirdParty/glfw)
+add_subdirectory(ThirdParty/glmock)
+
 
 # We disable this project as it doesn't build correctly on windows
 set_target_properties(makefont PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
@@ -41,8 +43,8 @@ endforeach()
 
 add_library(Frontier.Engine STATIC ${SOURCES} ${HEADERS} ${CMAKELISTS})
 
-target_include_directories ( Frontier.Engine PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/Source
+SET (FRONTIER_ENGINE_INCLUDES 
+	${CMAKE_CURRENT_SOURCE_DIR}/Source
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/freetype2/include
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/freetype-gl
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glew/include
@@ -50,15 +52,23 @@ target_include_directories ( Frontier.Engine PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glm
 )
 
-target_link_libraries( Frontier.Engine
+SET (FRONTIER_ENGINE_INCLUDES ${FRONTIER_ENGINE_INCLUDES} PARENT_SCOPE)
+
+SET (FRONTIER_ENGINE_LIBS
+    Frontier.Engine
     freetype
     freetype-gl
     libglew_static
-    glfw)
+    glfw
+    PARENT_SCOPE)
+
+target_include_directories ( Frontier.Engine PUBLIC
+    ${FRONTIER_ENGINE_INCLUDES}
+)
 
 
 # Testing
 option(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)
-add_subdirectory(ThirdParty/googletest/googletest)
+add_subdirectory(ThirdParty/googletest/googlemock)
 
 add_subdirectory(Tests)

@@ -14,7 +14,7 @@ void assertMatrixEqual(const glm::mat4& a, const glm::mat4& b, float epsilon = F
 
 TEST(TestTransform, TestTranslate) {
 
-	auto transform = new FTTransformPosition();
+	auto transform = std::make_unique<FTTransformPosition>();
 	transform->setPosition(glm::vec3(0, 0, 0));
 
 	auto& matrix =  transform->getTransformMatrix();
@@ -46,7 +46,7 @@ TEST(TestTransform, TestTranslate) {
 }
 
 TEST(TestTransform, TestRotate) {
-	auto transform = new FTTransformRotation();
+	auto transform = std::make_unique<FTTransformRotation>();
 	transform->setRotationQuaterion(glm::quat());
 
 	auto matrix = transform->getTransformMatrix();
@@ -96,7 +96,7 @@ TEST(TestTransform, TestScale) {
 	srand((unsigned int)time(nullptr));
 
 	glm::vec3 scale = glm::vec3(rand() % 100, rand() % 100, rand() % 100);
-	auto transform = new FTTransformScale();
+	auto transform = std::make_unique<FTTransformScale>();
 
 	transform->setScale(scale);
 
@@ -110,7 +110,7 @@ TEST(TestTransform, TestScale) {
 }
 
 TEST(TestTransform, TestTransformPositionScaleRotation) {
-	auto transform = new FTTransformPositionScaleRotation();
+	auto transform = std::make_unique<FTTransformPositionScaleRotation>();
 	srand((unsigned int)time(nullptr));
 
 	for (int i = 0; i < 10; i++) {
