@@ -1,46 +1,47 @@
 #pragma once
-#include <FTObject.h>
 #include <GL/glew.h>
 #include <Rendering/Scene/FTNode.h>
 #include <Rendering/Textures/FTTexture.h>
+#include <Util/FTMath.h>
+
 
 template <typename VertexType>
-class FTMeshData : public FTObject {
+class FTMeshData {
 public:
 
-	FTMeshData() : vertex_count_(0) {
+    FTMeshData() : vertex_count_(0) {
 
-	}
+    }
 
-	explicit FTMeshData(size_t vertex_count) : vertex_count_(0) {
-		vertices_.reserve(vertex_count);
-	}
+    explicit FTMeshData(size_t vertex_count) : vertex_count_(0) {
+        vertices_.reserve(vertex_count);
+    }
 
-	explicit FTMeshData(std::vector<VertexType>& vertices) : vertex_count_(0) {
-		vertices_ = std::move(vertices);
-	}
+    explicit FTMeshData(std::vector<VertexType>& vertices) : vertex_count_(0) {
+        vertices_ = std::move(vertices);
+    }
 
-	~FTMeshData() {
-	}
+    virtual ~FTMeshData() {
+    }
 
-	std::vector<VertexType>& getVertices() {
-		return vertices_;
-	}
+    std::vector<VertexType>& getVertices() {
+        return vertices_;
+    }
 
-	void setVertexCount(size_t count) {
-		FTAssert(vertices_.capacity() >= vertex_count_, "Invalid Vertex Count");
-		vertex_count_ = count;
-	}
+    void setVertexCount(size_t count) {
+        FTAssert(vertices_.capacity() >= vertex_count_, "Invalid Vertex Count");
+        vertex_count_ = count;
+    }
 
-	size_t getVertexCount() {
-		if (vertex_count_ != 0)
-			return vertex_count_;
-		return vertices_.size();
-	}
+    size_t getVertexCount() {
+        if (vertex_count_ != 0)
+            return vertex_count_;
+        return vertices_.size();
+    }
 
 private:
-	std::vector<VertexType> vertices_;
-	size_t vertex_count_;
+    std::vector<VertexType> vertices_;
+    size_t vertex_count_;
 };
 
 // Renders an attached mesh - note it does not bind a shader program nor update any matrices
@@ -48,150 +49,150 @@ template <typename Transform, typename ShaderProgram, typename VertexType>
 class FTMesh : public FTNode<Transform, ShaderProgram> {
 public:
 
-	explicit FTMesh() : primitive_type_(GL_TRIANGLES), render_wireframe_(false), is_loaded_(false), is_static_(true) {
+    explicit FTMesh() : primitive_type_(GL_TRIANGLES), render_wireframe_(false), is_loaded_(false), is_static_(true) {
 
-	}
+    }
 
-	// Creates a VBO for the vertices of the specified size
-	// The mesh can then be populated using the setMeshData functions
-	virtual void loadEmptyMesh(GLuint vertex_count, bool cleanup = true) {
-		FTAssert(!is_loaded_, "Trying to load mesh data for already loaded mesh");
-		is_static_ = false;
-		max_num_vertices_ = vertex_count;
-		num_vertices_ = 0;
+    virtual ~FTMesh() {
+        //delete[] vertices_;
+        if (!is_loaded_)
+            return;
+        glDeleteVertexArrays(1, &vertex_buffer_id_);
+        glDeleteVertexArrays(1, &vertex_array_id_);
+    }
 
-		glGenVertexArrays(1, &vertex_array_id_);
-		glBindVertexArray(vertex_array_id_);
+    // Creates a VBO for the vertices of the specified size
+    // The mesh can then be populated using the setMeshData functions
+    virtual void loadEmptyMesh(GLuint vertex_count, bool cleanup = true) {
+        FTAssert(!is_loaded_, "Trying to load mesh data for already loaded mesh");
+        is_static_ = false;
+        max_num_vertices_ = vertex_count;
+        num_vertices_ = 0;
 
-		glGenBuffers(1, &vertex_buffer_id_);
-		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
+        glGenVertexArrays(1, &vertex_array_id_);
+        glBindVertexArray(vertex_array_id_);
 
-		glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), nullptr, GL_DYNAMIC_DRAW);
+        glGenBuffers(1, &vertex_buffer_id_);
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
 
-		FTVertexDescriptor<VertexType>::bind();
+        glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), nullptr, GL_DYNAMIC_DRAW);
 
-		if (cleanup) {
-			glBindVertexArray(0);
-			is_loaded_ = true;
-		}
-	}
+        FTVertexDescriptor<VertexType>::bind();
 
-	// Loads a mesh described by an FTMesh object
-	// Cleanup specifies whether it should unbind the VAO after it has finished creating it
-	virtual void loadMeshData(const std::shared_ptr<FTMeshData<VertexType>>& data, bool is_static, bool cleanup = true) {
-		FTAssert(!is_loaded_, "Trying to load mesh data for already loaded mesh");
-		// TODO Support changing mesh data during runtime
-		is_static_ = is_static;
+        if (cleanup) {
+            glBindVertexArray(0);
+            is_loaded_ = true;
+        }
+    }
 
-		num_vertices_ = (GLuint)data->getVertexCount();
-		max_num_vertices_ = (GLuint)data->getVertexCount();
+    // Loads a mesh described by an FTMesh object
+    // Cleanup specifies whether it should unbind the VAO after it has finished creating it
+    virtual void loadMeshData(const std::shared_ptr<FTMeshData<VertexType>>& data, bool is_static, bool cleanup = true) {
+        FTAssert(!is_loaded_, "Trying to load mesh data for already loaded mesh");
+        // TODO Support changing mesh data during runtime
+        is_static_ = is_static;
 
-		glGenVertexArrays(1, &vertex_array_id_);
+        num_vertices_ = (GLuint)data->getVertexCount();
+        max_num_vertices_ = (GLuint)data->getVertexCount();
 
-
-		glBindVertexArray(vertex_array_id_);
-
-		glGenBuffers(1, &vertex_buffer_id_);
-		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
-
-		glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), (float*)(data->getVertices().data()), is_static_ ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
-
-		FTVertexDescriptor<VertexType>::bind();
-
-		if (cleanup) {
-			glBindVertexArray(0);
-			is_loaded_ = true;
-		}
-	}
-
-	void modifyVertices(GLuint start_index, GLuint num_vertices, const VertexType* data) {
-		FTAssert(is_loaded_, "Trying to set mesh data for unloaded mesh");
-		FTAssert(!is_static_, "Trying to edit mesh data for static mesh");
-		FTAssert(start_index + num_vertices <= max_num_vertices_, "Maximum buffer size exceeded!");
-
-		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
+        glGenVertexArrays(1, &vertex_array_id_);
 
 
-		glBufferSubData(GL_ARRAY_BUFFER, start_index * sizeof(VertexType), num_vertices * sizeof(VertexType), data);
-		num_vertices_ = max(start_index + num_vertices, num_vertices_);
-	}
+        glBindVertexArray(vertex_array_id_);
 
-	void resizeVertexBuffer(size_t num_vertices, const VertexType* data) {
-		FTAssert(is_loaded_, "Trying to set mesh data for unloaded mesh");
-		FTAssert(!is_static_, "Trying to edit mesh data for static mesh");
-		max_num_vertices_ = (GLuint)num_vertices;
-		glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
-		glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), data, GL_DYNAMIC_DRAW);
-	}
+        glGenBuffers(1, &vertex_buffer_id_);
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
 
-	virtual void setMeshData(const std::shared_ptr<FTMeshData<VertexType>>& data) {
-		FTAssert(is_loaded_, "Trying to set mesh data for unloaded mesh - consider using LoadMeshData instead");
+        glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), (float*)(data->getVertices().data()), is_static_ ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 
-		// Update mesh data
-		if (max_num_vertices_ >= data->getVertexCount()) {
-			num_vertices_ = (GLuint)data->getVertexCount();
-			// We can update the existing buffer
-			modifyVertices(0, num_vertices_, data->getVertices().data());
-		} else {
-			num_vertices_ = (GLuint)data->getVertexCount();
-			// We must re-create the buffer
-			resizeVertexBuffer(num_vertices_, data->getVertices().data());
-		}
-	}
+        FTVertexDescriptor<VertexType>::bind();
+
+        if (cleanup) {
+            glBindVertexArray(0);
+            is_loaded_ = true;
+        }
+    }
+
+    void modifyVertices(GLuint start_index, GLuint num_vertices, const VertexType* data) {
+        FTAssert(is_loaded_, "Trying to set mesh data for unloaded mesh");
+        FTAssert(!is_static_, "Trying to edit mesh data for static mesh");
+        FTAssert(start_index + num_vertices <= max_num_vertices_, "Maximum buffer size exceeded!");
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
 
 
-	virtual ~FTMesh() {
-		//delete[] vertices_;
-		if (!is_loaded_)
-			return;
-		glDeleteVertexArrays(1, &vertex_buffer_id_);
-		glDeleteVertexArrays(1, &vertex_array_id_);
-	}
+        glBufferSubData(GL_ARRAY_BUFFER, start_index * sizeof(VertexType), num_vertices * sizeof(VertexType), data);
+        num_vertices_ = FTMAX(start_index + num_vertices, num_vertices_);
+    }
 
-	virtual void pre_draw() override {
-		if (!is_loaded_) {
-			FTLogError("Trying to draw mesh before calling load!");
-			return;
-		}
+    void resizeVertexBuffer(size_t num_vertices, const VertexType* data) {
+        FTAssert(is_loaded_, "Trying to set mesh data for unloaded mesh");
+        FTAssert(!is_static_, "Trying to edit mesh data for static mesh");
+        max_num_vertices_ = (GLuint)num_vertices;
+        glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
+        glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), data, GL_DYNAMIC_DRAW);
+    }
 
-		if (render_wireframe_)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    virtual void setMeshData(const std::shared_ptr<FTMeshData<VertexType>>& data) {
+        FTAssert(is_loaded_, "Trying to set mesh data for unloaded mesh - consider using LoadMeshData instead");
 
-		glBindVertexArray(vertex_array_id_);
-	}
+        // Update mesh data
+        if (max_num_vertices_ >= data->getVertexCount()) {
+            num_vertices_ = (GLuint)data->getVertexCount();
+            // We can update the existing buffer
+            modifyVertices(0, num_vertices_, data->getVertices().data());
+        }
+        else {
+            num_vertices_ = (GLuint)data->getVertexCount();
+            // We must re-create the buffer
+            resizeVertexBuffer(num_vertices_, data->getVertices().data());
+        }
+    }
 
-	virtual void draw() override {
-		glDrawArrays(primitive_type_, 0, num_vertices_);
-	}
+    virtual void pre_draw() override {
+        if (!is_loaded_) {
+            FTLogError("Trying to draw mesh before calling load!");
+            return;
+        }
 
-	virtual void post_draw() override {
-		glBindVertexArray(0);
+        if (render_wireframe_)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		if (render_wireframe_)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
+        glBindVertexArray(vertex_array_id_);
+    }
 
-	void setRenderWireframe(bool render_wireframe) {
-		render_wireframe_ = render_wireframe;
-	}
+    virtual void draw() override {
+        glDrawArrays(primitive_type_, 0, num_vertices_);
+    }
 
-	void setPrimitiveType(GLenum type) {
-		primitive_type_ = type;
-	}
+    virtual void post_draw() override {
+        glBindVertexArray(0);
+
+        if (render_wireframe_)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+
+    void setRenderWireframe(bool render_wireframe) {
+        render_wireframe_ = render_wireframe;
+    }
+
+    void setPrimitiveType(GLenum type) {
+        primitive_type_ = type;
+    }
 
 protected:
 
-	GLuint vertex_array_id_;
-	GLuint vertex_buffer_id_;
+    GLuint vertex_array_id_;
+    GLuint vertex_buffer_id_;
 
-	// The number of vertices the mesh actually contains
-	GLuint num_vertices_;
+    // The number of vertices the mesh actually contains
+    GLuint num_vertices_;
 
-	// The number of vertices the VBO has space for
-	GLuint max_num_vertices_;
-	GLenum primitive_type_;
+    // The number of vertices the VBO has space for
+    GLuint max_num_vertices_;
+    GLenum primitive_type_;
 
-	bool render_wireframe_;
-	bool is_loaded_;
-	bool is_static_;
+    bool render_wireframe_;
+    bool is_loaded_;
+    bool is_static_;
 };

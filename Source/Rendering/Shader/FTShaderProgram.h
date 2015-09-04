@@ -1,46 +1,46 @@
 #pragma once
 #include <GL/glew.h>
-#include <FTObject.h>
 #include <vector>
+#include <frontier.h>
 #include <Rendering/Mesh/FTVertex.h>
 
 // Base class for ShaderProgram Objects
 // These encapsulate OpenGl program functionality
 // Including binding the program and updating uniforms
-class FTShaderProgram : public FTObject {
+class FTShaderProgram {
 public:
 
-	virtual ~FTShaderProgram() {
-		if (program_id_ != 0)
-		glDeleteProgram(program_id_);
-	}
+    virtual ~FTShaderProgram() {
+        if (program_id_ != 0)
+        glDeleteProgram(program_id_);
+    }
 
-	virtual bool load() = 0;
+    virtual bool load() = 0;
 
-	virtual void use() {
-		glUseProgram(program_id_);
-	}
+    virtual void use() {
+        glUseProgram(program_id_);
+    }
 
-	virtual void cleanup() {
+    virtual void cleanup() {
 
-	}
+    }
 
 protected:
-	FTShaderProgram(const char* vertex_shader, const char* fragment_shader) {
-		createShaderProgram(vertex_shader, fragment_shader);
-	}
+    FTShaderProgram(const char* vertex_shader, const char* fragment_shader) {
+        createShaderProgram(vertex_shader, fragment_shader);
+    }
 
-	GLuint program_id_;
+    GLuint program_id_;
 
 private:
 
-	bool createShaderProgram(const char* vertex_shader_code, const char* fragment_shader_code) {
-		program_id_ = 0;
-		// Create the shaders
-		GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
-		GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
+    bool createShaderProgram(const char* vertex_shader_code, const char* fragment_shader_code) {
+        program_id_ = 0;
+        // Create the shaders
+        GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
+        GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
 
-		/*	// load the vertex shader from the disk
+        /*	// load the vertex shader from the disk
 		std::string VertexShaderCode;
 		std::ifstream VertexShaderStream(vertexShader, std::ios::in);
 		if (VertexShaderStream.is_open()){
@@ -70,66 +70,66 @@ private:
 		return false;
 		}*/
 
-		//FTLOG("Vertex Shader Code:\n%s\nFragment Shader Code\n%s", VertexShaderCode.c_str(), FragmentShaderCode.c_str());
+        //FTLOG("Vertex Shader Code:\n%s\nFragment Shader Code\n%s", VertexShaderCode.c_str(), FragmentShaderCode.c_str());
 
-		GLint result = GL_FALSE;
-		int info_log_length;
+        GLint result = GL_FALSE;
+        int info_log_length;
 
-		//FTLOG("Compiling vertex shader %s", vertexShaderPath);
+        //FTLOG("Compiling vertex shader %s", vertexShaderPath);
 
-		char const* vertex_source_pointer = vertex_shader_code;
-		glShaderSource(vertex_shader_id, 1, &vertex_source_pointer, NULL);
-		glCompileShader(vertex_shader_id);
+        char const* vertex_source_pointer = vertex_shader_code;
+        glShaderSource(vertex_shader_id, 1, &vertex_source_pointer, nullptr);
+        glCompileShader(vertex_shader_id);
 
-		// Check Vertex Shader
-		glGetShaderiv(vertex_shader_id, GL_COMPILE_STATUS, &result);
-		glGetShaderiv(vertex_shader_id, GL_INFO_LOG_LENGTH, &info_log_length);
-		if (result != GL_TRUE) {
-			std::vector<char> vertex_shader_error_message(info_log_length + 1);
-			glGetShaderInfoLog(vertex_shader_id, info_log_length, NULL, &vertex_shader_error_message[0]);
-			FTAssert(false, "Vertex shader compilation failed with error: %s", &vertex_shader_error_message[0]);
-			return false;
-		}
+        // Check Vertex Shader
+        glGetShaderiv(vertex_shader_id, GL_COMPILE_STATUS, &result);
+        glGetShaderiv(vertex_shader_id, GL_INFO_LOG_LENGTH, &info_log_length);
+        if (result != GL_TRUE) {
+            std::vector<char> vertex_shader_error_message(info_log_length + 1);
+            glGetShaderInfoLog(vertex_shader_id, info_log_length, nullptr, &vertex_shader_error_message[0]);
+            FTAssert(false, "Vertex shader compilation failed with error: %s", &vertex_shader_error_message[0]);
+            return false;
+        }
 
-		//FTLog("Compiling fragment shader : %s", fragmentShader);
+        //FTLog("Compiling fragment shader : %s", fragmentShader);
 
-		char const* fragment_source_pointer = fragment_shader_code;
-		glShaderSource(fragment_shader_id, 1, &fragment_source_pointer, NULL);
-		glCompileShader(fragment_shader_id);
+        char const* fragment_source_pointer = fragment_shader_code;
+        glShaderSource(fragment_shader_id, 1, &fragment_source_pointer, nullptr);
+        glCompileShader(fragment_shader_id);
 
-		// Check Fragment Shader
-		glGetShaderiv(fragment_shader_id, GL_COMPILE_STATUS, &result);
-		glGetShaderiv(fragment_shader_id, GL_INFO_LOG_LENGTH, &info_log_length);
-		if (result != GL_TRUE) {
-			std::vector<char> FragmentShaderErrorMessage(info_log_length + 1);
-			glGetShaderInfoLog(fragment_shader_id, info_log_length, NULL, &FragmentShaderErrorMessage[0]);
-			FTAssert(false, "Fragment shader compilation failed with error: %s", &FragmentShaderErrorMessage[0]);
-			return false;
-		}
+        // Check Fragment Shader
+        glGetShaderiv(fragment_shader_id, GL_COMPILE_STATUS, &result);
+        glGetShaderiv(fragment_shader_id, GL_INFO_LOG_LENGTH, &info_log_length);
+        if (result != GL_TRUE) {
+            std::vector<char> FragmentShaderErrorMessage(info_log_length + 1);
+            glGetShaderInfoLog(fragment_shader_id, info_log_length, nullptr, &FragmentShaderErrorMessage[0]);
+            FTAssert(false, "Fragment shader compilation failed with error: %s", &FragmentShaderErrorMessage[0]);
+            return false;
+        }
 
-		//FTLOG("Linking Program");
+        //FTLOG("Linking Program");
 
-		program_id_ = glCreateProgram();
-		glAttachShader(program_id_, vertex_shader_id);
-		glAttachShader(program_id_, fragment_shader_id);
-		glLinkProgram(program_id_);
+        program_id_ = glCreateProgram();
+        glAttachShader(program_id_, vertex_shader_id);
+        glAttachShader(program_id_, fragment_shader_id);
+        glLinkProgram(program_id_);
 
-		// Check the program
-		glGetProgramiv(program_id_, GL_LINK_STATUS, &result);
-		glGetProgramiv(program_id_, GL_INFO_LOG_LENGTH, &info_log_length);
-		if (result != GL_TRUE) {
-			std::vector<char> ProgramErrorMessage(info_log_length + 1);
-			glGetProgramInfoLog(program_id_, info_log_length, NULL, &ProgramErrorMessage[0]);
-			FTLOG("%s\n", &ProgramErrorMessage[0]);
-			return false;
-		}
+        // Check the program
+        glGetProgramiv(program_id_, GL_LINK_STATUS, &result);
+        glGetProgramiv(program_id_, GL_INFO_LOG_LENGTH, &info_log_length);
+        if (result != GL_TRUE) {
+            std::vector<char> ProgramErrorMessage(info_log_length + 1);
+            glGetProgramInfoLog(program_id_, info_log_length, nullptr, &ProgramErrorMessage[0]);
+            FTLOG("%s\n", &ProgramErrorMessage[0]);
+            return false;
+        }
 
 
-		glDeleteShader(vertex_shader_id);
-		glDeleteShader(fragment_shader_id);
+        glDeleteShader(vertex_shader_id);
+        glDeleteShader(fragment_shader_id);
 
-		//FTLOG("Compilation successful");
+        //FTLOG("Compilation successful");
 
-		return true;
-	}
+        return true;
+    }
 };

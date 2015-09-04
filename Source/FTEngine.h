@@ -6,31 +6,23 @@
 
 class FTEngine {
 public:
-	static bool setup() {
-		if (FTDirector::getSharedInstance()->setup() != 0) {
-			FTLog("Director initialisation failed");
-			return false;
-		}
-		return true;
-	}
+    static bool setup() {
+        if (FTDirector::getSharedInstance()->setup() != 0) {
+            FTLog("Director initialisation failed");
+            return false;
+        }
+        return true;
+    }
 
-	static void cleanup() {
-		cleanupSingletons();
-
-#ifdef DEBUG_FT_ALLOC
-		if (FTObject::ft_object_alive_count_ != 0) {
-			FTLogError("Failed to deallocate all FTObjects - %i still alive", FTObject::ft_object_alive_count_.load());
-		} else {
-			FTLog("All FTObjects deallocated correctly!");
-		}
-#endif
-	}
+    static void cleanup() {
+        cleanupSingletons();
+    }
 
 private:
-	static void cleanupSingletons() {
-		delete FTDirector::getSharedInstance(); // Must be first
-		delete FTInputManager::getSharedInstance();
-		delete FTShaderCache::getSharedInstance();
-		delete FTFontCache::getSharedInstance();
-	}
+    static void cleanupSingletons() {
+        delete FTDirector::getSharedInstance(); // Must be first
+        delete FTInputManager::getSharedInstance();
+        delete FTShaderCache::getSharedInstance();
+        delete FTFontCache::getSharedInstance();
+    }
 };

@@ -1,8 +1,10 @@
 ﻿#pragma once
-#include <FTObject.h>
 
 // Base class for all drawable objects
-class FTDrawable : public FTObject {
+class FTDrawable {
 public:
-	virtual void draw() = 0;
+    virtual ~FTDrawable() {
+    }
+
+    virtual void draw() = 0;
 };

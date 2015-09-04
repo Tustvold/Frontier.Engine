@@ -1,8 +1,9 @@
 
+add_subdirectory(Scene)
+add_subdirectory(Textures)
+add_subdirectory(Camera)
 
 set (SOURCES ${SOURCES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/TestTransform.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/TestTexture.cpp
 PARENT_SCOPE)
 
 set (HEADERS ${HEADERS}

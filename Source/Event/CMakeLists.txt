@@ -1,0 +1,12 @@
+set(SOURCES ${SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTEventDispatcher.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTEventManager.cpp
+    PARENT_SCOPE)
+
+
+set (HEADERS ${HEADERS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTEvent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTEventDispatcher.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTEventManager.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTEventHelpers.h
+    PARENT_SCOPE)

@@ -8,50 +8,50 @@ struct GLFWwindow;
 // Class which manages drawing the world
 // This class is not thread safe and should only be called from the OpenGL thread
 class FTDirector {
-	friend class FTEngine;
+    friend class FTEngine;
 public:
-	int run();
+    int run();
 
-	static FTDirector* getSharedInstance();
+    static FTDirector* getSharedInstance();
 
-	Gallant::Signal1<float>* getPreDrawEventHandler() {
-		return &pre_draw_event_handler_;
-	}
+    Gallant::Signal1<float>* getPreDrawEventHandler() {
+        return &pre_draw_event_handler_;
+    }
 
-	glm::vec2 getWindowSize() {
-		return window_size_;
-	}
+    glm::vec2 getWindowSize() {
+        return window_size_;
+    }
 
-	Gallant::Signal2<float, float>* getWindowSizeChangeEventHandler() {
-		return &window_size_change_event_handler_;
-	}
+    Gallant::Signal2<float, float>* getWindowSizeChangeEventHandler() {
+        return &window_size_change_event_handler_;
+    }
 
-	void setCurrentScene(std::shared_ptr<FTScene>& scene) {
-		scene_ = scene;
-	}
+    void setCurrentScene(std::shared_ptr<FTScene>& scene) {
+        scene_ = scene;
+    }
 
 private:
-	FTDirector();
-	~FTDirector();
+    FTDirector();
+    ~FTDirector();
 
-	int setup();
+    int setup();
 
-	void loadDefaultShaderPrograms();
+    void loadDefaultShaderPrograms();
 
-	void loadDefaultFonts();
+    void loadDefaultFonts();
 
-	void windowSizeChange(GLFWwindow* window, int width, int height);
+    void windowSizeChange(GLFWwindow* window, int width, int height);
 
-	static inline void windowSizeChangeCallback(GLFWwindow* window, int width, int height) {
-		getSharedInstance()->windowSizeChange(window, width, height);
-	}
+    static void windowSizeChangeCallback(GLFWwindow* window, int width, int height) {
+        getSharedInstance()->windowSizeChange(window, width, height);
+    }
 
-	std::shared_ptr<FTScene> scene_;
-	GLFWwindow* window_;
-	glm::vec2 window_size_;
+    std::shared_ptr<FTScene> scene_;
+    GLFWwindow* window_;
+    glm::vec2 window_size_;
 
-	double last_tick_time_;
+    double last_tick_time_;
 
-	Gallant::Signal1<float> pre_draw_event_handler_;
-	Gallant::Signal2<float, float> window_size_change_event_handler_;
+    Gallant::Signal1<float> pre_draw_event_handler_;
+    Gallant::Signal2<float, float> window_size_change_event_handler_;
 };

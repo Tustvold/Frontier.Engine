@@ -1,6 +1,6 @@
 ﻿#include "FTVertexTextureShaderProgram.h"
 const char* FTVertexTextureShaderProgram::fragment_shader_source_ = {
-	"#version 140\n\
+    "#version 140\n\
 	\n\
 	in vec2 UV;\n\
 	\n\
@@ -16,7 +16,7 @@ const char* FTVertexTextureShaderProgram::fragment_shader_source_ = {
 };
 
 const char* FTVertexTextureShaderProgram::vertex_shader_source_ = {
-	"#version 140\n\
+    "#version 140\n\
 	#extension GL_ARB_explicit_attrib_location :require \n\
 	\n\
 	layout(location = 0) in vec3 vertexPosition_modelspace;\n\
@@ -43,8 +43,8 @@ FTVertexTextureShaderProgram::~FTVertexTextureShaderProgram() {
 }
 
 bool FTVertexTextureShaderProgram::load() {
-	if (!FTVertexShaderProgram::load())
-		return false;
-	texture_uniform_id_ = glGetUniformLocation(program_id_, "textureSampler");
-	return texture_uniform_id_ != -1;
+    if (!FTVertexShaderProgram::load())
+        return false;
+    texture_uniform_id_ = glGetUniformLocation(program_id_, "textureSampler");
+    return texture_uniform_id_ != -1;
 }

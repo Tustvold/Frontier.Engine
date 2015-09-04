@@ -4,15 +4,15 @@
 
 class FTCameraFPS : public FTCamera3D {
 public:
-	explicit FTCameraFPS();
-	~FTCameraFPS();
+    explicit FTCameraFPS();
+    virtual ~FTCameraFPS();
 
 
 private:
 
-	float move_speed_;
-	float rotation_speed_;
+    float move_speed_;
+    float rotation_speed_;
 
-	void keyHeld(KeyName, float dt);
-	void cursorPosChange(float x, float y);
+    void keyHeld(KeyName, float dt);
+    void cursorPosChange(float x, float y);
 };

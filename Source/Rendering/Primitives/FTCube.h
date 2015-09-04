@@ -5,16 +5,16 @@
 
 class FTCube : public FTIndexedMesh<FTTransformPositionScaleRotation, FTVertexColorShaderProgram, FTVertexColor, uint16_t> {
 public:
-	explicit FTCube(const glm::vec3 face_colors[6]);
-	~FTCube();
+    explicit FTCube(const glm::vec3 face_colors[6]);
+    ~FTCube();
 
-	void setPosition(const glm::vec3& position) {
-		transform_->setPosition(position);
-	}
+    void setPosition(const glm::vec3& position) {
+        transform_->setPosition(position);
+    }
 
-	void setRotationQuaternion(const glm::quat quat) {
-		transform_->setRotationQuaternion(quat);
-	}
+    void setRotationQuaternion(const glm::quat quat) {
+        transform_->setRotationQuaternion(quat);
+    }
 
 protected:
 

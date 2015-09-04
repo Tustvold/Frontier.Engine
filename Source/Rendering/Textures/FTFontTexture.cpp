@@ -5,9 +5,9 @@ FTFontTexture::FTFontTexture(ftgl::texture_atlas_t* texture_atlas) : texture_atl
 }
 
 FTFontTexture::~FTFontTexture() {
-	texture_atlas_delete(texture_atlas_);
+    texture_atlas_delete(texture_atlas_);
 }
 
 GLuint FTFontTexture::getTextureId() {
-	return texture_atlas_->id;
+    return texture_atlas_->id;
 }
