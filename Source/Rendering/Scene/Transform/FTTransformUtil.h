@@ -20,7 +20,7 @@ public:
         transform2_->setRotationQuaterion(quat);
     }
 
-    void setScale(const glm::vec3 pos) {
+    void setScale(const glm::vec3& pos) {
         transform3_->setScale(pos);
     }
 };

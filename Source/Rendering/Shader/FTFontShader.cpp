@@ -36,7 +36,7 @@ const char* FTFontShader::vertex_shader_source_ = {
 	}"
 };
 
-FTFontShader::FTFontShader() : FTVertexTextureShaderProgram(vertex_shader_source_, fragment_shader_source_) {
+FTFontShader::FTFontShader() {
 
 }
 

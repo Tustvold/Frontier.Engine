@@ -19,6 +19,7 @@ public:
             _CrtMemCheckpoint(&stateNow);
             int diffResult = _CrtMemDifference(&stateDiff, &memState_, &stateNow);
             if (diffResult) {
+                _CrtDumpMemoryLeaks();
                 FAIL() << "Memory leak of " << stateDiff.lSizes[1] << " byte(s) detected.";
             }
         }

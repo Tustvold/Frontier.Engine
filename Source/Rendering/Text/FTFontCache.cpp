@@ -1,11 +1,6 @@
 ﻿#include "FTFontCache.h"
 #include "Frontier.h"
 
-FTFontCache* FTFontCache::getSharedInstance() {
-    static FTFontCache* instance = new FTFontCache();
-    return instance;
-}
-
 FTFontCache::FTFontCache() {
     FTLOG("FTFontCache Init");
 }

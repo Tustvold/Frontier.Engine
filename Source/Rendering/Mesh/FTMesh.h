@@ -29,7 +29,7 @@ public:
     }
 
     void setVertexCount(size_t count) {
-        FTAssert(vertices_.capacity() >= vertex_count_, "Invalid Vertex Count");
+        FTAssert(vertices_.capacity() >= count, "Invalid Vertex Count");
         vertex_count_ = count;
     }
 
@@ -49,7 +49,7 @@ template <typename Transform, typename ShaderProgram, typename VertexType>
 class FTMesh : public FTNode<Transform, ShaderProgram> {
 public:
 
-    explicit FTMesh() : primitive_type_(GL_TRIANGLES), render_wireframe_(false), is_loaded_(false), is_static_(true) {
+    FTMesh() : vertex_array_id_(0), vertex_buffer_id_(0), num_vertices_(0), max_num_vertices_(0), primitive_type_(GL_TRIANGLES), render_wireframe_(false), is_loaded_(false), is_static_(true) {
 
     }
 
@@ -89,7 +89,6 @@ public:
     // Cleanup specifies whether it should unbind the VAO after it has finished creating it
     virtual void loadMeshData(const std::shared_ptr<FTMeshData<VertexType>>& data, bool is_static, bool cleanup = true) {
         FTAssert(!is_loaded_, "Trying to load mesh data for already loaded mesh");
-        // TODO Support changing mesh data during runtime
         is_static_ = is_static;
 
         num_vertices_ = (GLuint)data->getVertexCount();
@@ -178,6 +177,14 @@ public:
 
     void setPrimitiveType(GLenum type) {
         primitive_type_ = type;
+    }
+
+    GLuint getVertexCapacity() const {
+        return max_num_vertices_;
+    }
+
+    GLuint getNumVertices() const {
+        return num_vertices_;
     }
 
 protected:

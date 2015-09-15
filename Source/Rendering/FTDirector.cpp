@@ -21,11 +21,7 @@
 #include "Shader/FTFontShader.h"
 #include "Text/FTFontCache.h"
 #include <sstream>
-
-FTDirector* FTDirector::getSharedInstance() {
-    static FTDirector* instance = new FTDirector();
-    return instance;
-}
+#include <FTEngine.h>
 
 FTDirector::FTDirector() {
 }
@@ -72,38 +68,21 @@ int FTDirector::setup() {
     // Dark blue background
     glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
-    loadDefaultShaderPrograms();
     loadDefaultFonts();
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
 
     glEnable(GL_SCISSOR_TEST);
 
     //Setup Misc
     glfwSetWindowSizeCallback(window_, &windowSizeChangeCallback);
-    FTInputManager::getSharedInstance()->registerWithWindow(window_);
+    FTEngine::getInputManager()->registerWithWindow(window_);
     return 0;
 }
 
-void FTDirector::loadDefaultShaderPrograms() {
-    auto shaderCache = FTShaderCache::getSharedInstance();
-
-    auto shader = std::static_pointer_cast<FTShaderProgram>(std::make_shared<FTVertexColorShaderProgram>());
-    shaderCache->loadShaderProgram(shader);
-
-    shader = std::static_pointer_cast<FTShaderProgram>(std::make_shared<FTVertexTextureShaderProgram>());
-    shaderCache->loadShaderProgram(shader);
-
-    shader = std::static_pointer_cast<FTShaderProgram>(std::make_shared<FTFontShader>());
-    shaderCache->loadShaderProgram(shader);
-
-    shader = std::static_pointer_cast<FTShaderProgram>(std::make_shared<FTVertexShaderProgram>());
-    shaderCache->loadShaderProgram(shader);
-}
-
 void FTDirector::loadDefaultFonts() {
-    auto fontCache = FTFontCache::getSharedInstance();
+    auto fontCache = FTEngine::getFontCache();
 
     fontCache->loadFont("Resources/Fonts/Vera.ttf");
 }
@@ -147,7 +126,7 @@ int FTDirector::run() {
     while (glfwGetKey(window_, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
         glfwWindowShouldClose(window_) == 0);
 
-    FTShaderCache::getSharedInstance()->unloadAllShaders();
+    FTEngine::getShaderCache()->unloadAllShaders();
 
     // Close OpenGL window and terminate GLFW
     glfwTerminate();
@@ -162,4 +141,8 @@ void FTDirector::windowSizeChange(GLFWwindow* window, int width, int height) {
     window_size_.x = (float)width;
     window_size_.y = (float)height;
     window_size_change_event_handler_((float)width, (float)height);
+}
+
+void FTDirector::windowSizeChangeCallback(GLFWwindow* window, int width, int height) {
+    FTEngine::getDirector()->windowSizeChange(window, width, height);
 }

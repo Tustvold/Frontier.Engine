@@ -49,8 +49,6 @@ public:
         return key_down_[key];
     }
 
-    static FTInputManager* getSharedInstance();
-
 private:
 
     FTInputManager();

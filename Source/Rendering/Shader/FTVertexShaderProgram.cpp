@@ -27,7 +27,7 @@ const char* FTVertexShaderProgram::vertex_shader_source_ = {
 	}"
 };
 
-FTVertexShaderProgram::FTVertexShaderProgram() : FTShaderProgram(vertex_shader_source_, fragment_shader_source_) {
+FTVertexShaderProgram::FTVertexShaderProgram() {
 
 }
 
@@ -35,6 +35,8 @@ FTVertexShaderProgram::~FTVertexShaderProgram() {
 }
 
 bool FTVertexShaderProgram::load() {
+    if (!FTShaderProgram::load())
+        return false;
     mvp_uniform_ = glGetUniformLocation(program_id_, "MVP");
     return mvp_uniform_ != -1;
 }

@@ -12,8 +12,6 @@ class FTDirector {
 public:
     int run();
 
-    static FTDirector* getSharedInstance();
-
     Gallant::Signal1<float>* getPreDrawEventHandler() {
         return &pre_draw_event_handler_;
     }
@@ -36,15 +34,11 @@ private:
 
     int setup();
 
-    void loadDefaultShaderPrograms();
-
     void loadDefaultFonts();
 
     void windowSizeChange(GLFWwindow* window, int width, int height);
 
-    static void windowSizeChangeCallback(GLFWwindow* window, int width, int height) {
-        getSharedInstance()->windowSizeChange(window, width, height);
-    }
+    static void windowSizeChangeCallback(GLFWwindow* window, int width, int height);
 
     std::shared_ptr<FTScene> scene_;
     GLFWwindow* window_;

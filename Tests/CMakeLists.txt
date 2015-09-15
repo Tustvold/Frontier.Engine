@@ -11,7 +11,7 @@ FILE(GLOB_RECURSE CMAKELISTS Source/*CMakeLists.txt)
 
 add_executable(Frontier.Engine.Tests ${SOURCES} ${HEADERS} ${CMAKELISTS})
 target_include_directories(Frontier.Engine.Tests PUBLIC
-    ../ThirdParty/glmock/glewmock/)
+    ../ThirdParty/glmock/glfwmock/)
 
 # Rebuild directory structure within Visual Studio
 foreach(FILE ${SOURCES} ${HEADERS} ${CMAKELISTS})
@@ -25,7 +25,9 @@ endforeach()
 
 	
 target_link_libraries(Frontier.Engine.Tests
-	glewmock
+    glfwmock
+    freetype
+    freetype-gl
     Frontier.Engine
 )
 	

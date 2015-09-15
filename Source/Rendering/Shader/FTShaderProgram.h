@@ -15,7 +15,11 @@ public:
         glDeleteProgram(program_id_);
     }
 
-    virtual bool load() = 0;
+    virtual bool load() {
+        return compile();
+    }
+
+    virtual bool compile() = 0;
 
     virtual void use() {
         glUseProgram(program_id_);
@@ -26,13 +30,14 @@ public:
     }
 
 protected:
-    FTShaderProgram(const char* vertex_shader, const char* fragment_shader) {
-        createShaderProgram(vertex_shader, fragment_shader);
+
+    FTShaderProgram() {
+        
     }
 
     GLuint program_id_;
 
-private:
+protected:
 
     bool createShaderProgram(const char* vertex_shader_code, const char* fragment_shader_code) {
         program_id_ = 0;

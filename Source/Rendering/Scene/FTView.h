@@ -2,6 +2,7 @@
 #include <Rendering/Camera/FTCamera.h>
 #include <Rendering/FTDrawable.h>
 #include <memory>
+#include <FTEngine.h>
 
 class IFTView : public FTDrawable {
 
@@ -13,13 +14,13 @@ template <typename Camera>
 class FTView : public IFTView {
 public:
     FTView(const std::shared_ptr<Camera>& camera, const FTRect<float>& layer_rect) : camera_(camera), layer_rect_(layer_rect) {
-        glm::vec2 screensize = FTDirector::getSharedInstance()->getWindowSize();
+        glm::vec2 screensize = FTEngine::getDirector()->getWindowSize();
         camera_->setScreenRect(FTRect<int>((int)(layer_rect.x_ * screensize.x), (int)(layer_rect.y_ * screensize.y), (int)(layer_rect.width_ * screensize.x), (int)(layer_rect.height_ * screensize.y)));
-        FTDirector::getSharedInstance()->getWindowSizeChangeEventHandler()->Connect(this, &FTView::screensizeChanged);
+        FTEngine::getDirector()->getWindowSizeChangeEventHandler()->Connect(this, &FTView::screensizeChanged);
     }
 
     virtual ~FTView() {
-        FTDirector::getSharedInstance()->getWindowSizeChangeEventHandler()->Disconnect(this, &FTView::screensizeChanged);
+        FTEngine::getDirector()->getWindowSizeChangeEventHandler()->Disconnect(this, &FTView::screensizeChanged);
     }
 
     virtual void draw() override {

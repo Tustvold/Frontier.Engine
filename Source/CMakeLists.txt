@@ -5,6 +5,7 @@ add_subdirectory(Util)
 add_subdirectory(Event)
 
 set(SOURCES ${SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTEngine.cpp
     PARENT_SCOPE)
 
 

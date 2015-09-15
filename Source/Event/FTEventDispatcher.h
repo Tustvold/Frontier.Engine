@@ -2,7 +2,6 @@
 
 #include <ThirdParty/Signals/Signal.h>
 #include "FTEvent.h"
-#include "Frontier.h"
 #include "FTEventHelpers.h"
 
 class FTEventDispatcherBase {

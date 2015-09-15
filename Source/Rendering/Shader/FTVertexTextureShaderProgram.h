@@ -12,10 +12,11 @@ public:
         return texture_uniform_id_;
     }
 
-protected:
-    FTVertexTextureShaderProgram(const char* vertex_shader, const char* fragment_shader) : FTVertexShaderProgram(vertex_shader, fragment_shader) {
-
+    virtual bool compile() override {
+        return createShaderProgram(vertex_shader_source_, fragment_shader_source_);
     }
+
+protected:
 
     static const char* vertex_shader_source_;
     static const char* fragment_shader_source_;

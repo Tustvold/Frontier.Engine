@@ -13,9 +13,8 @@ public:
 
     void updateMvpUniforms(const GLfloat* mvp);
 
-protected:
-    FTVertexShaderProgram(const char* vertex_shader, const char* fragment_shader) : FTShaderProgram(vertex_shader, fragment_shader) {
-
+    virtual bool compile() override {
+        return createShaderProgram(vertex_shader_source_, fragment_shader_source_);
     }
 
 private:

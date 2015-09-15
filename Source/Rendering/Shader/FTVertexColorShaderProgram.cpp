@@ -33,7 +33,7 @@ const char* FTVertexColorShaderProgram::vertex_shader_source_ = {
 	}"
 };
 
-FTVertexColorShaderProgram::FTVertexColorShaderProgram() : FTVertexShaderProgram(vertex_shader_source_, fragment_shader_source_) {
+FTVertexColorShaderProgram::FTVertexColorShaderProgram() {
 
 }
 

@@ -44,7 +44,7 @@ endforeach()
 add_library(Frontier.Engine STATIC ${SOURCES} ${HEADERS} ${CMAKELISTS})
 
 SET (FRONTIER_ENGINE_INCLUDES 
-	${CMAKE_CURRENT_SOURCE_DIR}/Source
+    ${CMAKE_CURRENT_SOURCE_DIR}/Source
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/freetype2/include
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/freetype-gl
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glew/include

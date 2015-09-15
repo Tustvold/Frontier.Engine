@@ -1,7 +1,5 @@
-#include "gtest/gtest.h"
 #include <Rendering/Textures/FTTextureDDS.h>
 #include <glewmock.hpp>
-#include <GL/glew.h>
 
 using ::testing::_;
 TEST(TestTextureDDS, TestLoadTextureDDS) {

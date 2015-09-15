@@ -3,6 +3,7 @@
 #include <Rendering/Camera/FTCamera.h>
 #include <Rendering/Shader/FTVertexShaderProgram.h>
 #include <Rendering/Shader/FTShaderCache.h>
+#include <FTEngine.h>
 
 class IFTNode : public FTDrawable {
 public:
@@ -21,7 +22,7 @@ public:
 
     explicit FTNode() :
         transform_(new Transform()),
-        shader_program_(FTShaderCache::getSharedInstance()->getShaderProgram<ShaderProgram>()) {
+        shader_program_(FTEngine::getShaderCache()->getShaderProgram<ShaderProgram>()) {
 
     }
 
@@ -40,5 +41,5 @@ public:
 
 protected:
     std::unique_ptr<Transform> transform_;
-    std::shared_ptr<FTVertexShaderProgram> shader_program_;
+    std::shared_ptr<ShaderProgram> shader_program_;
 };

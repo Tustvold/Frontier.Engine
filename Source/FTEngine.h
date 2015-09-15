@@ -1,28 +1,39 @@
+#pragma once
+
 #include <Frontier.h>
-#include "Rendering/FTDirector.h"
-#include "Rendering/Text/FTFontCache.h"
-#include "Rendering/Shader/FTShaderCache.h"
-#include "Util/FTInputManager.h"
+
+
+class FTEventManager;
+class FTFontCache;
+class FTShaderCache;
+class FTInputManager;
+class FTDirector;
 
 class FTEngine {
 public:
-    static bool setup() {
-        if (FTDirector::getSharedInstance()->setup() != 0) {
-            FTLog("Director initialisation failed");
-            return false;
-        }
-        return true;
-    }
+    
 
-    static void cleanup() {
-        cleanupSingletons();
-    }
+    static FTDirector* getDirector();
+    static FTInputManager* getInputManager();
+    static FTShaderCache* getShaderCache();
+    static FTFontCache* getFontCache();
+    static FTEventManager* getEventManager();
+
+    static bool cleanup();
+
+    static bool setup(bool is_mocked = false);
 
 private:
-    static void cleanupSingletons() {
-        delete FTDirector::getSharedInstance(); // Must be first
-        delete FTInputManager::getSharedInstance();
-        delete FTShaderCache::getSharedInstance();
-        delete FTFontCache::getSharedInstance();
-    }
+    static FTEngine* getSharedInstance();
+
+    FTEngine();
+    ~FTEngine();
+
+    bool _setup(bool is_mocked);
+
+    FTEventManager* event_manager_;
+    FTFontCache* font_cache_;
+    FTShaderCache* shader_cache_;
+    FTInputManager* input_manager_;
+    FTDirector* director_;
 };

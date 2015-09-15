@@ -1,5 +1,4 @@
 set(SOURCES ${SOURCES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTEventDispatcher.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FTEventManager.cpp
     PARENT_SCOPE)
 

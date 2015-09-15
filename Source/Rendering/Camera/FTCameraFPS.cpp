@@ -1,12 +1,12 @@
 #include "FTCameraFPS.h"
-#include <Util/FTInputManager.h>
+#include <FTEngine.h>
 #include <Frontier.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
 
 FTCameraFPS::FTCameraFPS() : move_speed_(15.0f), rotation_speed_(0.005f) {
-    FTInputManager::getSharedInstance()->getButtonHeldEventHandler()->Connect(this, &FTCameraFPS::keyHeld);
-    FTInputManager::getSharedInstance()->getCursorMovedEventHandler()->Connect(this, &FTCameraFPS::cursorPosChange);
+    FTEngine::getInputManager()->getButtonHeldEventHandler()->Connect(this, &FTCameraFPS::keyHeld);
+    FTEngine::getInputManager()->getCursorMovedEventHandler()->Connect(this, &FTCameraFPS::cursorPosChange);
 }
 
 

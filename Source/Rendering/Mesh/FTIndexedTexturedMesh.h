@@ -21,7 +21,7 @@ public:
     void draw() override {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture_->getTextureId());
-        glUniform1i(((FTVertexTextureShaderProgram*)shader_program_.get())->getTextureUniformId(), 0);
+        glUniform1i(shader_program_->getTextureUniformId(), 0);
         FTIndexedMesh::draw();
     }
 

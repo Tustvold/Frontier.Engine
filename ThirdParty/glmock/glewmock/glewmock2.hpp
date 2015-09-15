@@ -14,10 +14,8 @@ public:
 	static GlewMock2* getMock();
 
 	MOCK_METHOD4(gl_GetProgramInfoLog, void (GLuint program, GLsizei bufSize, GLsizei* length, GLchar* infoLog));
-	MOCK_METHOD3(gl_GetProgramiv, void (GLuint program, GLenum pname, GLint* param));
 	MOCK_METHOD4(gl_GetShaderInfoLog, void (GLuint shader, GLsizei bufSize, GLsizei* length, GLchar* infoLog));
 	MOCK_METHOD4(gl_GetShaderSource, void (GLuint obj, GLsizei maxLength, GLsizei* length, GLchar* source));
-	MOCK_METHOD3(gl_GetShaderiv, void (GLuint shader, GLenum pname, GLint* param));
 	MOCK_METHOD2(gl_GetUniformLocation, int (GLuint program, const GLchar* name));
 	MOCK_METHOD3(gl_GetUniformfv, void (GLuint program, GLint location, GLfloat* params));
 	MOCK_METHOD3(gl_GetUniformiv, void (GLuint program, GLint location, GLint* params));
@@ -184,6 +182,10 @@ public:
 	MOCK_METHOD1(glew_GetExtension, GLboolean (const char* name));
 	MOCK_METHOD1(glew_GetErrorString, const GLubyte*(GLenum error));
 	MOCK_METHOD1(glew_GetString, const GLubyte*(GLenum name));
+    MOCK_METHOD1(gl_BindVertexArray, void(GLuint array));
+    MOCK_METHOD2(gl_DeleteVertexArrays, void(GLsizei n, const GLuint* arrays));
+    MOCK_METHOD2(gl_GenVertexArrays, void(GLsizei n, GLuint* arrays));
+    MOCK_METHOD1(gl_IsVertexArray, GLboolean(GLuint array));
 };
 
 #endif

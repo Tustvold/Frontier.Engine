@@ -13,6 +13,8 @@ GlewMock* GlewMock::getMock() {
 	return (GlewMock*)GLMock::getMock();
 }
 
+GLboolean glewExperimental = GL_FALSE;
+
 void  mockgl_CopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height)
 {
     return GlewMock::getMock()->gl_CopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height);

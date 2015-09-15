@@ -1,21 +1,10 @@
 #include "FTInputManager.h"
 #include "Rendering/FTDirector.h"
 #include "Frontier.h"
-
+#include <FTEngine.h>
 
 //Static Methods
 bool FTInputManager::trust_mouse_ = false;
-
-static bool s_initialised = false;
-static FTInputManager* s_instance = nullptr;
-
-FTInputManager* FTInputManager::getSharedInstance() {
-    if (!s_initialised) {
-        s_instance = new FTInputManager();
-        s_initialised = true;
-    }
-    return s_instance;
-}
 
 FTInputManager::FTInputManager() {
     for (int i = 0; i < GLFW_KEY_LAST + 1; i++) {
@@ -35,16 +24,16 @@ FTInputManager::FTInputManager() {
     key_mappings_[GLFW_KEY_EQUAL] = KeyNameFreezeFrustrum;
     key_mappings_[GLFW_KEY_LEFT_ALT] = KeyNameFreeMouse;
 
-    FTDirector* director = FTDirector::getSharedInstance();
-    director->getPreDrawEventHandler()->Connect(this, &FTInputManager::update);
+    
+    FTEngine::getDirector()->getPreDrawEventHandler()->Connect(this, &FTInputManager::update);
 }
 
 void FTInputManager::keyCallbackStatic(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    s_instance->keyCallback(window, key, scancode, action, mods); // If this method is being called s_instance has been initialized
+    FTEngine::getInputManager()->keyCallback(window, key, scancode, action, mods); // If this method is being called s_instance has been initialized
 }
 
 void FTInputManager::cursorPosCallbackStatic(GLFWwindow* window, double x, double y) {
-    s_instance->cursorPosCallback(window, x, y); // If this method is being called s_instance has been initialized
+    FTEngine::getInputManager()->cursorPosCallback(window, x, y); // If this method is being called s_instance has been initialized
 }
 
 void FTInputManager::cursorEnterCallback(GLFWwindow* window, int entered) {
@@ -83,7 +72,7 @@ void FTInputManager::cursorPosCallback(GLFWwindow* window, double x, double y) {
     if (key_down_[KeyNameFreeMouse])
         return;
 
-    glm::vec2 screensize = FTDirector::getSharedInstance()->getWindowSize();
+    glm::vec2 screensize = FTEngine::getDirector()->getWindowSize();
 
     float delta_x = (float)(x - screensize.x / 2.0f);
     float delta_y = (float)(screensize.y / 2.0f - y); // Change coords to be centred in the bottom left not top left

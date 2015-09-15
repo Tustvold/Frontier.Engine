@@ -12,8 +12,12 @@ public:
         transform_->setPosition(position);
     }
 
-    void setRotationQuaternion(const glm::quat quat) {
+    void setRotationQuaternion(const glm::quat& quat) {
         transform_->setRotationQuaternion(quat);
+    }
+
+    void setScale(const glm::vec3& scale) {
+        transform_->setScale(scale);
     }
 
 protected:
