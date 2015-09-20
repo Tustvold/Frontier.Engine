@@ -23,6 +23,8 @@ public:
 
     static bool setup(bool is_mocked = false);
 
+    static void init();
+
 private:
     static FTEngine* getSharedInstance();
 
@@ -36,4 +38,5 @@ private:
     FTShaderCache* shader_cache_;
     FTInputManager* input_manager_;
     FTDirector* director_;
+    bool setup_;
 };

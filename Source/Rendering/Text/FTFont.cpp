@@ -44,8 +44,8 @@ std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture, uint16_t>> FTFont::gener
 void FTFont::populateMeshDataForString(std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture, uint16_t>>& data, const std::basic_string<wchar_t>& text, int size, glm::vec2& pen) {
     ftgl::texture_font_t* font = cacheFontSize(size);
     size_t length = text.length();
-    auto vertices = data->getVertices();
-    auto indices = data->getIndices();
+    auto& vertices = data->getVertices();
+    auto& indices = data->getIndices();
 
     //glm::vec2 pen = glm::vec2();
     int curIndex = 0;

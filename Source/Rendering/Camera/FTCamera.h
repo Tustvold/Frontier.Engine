@@ -1,7 +1,6 @@
 ﻿#pragma once
-#include <glm/glm.hpp>
+#include <Frontier.h>
 #include <Util/FTRect.h>
-#include <GL/glew.h>
 
 // The base class for all cameras
 // Contains some properties common to all cameras

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <unordered_map>
 #include <typeindex>
 #include <Frontier.h>
@@ -26,12 +25,6 @@ public:
         return std::static_pointer_cast<Type>(it->second);
     }
 
-
-
-private:
-    FTEventManager();
-    ~FTEventManager();
-
     template <typename Type>
     void registerDispatcher(const std::shared_ptr<Type>& dispatcher) {
         static_assert(std::is_base_of<FTEventDispatcherBase, Type>::value, "Dispatcher is not a subclass of FTEventDispatcherBase");
@@ -39,6 +32,10 @@ private:
         FTAssert(event_dispatchers_.find(type) == event_dispatchers_.end(), "FTEventDispatcher already registered");
         event_dispatchers_[type] = dispatcher;
     }
+
+private:
+    FTEventManager();
+    ~FTEventManager();
 
     std::unordered_map<std::type_index, std::shared_ptr<FTEventDispatcherBase>> event_dispatchers_;
 };

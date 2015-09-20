@@ -1,0 +1,9 @@
+set(SOURCES ${SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTMouseEventDispatcher.cpp
+    PARENT_SCOPE)
+
+
+set (HEADERS ${HEADERS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTMouseEventDispatcher.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTMouseEvents.h
+    PARENT_SCOPE)

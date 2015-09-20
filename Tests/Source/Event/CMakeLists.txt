@@ -1,3 +1,8 @@
+add_subdirectory(Engine)
+add_subdirectory(Keyboard)
+add_subdirectory(Mouse)
+add_subdirectory(Window)
+
 set (SOURCES ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/TestEventDispatcher.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/TestEventManager.cpp

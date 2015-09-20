@@ -1,6 +1,6 @@
 #pragma once
 
-class FTEvent {
+struct FTEvent {
 public:
 
 protected:

@@ -162,31 +162,31 @@ void* glfwGetWindowUserPointer(GLFWwindow* window) {
 }
 
 GLFWwindowposfun glfwSetWindowPosCallback(GLFWwindow* window, GLFWwindowposfun cbfun) {
-    return GlfwMock::getMock()->glfwSetWindowPosCallback(window, cbfun);
+    return GlfwMock::getMock()->window_pos_callback_ = cbfun;
 }
 
 GLFWwindowsizefun glfwSetWindowSizeCallback(GLFWwindow* window, GLFWwindowsizefun cbfun) {
-    return GlfwMock::getMock()->glfwSetWindowSizeCallback(window, cbfun);
+    return GlfwMock::getMock()->window_size_callback_ = cbfun;
 }
 
 GLFWwindowclosefun glfwSetWindowCloseCallback(GLFWwindow* window, GLFWwindowclosefun cbfun) {
-    return GlfwMock::getMock()->glfwSetWindowCloseCallback(window, cbfun);
+    return GlfwMock::getMock()->window_close_callback_ = cbfun;
 }
 
 GLFWwindowrefreshfun glfwSetWindowRefreshCallback(GLFWwindow* window, GLFWwindowrefreshfun cbfun) {
-    return GlfwMock::getMock()->glfwSetWindowRefreshCallback(window, cbfun);
+    return GlfwMock::getMock()->window_refresh_callback_ = cbfun;
 }
 
 GLFWwindowfocusfun glfwSetWindowFocusCallback(GLFWwindow* window, GLFWwindowfocusfun cbfun) {
-    return GlfwMock::getMock()->glfwSetWindowFocusCallback(window, cbfun);
+    return GlfwMock::getMock()->window_focus_callback_ = cbfun;
 }
 
 GLFWwindowiconifyfun glfwSetWindowIconifyCallback(GLFWwindow* window, GLFWwindowiconifyfun cbfun) {
-    return GlfwMock::getMock()->glfwSetWindowIconifyCallback(window, cbfun);
+    return GlfwMock::getMock()->window_iconify_callback_ = cbfun;
 }
 
 GLFWframebuffersizefun glfwSetFramebufferSizeCallback(GLFWwindow* window, GLFWframebuffersizefun cbfun) {
-    return GlfwMock::getMock()->glfwSetFramebufferSizeCallback(window, cbfun);
+    return GlfwMock::getMock()->window_set_frame_buffer_size_callback_ = cbfun;
 }
 
 void glfwPollEvents(void) {
@@ -242,35 +242,35 @@ void glfwSetCursor(GLFWwindow* window, GLFWcursor* cursor) {
 }
 
 GLFWkeyfun glfwSetKeyCallback(GLFWwindow* window, GLFWkeyfun cbfun) {
-    return GlfwMock::getMock()->glfwSetKeyCallback(window, cbfun);
+    return GlfwMock::getMock()->key_callback_ = cbfun;
 }
 
 GLFWcharfun glfwSetCharCallback(GLFWwindow* window, GLFWcharfun cbfun) {
-    return GlfwMock::getMock()->glfwSetCharCallback(window, cbfun);
+    return GlfwMock::getMock()->char_callback_ = cbfun;
 }
 
 GLFWcharmodsfun glfwSetCharModsCallback(GLFWwindow* window, GLFWcharmodsfun cbfun) {
-    return GlfwMock::getMock()->glfwSetCharModsCallback(window, cbfun);
+    return GlfwMock::getMock()->char_mods_callback_ = cbfun;
 }
 
 GLFWmousebuttonfun glfwSetMouseButtonCallback(GLFWwindow* window, GLFWmousebuttonfun cbfun) {
-    return GlfwMock::getMock()->glfwSetMouseButtonCallback(window, cbfun);
+    return GlfwMock::getMock()->mouse_button_callback_ = cbfun;
 }
 
 GLFWcursorposfun glfwSetCursorPosCallback(GLFWwindow* window, GLFWcursorposfun cbfun) {
-    return GlfwMock::getMock()->glfwSetCursorPosCallback(window, cbfun);
+    return GlfwMock::getMock()->mouse_pos_callback_ = cbfun;
 }
 
 GLFWcursorenterfun glfwSetCursorEnterCallback(GLFWwindow* window, GLFWcursorenterfun cbfun) {
-    return GlfwMock::getMock()->glfwSetCursorEnterCallback(window, cbfun);
+    return GlfwMock::getMock()->mouse_enter_callback_ = cbfun;
 }
 
 GLFWscrollfun glfwSetScrollCallback(GLFWwindow* window, GLFWscrollfun cbfun) {
-    return GlfwMock::getMock()->glfwSetScrollCallback(window, cbfun);
+    return GlfwMock::getMock()->mouse_scroll_callback_ = cbfun;
 }
 
 GLFWdropfun glfwSetDropCallback(GLFWwindow* window, GLFWdropfun cbfun) {
-    return GlfwMock::getMock()->glfwSetDropCallback(window, cbfun);
+    return GlfwMock::getMock()->drop_callback_ = cbfun;
 }
 
 int glfwJoystickPresent(int joy) {

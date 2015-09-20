@@ -1,17 +1,6 @@
 #include "FTDirector.h"
 
-// Include standard headers
-#include <stdio.h>
-#include <stdlib.h>
-
-// Include GLEW
-#include <GL/glew.h>
-
-// Include GLM
-#include <glm/glm.hpp>
-
-// Include GLFW
-#include <glfw3.h>
+#include <Frontier.h>
 #include <Util/FTInputManager.h>
 
 #include <Rendering/Shader/FTShaderCache.h>
@@ -22,6 +11,11 @@
 #include "Text/FTFontCache.h"
 #include <sstream>
 #include <FTEngine.h>
+#include <Event/Engine/FTEngineEventDispatcher.h>
+#include <Event/FTEventManager.h>
+#include <Event/Window/FTWindowEventDispatcher.h>
+
+class FTWindowEventDispatcher;
 
 FTDirector::FTDirector() {
 }
@@ -76,8 +70,9 @@ int FTDirector::setup() {
     glEnable(GL_SCISSOR_TEST);
 
     //Setup Misc
-    glfwSetWindowSizeCallback(window_, &windowSizeChangeCallback);
-    FTEngine::getInputManager()->registerWithWindow(window_);
+    auto window_resize_delegate = Gallant::Delegate1<const FTWindowResizeEvent&>(this, &FTDirector::windowSizeChangeEvent);
+    FTEngine::getEventManager()->getEventDispatcher<FTWindowEventDispatcher>()->registerDelegate(window_resize_delegate);
+
     return 0;
 }
 
@@ -87,16 +82,21 @@ void FTDirector::loadDefaultFonts() {
     fontCache->loadFont("Resources/Fonts/Vera.ttf");
 }
 
+void FTDirector::windowSizeChangeEvent(const FTWindowResizeEvent& event) {
+    glViewport(0, 0, event.width_, event.height_);
+}
 
 int FTDirector::run() {
 
-    float fps = 60;
-    float fps_time_acc = 0;
+    double fps = 60;
+    double fps_time_acc = 0;
     last_tick_time_ = glfwGetTime();
+    FTPreDrawEvent pre_draw_event;
+    auto engine_event_dispatcher = FTEngine::getEventManager()->getEventDispatcher<FTEngineEventDispatcher>();
 
     do {
         double current_time = glfwGetTime();
-        float dt = (float)(current_time - last_tick_time_);
+        double dt = (current_time - last_tick_time_);
         last_tick_time_ = current_time;
         if (dt > 0) {
             fps = 0.1f * fps + 0.9f / dt;
@@ -111,7 +111,9 @@ int FTDirector::run() {
             glfwSetWindowTitle(window_, ss.str().c_str());
         }
 
-        pre_draw_event_handler_(dt);
+        pre_draw_event.delta_time_ = dt;
+        pre_draw_event.average_fps_ = fps;
+        engine_event_dispatcher->raiseEvent(pre_draw_event);
 
         glDisable(GL_SCISSOR_TEST);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -133,16 +135,4 @@ int FTDirector::run() {
 
 
     return 0;
-}
-
-void FTDirector::windowSizeChange(GLFWwindow* window, int width, int height) {
-    //FTLOG("Window size change");
-    glViewport(0, 0, width, height);
-    window_size_.x = (float)width;
-    window_size_.y = (float)height;
-    window_size_change_event_handler_((float)width, (float)height);
-}
-
-void FTDirector::windowSizeChangeCallback(GLFWwindow* window, int width, int height) {
-    FTEngine::getDirector()->windowSizeChange(window, width, height);
 }

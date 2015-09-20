@@ -1,10 +1,22 @@
 #pragma once
+// Include standard headers
+#include <stdio.h>
+#include <stdlib.h>
+
+// Include GLEW
+#include <GL/glew.h>
+
+// Include GLM
+#include <glm/glm.hpp>
+
+// Include GLFW
+#include <glfw3.h>
 
 #include <stdarg.h>
 #include <stdexcept>
 #include <memory>
-#include <stdio.h>
 #include <Util/FTLog.h>
+
 
 static void FTLog(const char* format, ...) {
     va_list args;

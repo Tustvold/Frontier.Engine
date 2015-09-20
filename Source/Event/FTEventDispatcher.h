@@ -1,6 +1,5 @@
 #pragma once
 
-#include <ThirdParty/Signals/Signal.h>
 #include "FTEvent.h"
 #include "FTEventHelpers.h"
 
@@ -36,6 +35,14 @@ public:
         auto manager = (details::FTSignalManager<T>*)this;
         auto& eventHandler = selector.getEventHandler(manager);
         eventHandler.Connect(delegate);
+    }
+
+    template <typename T>
+    void unregisterDelegate(const Gallant::Delegate1<const T&>& delegate) const {
+        details::FTSignalSelector<T, EventType, Others...> selector;
+        auto manager = (details::FTSignalManager<T>*)this;
+        auto& eventHandler = selector.getEventHandler(manager);
+        eventHandler.Disconnect(delegate);
     }
 
 protected:

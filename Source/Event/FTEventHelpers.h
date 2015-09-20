@@ -1,3 +1,4 @@
+#pragma once
 #include <ThirdParty/Signals/Signal.h>
 
 // Internal utility templates - do not use

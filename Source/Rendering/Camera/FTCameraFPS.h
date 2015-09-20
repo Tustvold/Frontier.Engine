@@ -2,6 +2,8 @@
 #include <Util/FTInputManager.h>
 #include "FTCamera3D.h"
 
+struct FTMouseMoveEvent;
+
 class FTCameraFPS : public FTCamera3D {
 public:
     explicit FTCameraFPS();
@@ -13,6 +15,13 @@ private:
     float move_speed_;
     float rotation_speed_;
 
-    void keyHeld(KeyName, float dt);
-    void cursorPosChange(float x, float y);
+    std::shared_ptr<FTKeyState> forward_state_;
+    std::shared_ptr<FTKeyState> back_state_;
+    std::shared_ptr<FTKeyState> left_state_;
+    std::shared_ptr<FTKeyState> right_state_;
+    std::shared_ptr<FTKeyState> up_state_;
+    std::shared_ptr<FTKeyState> down_state_;
+
+    void update(const FTPreDrawEvent& event);
+    void mouseMoveEvent(const FTMouseMoveEvent& event);
 };

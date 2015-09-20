@@ -89,20 +89,6 @@ public:
 
     MOCK_METHOD1(glfwGetWindowUserPointer, void*(GLFWwindow* window));
 
-    MOCK_METHOD2(glfwSetWindowPosCallback, GLFWwindowposfun(GLFWwindow* window, GLFWwindowposfun cbfun));
-
-    MOCK_METHOD2(glfwSetWindowSizeCallback, GLFWwindowsizefun(GLFWwindow* window, GLFWwindowsizefun cbfun));
-
-    MOCK_METHOD2(glfwSetWindowCloseCallback, GLFWwindowclosefun(GLFWwindow* window, GLFWwindowclosefun cbfun));
-
-    MOCK_METHOD2(glfwSetWindowRefreshCallback, GLFWwindowrefreshfun(GLFWwindow* window, GLFWwindowrefreshfun cbfun));
-
-    MOCK_METHOD2(glfwSetWindowFocusCallback, GLFWwindowfocusfun(GLFWwindow* window, GLFWwindowfocusfun cbfun));
-
-    MOCK_METHOD2(glfwSetWindowIconifyCallback, GLFWwindowiconifyfun(GLFWwindow* window, GLFWwindowiconifyfun cbfun));
-
-    MOCK_METHOD2(glfwSetFramebufferSizeCallback, GLFWframebuffersizefun(GLFWwindow* window, GLFWframebuffersizefun cbfun));
-
     MOCK_METHOD0(glfwPollEvents, void(void));
 
     MOCK_METHOD0(glfwWaitEvents, void(void));
@@ -128,22 +114,6 @@ public:
     MOCK_METHOD1(glfwDestroyCursor, void(GLFWcursor* cursor));
 
     MOCK_METHOD2(glfwSetCursor, void(GLFWwindow* window, GLFWcursor* cursor));
-
-    MOCK_METHOD2(glfwSetKeyCallback, GLFWkeyfun(GLFWwindow* window, GLFWkeyfun cbfun));
-
-    MOCK_METHOD2(glfwSetCharCallback, GLFWcharfun(GLFWwindow* window, GLFWcharfun cbfun));
-
-    MOCK_METHOD2(glfwSetCharModsCallback, GLFWcharmodsfun(GLFWwindow* window, GLFWcharmodsfun cbfun));
-
-    MOCK_METHOD2(glfwSetMouseButtonCallback, GLFWmousebuttonfun(GLFWwindow* window, GLFWmousebuttonfun cbfun));
-
-    MOCK_METHOD2(glfwSetCursorPosCallback, GLFWcursorposfun(GLFWwindow* window, GLFWcursorposfun cbfun));
-
-    MOCK_METHOD2(glfwSetCursorEnterCallback, GLFWcursorenterfun(GLFWwindow* window, GLFWcursorenterfun cbfun));
-
-    MOCK_METHOD2(glfwSetScrollCallback, GLFWscrollfun(GLFWwindow* window, GLFWscrollfun cbfun));
-
-    MOCK_METHOD2(glfwSetDropCallback, GLFWdropfun(GLFWwindow* window, GLFWdropfun cbfun));
 
     MOCK_METHOD1(glfwJoystickPresent, int(int joy));
 
@@ -172,4 +142,23 @@ public:
     MOCK_METHOD1(glfwExtensionSupported, int(const char* extension));
 
     MOCK_METHOD1(glfwGetProcAddress, GLFWglproc(const char* procname));
+
+    // Input callbacks
+    GLFWkeyfun key_callback_;
+    GLFWcharfun char_callback_;
+    GLFWcharmodsfun char_mods_callback_;
+    GLFWmousebuttonfun mouse_button_callback_;
+    GLFWcursorposfun mouse_pos_callback_;
+    GLFWcursorenterfun mouse_enter_callback_;
+    GLFWscrollfun mouse_scroll_callback_;
+    GLFWdropfun drop_callback_;
+
+    // Window callbacks
+    GLFWwindowposfun window_pos_callback_;
+    GLFWwindowsizefun window_size_callback_;
+    GLFWwindowclosefun window_close_callback_;
+    GLFWwindowrefreshfun window_refresh_callback_;
+    GLFWwindowfocusfun window_focus_callback_;
+    GLFWwindowiconifyfun window_iconify_callback_;
+    GLFWframebuffersizefun window_set_frame_buffer_size_callback_;
 };

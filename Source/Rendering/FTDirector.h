@@ -2,6 +2,8 @@
 
 #include <ThirdParty/Signals/Signal.h>
 #include "Scene/FTScene.h"
+#include <Event/Engine/FTEngineEventDispatcher.h>
+struct FTWindowResizeEvent;
 class FTCamera;
 struct GLFWwindow;
 
@@ -12,21 +14,19 @@ class FTDirector {
 public:
     int run();
 
-    Gallant::Signal1<float>* getPreDrawEventHandler() {
-        return &pre_draw_event_handler_;
-    }
-
     glm::vec2 getWindowSize() {
         return window_size_;
-    }
-
-    Gallant::Signal2<float, float>* getWindowSizeChangeEventHandler() {
-        return &window_size_change_event_handler_;
     }
 
     void setCurrentScene(std::shared_ptr<FTScene>& scene) {
         scene_ = scene;
     }
+
+    GLFWwindow* getWindow() const {
+        return window_;
+    };
+
+    void draw();
 
 private:
     FTDirector();
@@ -36,16 +36,11 @@ private:
 
     void loadDefaultFonts();
 
-    void windowSizeChange(GLFWwindow* window, int width, int height);
-
-    static void windowSizeChangeCallback(GLFWwindow* window, int width, int height);
+    void windowSizeChangeEvent(const FTWindowResizeEvent& event);
 
     std::shared_ptr<FTScene> scene_;
     GLFWwindow* window_;
     glm::vec2 window_size_;
 
     double last_tick_time_;
-
-    Gallant::Signal1<float> pre_draw_event_handler_;
-    Gallant::Signal2<float, float> window_size_change_event_handler_;
 };

@@ -13,8 +13,12 @@ FTEngine* FTEngine::getSharedInstance() {
     return s_instance;
 }
 
-FTEngine::FTEngine() {
-    
+FTEngine::FTEngine() : setup_(false) {
+    director_ = new FTDirector();
+    event_manager_ = new FTEventManager();
+    input_manager_ = new FTInputManager();
+    shader_cache_ = new FTShaderCache();
+    font_cache_ = new FTFontCache();
 }
 
 FTEngine::~FTEngine() {
@@ -26,28 +30,32 @@ FTEngine::~FTEngine() {
 }
 
 bool FTEngine::_setup(bool is_mocked) {
-    director_ = new FTDirector();
-    event_manager_ = new FTEventManager();
-    input_manager_ = new FTInputManager();
-    shader_cache_ = new FTShaderCache();
-    font_cache_ = new FTFontCache();
-
     if (!is_mocked && director_->setup() != 0) {
         FTLog("Director initialisation failed");
         return false;
     }
+
+    input_manager_->setup();
+
     return true;
 }
 
 
 bool FTEngine::setup(bool is_mocked) {
-    FTAssert(s_instance == nullptr, "FTEngine already setup");
-    s_instance = new FTEngine();
+    if (s_instance == nullptr) {
+        FTEngine::init();
+    }
+    FTAssert(!s_instance->setup_, "FTEngine already setup");
     if (s_instance->_setup(is_mocked)) {
         return true;
     }
     cleanup();
     return false;
+}
+
+void FTEngine::init() {
+    FTAssert(s_instance == nullptr, "FTEngine::init() already called");
+    s_instance = new FTEngine();
 }
 
 bool FTEngine::cleanup() {

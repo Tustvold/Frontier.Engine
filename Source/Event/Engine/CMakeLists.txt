@@ -1,0 +1,9 @@
+set(SOURCES ${SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTEngineEventDispatcher.cpp
+    PARENT_SCOPE)
+
+
+set (HEADERS ${HEADERS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTEngineEventDispatcher.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTEngineEvents.h
+    PARENT_SCOPE)

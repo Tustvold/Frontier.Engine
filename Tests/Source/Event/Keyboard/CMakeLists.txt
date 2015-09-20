@@ -1,0 +1,6 @@
+set (SOURCES ${SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/TestKeyboardEventDispatcher.cpp
+PARENT_SCOPE)
+
+set (HEADERS ${HEADERS}
+PARENT_SCOPE)
