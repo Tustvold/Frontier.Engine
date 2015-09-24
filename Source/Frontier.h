@@ -15,6 +15,8 @@
 #include <stdarg.h>
 #include <stdexcept>
 #include <memory>
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <Util/FTLog.h>
 
 

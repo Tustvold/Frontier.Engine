@@ -8,6 +8,6 @@ class FTKeyboardEventDispatcher : public FTEventDispatcher<FTKeyPressedEvent, FT
 public:
     FTKeyboardEventDispatcher();
     ~FTKeyboardEventDispatcher();
-
+private:
     void keyPressedEvent(GLFWwindow* window, int key, int scancode, int action, int mods);
 };

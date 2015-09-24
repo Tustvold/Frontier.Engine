@@ -1,8 +1,6 @@
 #include "FTCameraFPS.h"
 #include <FTEngine.h>
 #include <Frontier.h>
-#define _USE_MATH_DEFINES
-#include <math.h>
 #include <Event/Mouse/FTMouseEvents.h>
 #include <Event/Mouse/FTMouseEventDispatcher.h>
 
@@ -66,8 +64,8 @@ void FTCameraFPS::update(const FTPreDrawEvent& event) {
 }
 
 void FTCameraFPS::mouseMoveEvent(const FTMouseMoveEvent& event) {
-    rotation_euler_radians.x += event.delta_x_ * rotation_speed_;
-    rotation_euler_radians.y -= event.delta_y_ * rotation_speed_;
+    rotation_euler_radians.x += (float)event.delta_x_ * rotation_speed_;
+    rotation_euler_radians.y -= (float)event.delta_y_ * rotation_speed_;
 
     if (rotation_euler_radians.y > M_PI / 2.0f)
         rotation_euler_radians.y = (float)M_PI / 2.0f;
