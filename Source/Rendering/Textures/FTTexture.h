@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <GL/glew.h>
+#include <Frontier.h>
 
 // TODO Implement system for using multiple texture units
 class FTTexture {

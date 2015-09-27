@@ -2,6 +2,7 @@ add_subdirectory(Engine)
 add_subdirectory(Keyboard)
 add_subdirectory(Mouse)
 add_subdirectory(Window)
+add_subdirectory(Input)
 
 set(SOURCES ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTEventManager.cpp

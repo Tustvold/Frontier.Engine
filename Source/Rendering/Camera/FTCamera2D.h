@@ -6,6 +6,7 @@
 
 class FTCamera2D : public FTCamera {
 public:
+
     FTCamera2D() {
         setClippingPlanes(0, 1);
     }
@@ -36,6 +37,13 @@ public:
 
     bool testBoundingBox(glm::vec3& center, glm::vec3& halfextents) const override {
         return true;
+    }
+
+    bool testNodeVisible(const FTNodeBase* node) const override {
+        auto& position = node->getPosition();
+        auto& size = node->getSize();
+
+        return position.x <= screen_rect_.x_ + screen_rect_.width_ && position.x + size.x >= screen_rect_.x_ && position.y <= screen_rect_.y_ + screen_rect_.height_ && position.y + size.y >= screen_rect_.y_;
     }
 
 private:

@@ -16,7 +16,7 @@ public:
 
     virtual void draw() {
         for (auto it = views_.begin(); it != views_.end(); ++it) {
-            (*it)->draw();
+            (*it)->visit();
         }
     }
 

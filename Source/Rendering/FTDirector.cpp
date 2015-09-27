@@ -1,7 +1,7 @@
 #include "FTDirector.h"
 
 #include <Frontier.h>
-#include <Util/FTInputManager.h>
+#include <Event/Input/FTInputManager.h>
 
 #include <Rendering/Shader/FTShaderCache.h>
 #include <Rendering/Textures/FTTexture.h>

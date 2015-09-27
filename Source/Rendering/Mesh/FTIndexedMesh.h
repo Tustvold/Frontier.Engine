@@ -42,8 +42,8 @@ protected:
     size_t index_count_;
 };
 
-template <typename Transform, typename ShaderProgram, typename VertexType, typename IndexType>
-class FTIndexedMesh : public FTMesh<Transform, ShaderProgram, VertexType> {
+template <typename ShaderProgram, typename VertexType, typename IndexType>
+class FTIndexedMesh : public FTMesh<ShaderProgram, VertexType> {
 public:
 
     virtual ~FTIndexedMesh() {

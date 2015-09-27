@@ -2,8 +2,8 @@
 #include <Rendering/Scene/FTNode.h>
 
 // A FTNode which renders a provided FTDrawable
-template <typename Transform, typename ShaderProgram>
-class FTDrawableNode : public FTNode<Transform, ShaderProgram> {
+template <typename ShaderProgram>
+class FTDrawableNode : public FTNode<ShaderProgram> {
 public:
     explicit FTDrawableNode(std::unique_ptr<FTDrawable> drawable) : FTNode(), drawable_(std::move(drawable)) {
 

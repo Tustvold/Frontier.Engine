@@ -4,12 +4,12 @@
 
 FTCube::FTCube(const glm::vec3 face_colors[6]) : FTIndexedMesh() {
 
-    auto data = std::make_shared<FTIndexedMeshData<FTVertexColor, uint16_t>>(4 * 6, 36);
+    auto data = std::make_shared<FTIndexedMeshData<FTVertexColor<glm::vec3>, uint16_t>>(4 * 6, 36);
 
     auto vertices = data->getVertices().data();
     auto indices = data->getIndices().data();
 
-    FTVertexColor vertex;
+    FTVertexColor<glm::vec3> vertex;
     int cur_index = 0;
     int vertex_index = 0;
     int indices_index = 0;

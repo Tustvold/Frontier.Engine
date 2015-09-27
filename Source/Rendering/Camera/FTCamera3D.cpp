@@ -1,6 +1,7 @@
 #include "FTCamera3D.h"
 #include <glm/gtc/matrix_access.hpp>
 #include <Rendering/FTDirector.h>
+#include <Rendering/Scene/FTNode.h>
 
 
 FTCamera3D::FTCamera3D() : position_(0, 0, 0), rotation_euler_radians(0, 0), rotation_dirty_(true), update_view_frustrum_(true), fov_(45) {
@@ -9,6 +10,12 @@ FTCamera3D::FTCamera3D() : position_(0, 0, 0), rotation_euler_radians(0, 0), rot
 
 FTCamera3D::~FTCamera3D() {
     
+}
+
+bool FTCamera3D::testNodeVisible(const FTNodeBase* node) const {
+    glm::vec3 half_extents = node->getSize()/2.0f;
+    glm::vec3 center = node->getPosition() + half_extents;
+    return testBoundingBox(center, half_extents);
 }
 
 glm::vec4 normalizeVec4(const glm::vec4& vec) {

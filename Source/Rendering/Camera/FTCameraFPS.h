@@ -1,5 +1,5 @@
 #pragma once
-#include <Util/FTInputManager.h>
+#include <Event/Input/FTInputManager.h>
 #include "FTCamera3D.h"
 
 struct FTMouseMoveEvent;

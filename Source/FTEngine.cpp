@@ -1,7 +1,7 @@
 #include "FTEngine.h"
 
 #include "Rendering/FTDirector.h"
-#include "Util/FTInputManager.h"
+#include "Event/Input/FTInputManager.h"
 #include "Rendering/Shader/FTShaderCache.h"
 #include "Rendering/Text/FTFontCache.h"
 #include "Event/FTEventManager.h"

@@ -21,9 +21,9 @@ public:
 
     ftgl::texture_font_t* cacheFontSize(int size);
 
-    std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture, uint16_t>> generateMeshForString(const std::basic_string<wchar_t>& string, int size, glm::vec2& outputsize);
+    std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture<glm::vec2>, uint16_t>> generateMeshForString(const std::basic_string<wchar_t>& string, int size, glm::vec2& outputsize);
 
-    void populateMeshDataForString(std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture, uint16_t>>& data, const std::basic_string<wchar_t>& string, int size, glm::vec2& outputsize);
+    void populateMeshDataForString(std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture<glm::vec2>, uint16_t>>& data, const std::basic_string<wchar_t>& string, int size, glm::vec2& outputsize);
 
 protected:
     float h;

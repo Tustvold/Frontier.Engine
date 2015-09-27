@@ -2,7 +2,7 @@
 #include <Rendering/Mesh/FTIndexedMesh.h>
 
 TEST(TestIndexedMeshData, TestPreAllocate) {
-    FTIndexedMeshData<FTVertexColor, uint16_t> mesh(40,80);
+    FTIndexedMeshData<FTVertexColor<glm::vec3>, uint16_t> mesh(40,80);
     EXPECT_EQ(mesh.getVertices().capacity(), 40);
     EXPECT_EQ(mesh.getIndices().capacity(), 80);
     EXPECT_EQ(mesh.getVertexCount(), 0);
@@ -10,12 +10,12 @@ TEST(TestIndexedMeshData, TestPreAllocate) {
 }
 
 TEST(TestIndexedMeshData, TestDynamic) {
-    FTIndexedMeshData<FTVertexColor,uint16_t> mesh(10,10);
+    FTIndexedMeshData<FTVertexColor<glm::vec3>,uint16_t> mesh(10,10);
     auto& vertices = mesh.getVertices();
     auto& indices = mesh.getIndices();
 
     for (int i = 0; i < 15; i++) {
-        vertices.push_back(FTVertexColor(glm::vec3(i, i, i), glm::vec3(0, 0, 0)));
+        vertices.push_back(FTVertexColor<glm::vec3>(glm::vec3(i, i, i), glm::vec3(0, 0, 0)));
     }
 
     for (int i = 0; i < 15; i++) {
@@ -26,11 +26,11 @@ TEST(TestIndexedMeshData, TestDynamic) {
 }
 
 TEST(TestIndexedMeshData, TestData) {
-    FTIndexedMeshData<FTVertexColor, uint16_t> mesh(10,15);
+    FTIndexedMeshData<FTVertexColor<glm::vec3>, uint16_t> mesh(10,15);
     auto vertices = mesh.getVertices().data();
     auto indices = mesh.getIndices().data();
     for (int i = 0; i < 10; i++) {
-        vertices[i] = FTVertexColor(glm::vec3(i, i, i), glm::vec3(0, 0, 0));
+        vertices[i] = FTVertexColor<glm::vec3>(glm::vec3(i, i, i), glm::vec3(0, 0, 0));
     }
     for (int i = 0; i < 15; i++) {
         indices[i] = i;

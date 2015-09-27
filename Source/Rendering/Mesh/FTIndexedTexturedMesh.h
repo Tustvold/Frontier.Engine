@@ -3,8 +3,8 @@
 #include <Rendering/Mesh/FTIndexedMesh.h>
 #include <Rendering/Textures/FTTexture.h>
 
-template <typename Transform, typename ShaderProgram, typename VertexType, typename IndexType>
-class FTIndexedTexturedMesh : public FTIndexedMesh<Transform, ShaderProgram, VertexType, IndexType> {
+template <typename ShaderProgram, typename VertexType, typename IndexType>
+class FTIndexedTexturedMesh : public FTIndexedMesh<ShaderProgram, VertexType, IndexType> {
 public:
     FTIndexedTexturedMesh() : FTIndexedMesh() {
 

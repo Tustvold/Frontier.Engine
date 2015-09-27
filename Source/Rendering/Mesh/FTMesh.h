@@ -45,8 +45,8 @@ private:
 };
 
 // Renders an attached mesh - note it does not bind a shader program nor update any matrices
-template <typename Transform, typename ShaderProgram, typename VertexType>
-class FTMesh : public FTNode<Transform, ShaderProgram> {
+template <typename ShaderProgram, typename VertexType>
+class FTMesh : public FTNode<ShaderProgram> {
 public:
 
     FTMesh() : vertex_array_id_(0), vertex_buffer_id_(0), num_vertices_(0), max_num_vertices_(0), primitive_type_(GL_TRIANGLES), render_wireframe_(false), is_loaded_(false), is_static_(true) {
@@ -77,7 +77,7 @@ public:
 
         glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), nullptr, GL_DYNAMIC_DRAW);
 
-        FTVertexDescriptor<VertexType>::bind();
+        VertexType::bind();
 
         if (cleanup) {
             glBindVertexArray(0);
@@ -104,7 +104,7 @@ public:
 
         glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), (float*)(data->getVertices().data()), is_static_ ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
 
-        FTVertexDescriptor<VertexType>::bind();
+        VertexType::bind();
 
         if (cleanup) {
             glBindVertexArray(0);

@@ -6,4 +6,6 @@ set(SOURCES ${SOURCES}
 
 set (HEADERS ${HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/MockEngineEventDispatcher.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/MockShader.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/ExpectUtils.h
     PARENT_SCOPE)

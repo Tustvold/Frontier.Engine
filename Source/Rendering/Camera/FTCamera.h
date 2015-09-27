@@ -2,6 +2,8 @@
 #include <Frontier.h>
 #include <Util/FTRect.h>
 
+class FTNodeBase;
+
 // The base class for all cameras
 // Contains some properties common to all cameras
 class FTCamera {
@@ -23,6 +25,8 @@ public:
         glScissor(screen_rect_.x_, screen_rect_.y_, screen_rect_.width_, screen_rect_.height_);
         glViewport(screen_rect_.x_, screen_rect_.y_, screen_rect_.width_, screen_rect_.height_);
     }
+
+    virtual bool testNodeVisible(const FTNodeBase* node) const = 0;
 
     virtual bool testBoundingBox(glm::vec3& center, glm::vec3& halfextents) const = 0;
 

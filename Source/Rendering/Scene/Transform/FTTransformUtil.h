@@ -23,4 +23,16 @@ public:
     void setScale(const glm::vec3& pos) {
         transform3_->setScale(pos);
     }
+
+    const glm::vec3& getPosition() const {
+        return transform1_->getPosition();
+    }
+
+    const glm::quat& getRotationQuaternion() const {
+        return transform2_->getRotationQuaternion();
+    }
+
+    const glm::vec3& getScale() const {
+        return transform3_->getScale();
+    }
 };

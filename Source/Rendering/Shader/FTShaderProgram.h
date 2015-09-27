@@ -12,7 +12,7 @@ public:
 
     virtual ~FTShaderProgram() {
         if (program_id_ != 0)
-        glDeleteProgram(program_id_);
+            glDeleteProgram(program_id_);
     }
 
     virtual bool load() {
@@ -31,7 +31,7 @@ public:
 
 protected:
 
-    FTShaderProgram() {
+    FTShaderProgram() : program_id_(0) {
         
     }
 

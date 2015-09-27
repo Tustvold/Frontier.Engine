@@ -1,16 +1,56 @@
 ﻿#pragma once
 
-#include <glm/glm.hpp>
-#include <GL/glew.h>
+namespace details {
+    template <typename T>
+    struct VectorInfo {
+        
+    };
 
-struct FTVertex {
-    glm::vec3 position_;
+    template <>
+    struct VectorInfo<glm::vec2> {
+        static int getNumComponents() {
+            return 2;
+        }
+    };
+
+    template <>
+    struct VectorInfo<glm::vec3> {
+        static int getNumComponents() {
+            return 3;
+        }
+    };
+
+    template <>
+    struct VectorInfo<glm::vec4> {
+        static int getNumComponents() {
+            return 4;
+        }
+    };
+}
+
+#include <Frontier.h>
+
+enum {
+    kVertexAttribLocation = 0,
+    kColorAttribLocation = 1,
+    kUVAttribLocation = 2
+};
+
+// TODO: Add alignment specifiers to these to make sure the compiler doesn't insert padding
+// Currently MSVC doesn't seem to allow alignas in templates, however...
+struct IFTVertex {
+
+};
+
+template <typename PosType>
+struct FTVertex : public IFTVertex {
+    PosType position_;
 
     FTVertex() {
 
     }
 
-    explicit FTVertex(const glm::vec3& position) : position_(position) {
+    explicit FTVertex(const PosType& position) : position_(position) {
 
     }
 
@@ -23,17 +63,30 @@ struct FTVertex {
     bool operator!=(const FTVertex& other) const {
         return !((*this) == other);
     }
+
+    static void bind() {
+        glVertexAttribPointer(
+            kVertexAttribLocation, // attribute
+            details::VectorInfo<PosType>::getNumComponents(), // size
+            GL_FLOAT, // type
+            GL_FALSE, // normalized?
+            sizeof(FTVertex), // stride
+            (void*)0 // array buffer offset
+            );
+        glEnableVertexAttribArray(kVertexAttribLocation);
+    };
 };
 
+template <typename PosType>
 struct FTVertexColor {
-    glm::vec3 position_;
+    PosType position_;
     glm::vec3 color_;
 
     FTVertexColor() {
 
     }
 
-    FTVertexColor(const glm::vec3& position, const glm::vec3 color) : position_(position), color_(color) {
+    FTVertexColor(const PosType& position, const glm::vec3 color) : position_(position), color_(color) {
 
     }
 
@@ -48,17 +101,40 @@ struct FTVertexColor {
     bool operator!=(const FTVertexColor& other) const {
         return !((*this) == other);
     }
+
+    static void bind() {
+        glVertexAttribPointer(
+            kVertexAttribLocation,
+            details::VectorInfo<PosType>::getNumComponents(),
+            GL_FLOAT,
+            GL_FALSE,
+            sizeof(FTVertexColor),
+            (void*)0
+            );
+
+        glVertexAttribPointer(
+            kColorAttribLocation,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            sizeof(FTVertexColor),
+            (void*)(sizeof(PosType))
+            );
+        glEnableVertexAttribArray(kVertexAttribLocation);
+        glEnableVertexAttribArray(kColorAttribLocation);
+    };
 };
 
+template <typename PosType>
 struct FTVertexTexture {
-    glm::vec3 position_;
+    PosType position_;
     glm::vec2 uv_;
 
     FTVertexTexture() {
 
     }
 
-    FTVertexTexture(const glm::vec3& position, const glm::vec2 uv) : position_(position), uv_(uv) {
+    FTVertexTexture(const PosType& position, const glm::vec2 uv) : position_(position), uv_(uv) {
 
     }
 
@@ -73,10 +149,34 @@ struct FTVertexTexture {
     bool operator!=(const FTVertexTexture& other) const {
         return !((*this) == other);
     }
+
+    static void bind() {
+        glVertexAttribPointer(
+            kVertexAttribLocation,
+            details::VectorInfo<PosType>::getNumComponents(),
+            GL_FLOAT,
+            GL_FALSE,
+            sizeof(FTVertexTexture),
+            (void*)0
+            );
+
+        glVertexAttribPointer(
+            kUVAttribLocation,
+            2,
+            GL_FLOAT,
+            GL_FALSE,
+            sizeof(FTVertexTexture),
+            (void*)(sizeof(PosType))
+            );
+
+        glEnableVertexAttribArray(kVertexAttribLocation);
+        glEnableVertexAttribArray(kUVAttribLocation);
+    };
 };
 
+template <typename PosType>
 struct FTVertexColorTexture {
-    glm::vec3 position_;
+    PosType position_;
     glm::vec3 color_;
     glm::vec2 uv_;
 
@@ -97,119 +197,24 @@ struct FTVertexColorTexture {
     bool operator!=(const FTVertexColorTexture& other) const {
         return !((*this) == other);
     }
-};
 
-
-enum {
-    kVertexAttribLocation = 0,
-    kColorAttribLocation = 1,
-    kUVAttribLocation = 2
-};
-
-template <typename VertexType>
-class FTVertexDescriptor {
-public:
-
-protected:
-    FTVertexDescriptor() {
-
-    }
-
-    ~FTVertexDescriptor() {
-    }
-};
-
-template <>
-class FTVertexDescriptor<FTVertex> {
-public:
-    static void bind() {
-        glVertexAttribPointer(
-            kVertexAttribLocation, // attribute
-            3, // size
-            GL_FLOAT, // type
-            GL_FALSE, // normalized?
-            sizeof(FTVertex), // stride
-            (void*)0 // array buffer offset
-        );
-        glEnableVertexAttribArray(kVertexAttribLocation);
-    };
-};
-
-template <>
-class FTVertexDescriptor<FTVertexColor> {
-public:
     static void bind() {
         glVertexAttribPointer(
             kVertexAttribLocation,
-            3,
-            GL_FLOAT,
-            GL_FALSE,
-            sizeof(FTVertexColor),
-            (void*)0
-        );
-
-        glVertexAttribPointer(
-            kColorAttribLocation,
-            3,
-            GL_FLOAT,
-            GL_FALSE,
-            sizeof(FTVertexColor),
-            (void*)(3 * sizeof(float))
-        );
-        glEnableVertexAttribArray(kVertexAttribLocation);
-        glEnableVertexAttribArray(kColorAttribLocation);
-    };
-};
-
-template <>
-class FTVertexDescriptor<FTVertexTexture> {
-public:
-    static void bind() {
-        glVertexAttribPointer(
-            kVertexAttribLocation,
-            3,
-            GL_FLOAT,
-            GL_FALSE,
-            sizeof(FTVertexTexture),
-            (void*)0
-        );
-
-        glVertexAttribPointer(
-            kUVAttribLocation,
-            2,
-            GL_FLOAT,
-            GL_FALSE,
-            sizeof(FTVertexTexture),
-            (void*)(3 * sizeof(float))
-        );
-
-        glEnableVertexAttribArray(kVertexAttribLocation);
-        glEnableVertexAttribArray(kUVAttribLocation);
-    };
-};
-
-
-template <>
-class FTVertexDescriptor<FTVertexColorTexture> {
-public:
-    static void bind() {
-        glVertexAttribPointer(
-            kVertexAttribLocation,
-            3,
+            details::VectorInfo<PosType>::getNumComponents(),
             GL_FLOAT,
             GL_FALSE,
             sizeof(FTVertexColorTexture),
             (void*)0
-        );
-
+            );
         glVertexAttribPointer(
             kColorAttribLocation,
             3,
             GL_FLOAT,
             GL_FALSE,
             sizeof(FTVertexColorTexture),
-            (void*)(3 * sizeof(float))
-        );
+            (void*)(sizeof(PosType))
+            );
 
         glVertexAttribPointer(
             kUVAttribLocation,
@@ -217,8 +222,8 @@ public:
             GL_FLOAT,
             GL_FALSE,
             sizeof(FTVertexColorTexture),
-            (void*)(6 * sizeof(float))
-        );
+            (void*)(sizeof(PosType) + sizeof(glm::vec3))
+            );
 
         glEnableVertexAttribArray(kVertexAttribLocation);
         glEnableVertexAttribArray(kUVAttribLocation);

@@ -16,6 +16,10 @@ public:
         transform_dirty_ = true;
     }
 
+    const glm::quat& getRotationQuaternion() const {
+        return rotation_quat_;
+    }
+
 protected:
     glm::quat rotation_quat_;
 };

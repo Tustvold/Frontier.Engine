@@ -4,21 +4,23 @@
 #include <FTEngine.h>
 #include "FTFontCache.h"
 
-FTLabel::FTLabel(const std::basic_string<char>& fontpath, const std::basic_string<wchar_t>& text, int font_size, bool is_mutable) : FTIndexedTexturedMesh(), anchor_point_(0, 0), position_(0, 0), is_mutable_(is_mutable), font_size_(font_size) {
+FTLabel::FTLabel(const std::basic_string<char>& fontpath, const std::basic_string<wchar_t>& text, int font_size, bool is_mutable) : FTIndexedTexturedMesh(), is_mutable_(is_mutable), font_size_(font_size) {
 
     font_ = FTEngine::getFontCache()->getFont(fontpath);
 
-    auto data = font_->generateMeshForString(text, font_size, label_size_);
+    glm::vec2 pen;
+    auto data = font_->generateMeshForString(text, font_size, pen);
+    setSize(glm::vec3(pen.x, pen.y, 0));
 
     auto texture = font_->getTexture();
 
     setTexture(texture);
     loadIndexedMeshData(data, !is_mutable);
 
+    setFrustrumCull(false);
+
     if (is_mutable)
         mesh_data_ = std::move(data);
-
-    setPosition(glm::vec2(0, 0));
 
     text_ = text;
 }
@@ -26,11 +28,6 @@ FTLabel::FTLabel(const std::basic_string<char>& fontpath, const std::basic_strin
 
 FTLabel::~FTLabel() {
     
-}
-
-void FTLabel::setPosition(const glm::vec2& pos) {
-    position_ = pos;
-    transform_->setPosition(glm::vec3(position_.x - label_size_.x * anchor_point_.x, position_.y - label_size_.y * anchor_point_.y, 0));
 }
 
 void FTLabel::setString(const wchar_t* text) {
@@ -44,8 +41,9 @@ void FTLabel::setString(const wchar_t* text) {
     mesh_data_->getIndices().clear();
     mesh_data_->getVertices().clear();
 
-    font_->populateMeshDataForString(mesh_data_, text, font_size_, label_size_);
+    glm::vec2 pen;
+    font_->populateMeshDataForString(mesh_data_, text, font_size_, pen);
     setIndexedMeshData(mesh_data_);
 
-    setPosition(position_);
+    setSize(glm::vec3(pen.x, pen.y, 0));
 }

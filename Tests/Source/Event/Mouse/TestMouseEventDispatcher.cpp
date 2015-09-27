@@ -8,7 +8,8 @@ public:
     MOCK_METHOD1(mouseMoveEvent, void(const FTMouseMoveEvent&));
     MOCK_METHOD1(mouseEnterEvent, void(const FTMouseEnterEvent&)); 
     MOCK_METHOD1(mouseExitEvent, void(const FTMouseExitEvent&));
-
+    MOCK_METHOD1(mouseButtonPressedEvent, void(const FTMouseButtonPressedEvent&));
+    MOCK_METHOD1(mouseButtonReleasedEvent, void(const FTMouseButtonReleasedEvent&));
 };
 
 TEST(TestMouseEventDispatcher, TestMouseMove) {
@@ -78,6 +79,67 @@ TEST(TestMouseEventDispatcher, TestEnterExitPosPurge) {
     mock.mouse_enter_callback_(nullptr, GL_FALSE);
 
     mock.mouse_pos_callback_(nullptr, 240, 80);
+
+    FTEngine::cleanup();
+}
+
+TEST(TestMouseEventDispatcher, TestMouseButtonSimple) {
+    GlfwMock mock;
+    FTEngine::setup(true);
+    MockMouseEventListener listener;
+
+    auto move_delegate = Gallant::Delegate1<const FTMouseMoveEvent&>(&listener, &MockMouseEventListener::mouseMoveEvent);
+    FTEngine::getEventManager()->getEventDispatcher<FTMouseEventDispatcher>()->registerDelegate(move_delegate);
+
+    auto pressed_delegate = Gallant::Delegate1<const FTMouseButtonPressedEvent&>(&listener, &MockMouseEventListener::mouseButtonPressedEvent);
+    FTEngine::getEventManager()->getEventDispatcher<FTMouseEventDispatcher>()->registerDelegate(pressed_delegate);
+
+    auto released_delegate = Gallant::Delegate1<const FTMouseButtonReleasedEvent&>(&listener, &MockMouseEventListener::mouseButtonReleasedEvent);
+    FTEngine::getEventManager()->getEventDispatcher<FTMouseEventDispatcher>()->registerDelegate(released_delegate);
+
+    testing::InSequence s;
+
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(200, 100, 0, 0)));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(240, 80, 40, -20)));
+    EXPECT_CALL(listener, mouseButtonPressedEvent(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)));
+    EXPECT_CALL(listener, mouseButtonReleasedEvent(FTMouseButtonReleasedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)));
+
+    mock.mouse_pos_callback_(nullptr, 200, 100);
+    mock.mouse_pos_callback_(nullptr, 240, 80);
+    mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
+    mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, 0);
+
+
+    FTEngine::cleanup();
+}
+
+TEST(TestMouseEventDispatcher, TestMouseButtonExit) {
+    GlfwMock mock;
+    FTEngine::setup(true);
+    MockMouseEventListener listener;
+
+    auto move_delegate = Gallant::Delegate1<const FTMouseMoveEvent&>(&listener, &MockMouseEventListener::mouseMoveEvent);
+    FTEngine::getEventManager()->getEventDispatcher<FTMouseEventDispatcher>()->registerDelegate(move_delegate);
+
+    auto pressed_delegate = Gallant::Delegate1<const FTMouseButtonPressedEvent&>(&listener, &MockMouseEventListener::mouseButtonPressedEvent);
+    FTEngine::getEventManager()->getEventDispatcher<FTMouseEventDispatcher>()->registerDelegate(pressed_delegate);
+
+    auto released_delegate = Gallant::Delegate1<const FTMouseButtonReleasedEvent&>(&listener, &MockMouseEventListener::mouseButtonReleasedEvent);
+    FTEngine::getEventManager()->getEventDispatcher<FTMouseEventDispatcher>()->registerDelegate(released_delegate);
+
+    testing::InSequence s;
+
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(200, 100, 0, 0)));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(240, 80, 40, -20)));
+    EXPECT_CALL(listener, mouseButtonPressedEvent(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)));
+    EXPECT_CALL(listener, mouseButtonReleasedEvent(FTMouseButtonReleasedEvent(DBL_MAX, DBL_MAX, GLFW_MOUSE_BUTTON_LEFT, true)));
+
+    mock.mouse_pos_callback_(nullptr, 200, 100);
+    mock.mouse_pos_callback_(nullptr, 240, 80);
+    mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
+    mock.mouse_enter_callback_(nullptr, GL_FALSE);
+    mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, 0);
+
 
     FTEngine::cleanup();
 }

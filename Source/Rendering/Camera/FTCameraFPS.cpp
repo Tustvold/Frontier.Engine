@@ -52,9 +52,11 @@ void FTCameraFPS::update(const FTPreDrawEvent& event) {
         view_matrix_dirty_ = true;
     }
 
+    update_view_frustrum_ = true;
     if (up_state_->isPressed()) {
         position_.y += dt * move_speed_;
         view_matrix_dirty_ = true;
+        update_view_frustrum_ = false;
     }
 
     if (down_state_->isPressed()) {

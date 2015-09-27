@@ -93,6 +93,8 @@ public:
         return true;
     }
 
+    bool testNodeVisible(const FTNodeBase* node) const override;
+
 protected:
 
     FTAlignedData<glm::mat4> projection_matrix_;

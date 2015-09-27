@@ -8,6 +8,7 @@
 
 // Include GLM
 #include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 // Include GLFW
 #include <glfw3.h>
@@ -76,3 +77,17 @@ static void FTAssert(bool value, const char* format, ...) {
 }
 
 #define FTLOG(...) FTLog(__VA_ARGS__)
+
+// A number of functions (mainly those talking to OpenGL) assumes that the glm vectors 
+// are not padded. We make sure this assumption holds here
+static_assert(sizeof(glm::vec2) == sizeof(GLfloat) * 2, "glm::vec2 has been padded by the compiler");
+static_assert(sizeof(glm::vec3) == sizeof(GLfloat) * 3, "glm::vec3 has been padded by the compiler");
+static_assert(sizeof(glm::vec4) == sizeof(GLfloat) * 4, "glm::vec4 has been padded by the compiler");
+
+#if defined(_MSC_VER)
+#define ALIGNED_(x) __declspec(align(x))
+#else
+#if defined(__GNUC__)
+#define ALIGNED_(x) __attribute__ ((aligned(x)))
+#endif
+#endif
