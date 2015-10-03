@@ -6,6 +6,7 @@
 #include <Rendering/Shader/FTVertexShaderProgram.h>
 #include <FTEngine.h>
 #include <stack>
+#include <Util/FTMath.h>
 
 class FTNodeBase : public FTDrawable, public FTTransform {
 public:
@@ -17,10 +18,10 @@ public:
 
     virtual void pre_draw() = 0;
     virtual void post_draw() = 0;
-    virtual void visit(const std::shared_ptr<FTCamera>& camera, std::stack<glm::mat4>& matrix_stack) = 0;
+    virtual void visit(const std::shared_ptr<FTCamera>& camera, std::stack<glm::mat4>& matrix_stack, bool parent_updated) = 0;
 
     // Iterate over children you wish to draw - this allows usage of non-standard containers for children
-    virtual void visitChildren(const std::shared_ptr<FTCamera>& camera, std::stack<glm::mat4>& matrix_stack) {
+    virtual void visitChildren(const std::shared_ptr<FTCamera>& camera, std::stack<glm::mat4>& matrix_stack, bool parent_updated) {
         
     }
 
@@ -87,9 +88,9 @@ public:
         perform_frustrum_cull_ = should_cull;
     }
 
-    virtual void updateMatrices() override {
+    virtual bool updateMatrices() override {
         if (!getDirty())
-            return;
+            return false;
         scale_transform_->updateMatrices();
         rotation_transform_->updateMatrices();
         
@@ -103,6 +104,46 @@ public:
         position_transform_->updateMatrices();
 
         transform_matrix = position_transform_->getTransformMatrix() * rotate_scale_matrix;
+        transform_dirty_ = false;
+        return true;
+    }
+
+    virtual void updateAAB(const glm::mat4& model_matrix) {
+        glm::vec4 positions[8] = {
+            glm::vec4(0, 0, 0, 1),
+            glm::vec4(size_.x, 0, 0, 1),
+            glm::vec4(0, size_.y, 0, 1),
+            glm::vec4(0, 0, size_.z, 1),
+            glm::vec4(size_.x, size_.y, 0, 1),
+            glm::vec4(size_.x, 0, size_.z, 1),
+            glm::vec4(0, size_.y, size_.z, 1),
+            glm::vec4(size_.x, size_.y, size_.z, 1)
+        };
+
+        auto min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
+        auto max = glm::vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+
+        for (int i = 0; i < 8; i++) {
+            auto transformed = model_matrix * positions[i];
+            max.x = FTMAX(transformed.x, max.x);
+            max.y = FTMAX(transformed.y, max.y);
+            max.z = FTMAX(transformed.z, max.z);
+
+            min.x = FTMIN(transformed.x, min.x);
+            min.y = FTMIN(transformed.y, min.y);
+            min.z = FTMIN(transformed.z, min.z);
+        }
+
+        aab_extents_ = (max - min) / 2.0f;
+        aab_center_ = (max + min) / 2.0f;
+    }
+
+    const glm::vec3& getAABCenter() const {
+        return aab_center_;
+    }
+
+    const glm::vec3& getAABHalfExtents() const {
+        return aab_extents_;
     }
 
 protected:
@@ -114,6 +155,10 @@ protected:
     glm::vec3 anchor_point_;
     glm::vec3 unaltered_position_;
     bool perform_frustrum_cull_;
+    bool compute_aab_;
+
+    glm::vec3 aab_center_;
+    glm::vec3 aab_extents_;
 
     std::unique_ptr<FTTransformRotation> rotation_transform_;
     std::unique_ptr<FTTransformPosition> position_transform_;
@@ -133,11 +178,17 @@ public:
     }
 
     // Override to provide custom transforms, custom frustrum culling, children, etc
-    virtual void visit(const std::shared_ptr<FTCamera>& camera, std::stack<glm::mat4>& matrix_stack) override {
-        updateMatrices();
-        if (perform_frustrum_cull_ && !isVisible(camera))
-            return;
-        glm::mat4 mvp = matrix_stack.top() * getTransformMatrix();
+    virtual void visit(const std::shared_ptr<FTCamera>& camera, std::stack<glm::mat4>& matrix_stack, bool parent_updated) override {
+        parent_updated |= updateMatrices();
+        glm::mat4 model_matrix = matrix_stack.top() * getTransformMatrix();
+        if (perform_frustrum_cull_) {
+            if (parent_updated)
+                updateAAB(model_matrix);
+            if (!isVisible(camera))
+                return;
+        }
+        
+        glm::mat4 mvp = camera->getViewProjectionMatrix() * model_matrix;
         shader_program_->use();
         shader_program_->updateMvpUniforms(&mvp[0][0]);
 
@@ -146,8 +197,8 @@ public:
         this->post_draw();
         shader_program_->cleanup();
 
-        matrix_stack.push(mvp);
-        visitChildren(camera, matrix_stack);
+        matrix_stack.push(model_matrix);
+        visitChildren(camera, matrix_stack, parent_updated);
         matrix_stack.pop();
     }
 

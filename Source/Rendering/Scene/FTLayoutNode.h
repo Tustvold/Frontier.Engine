@@ -16,9 +16,9 @@ public:
         children_.push_back(child);
     }
 
-    void visitChildren(const std::shared_ptr<FTCamera>& camera, std::stack<glm::mat4>& matrix_stack) override {
+    void visitChildren(const std::shared_ptr<FTCamera>& camera, std::stack<glm::mat4>& matrix_stack, bool parent_updated) override {
         for (auto it = children_.begin(); it != children_.end(); ++it) {
-            (*it)->visit(camera, matrix_stack);
+            (*it)->visit(camera, matrix_stack, parent_updated);
         }
     }
     

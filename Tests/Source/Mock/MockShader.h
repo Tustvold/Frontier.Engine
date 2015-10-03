@@ -4,6 +4,10 @@
 class MockShader : public FTVertexShaderProgram {
 
 public:
+    void updateMvpUniforms(const GLfloat* mvp) override {
+
+    }
+
     void use() override {
 
     }

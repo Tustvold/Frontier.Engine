@@ -21,6 +21,7 @@
 #include <Util/FTLog.h>
 
 
+
 static void FTLog(const char* format, ...) {
     va_list args;
     va_start(args, format);

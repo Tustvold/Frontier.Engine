@@ -4,7 +4,7 @@
 #include <Mock/MockShader.h>
 #include <Mock/ExpectUtils.h>
 
-class MockNode : public FTNode<MockShader> {
+class MockNodeTransform : public FTNode<MockShader> {
 public:
     std::unique_ptr<FTTransformScale>& getScaleTransform() {
         return scale_transform_;
@@ -54,7 +54,7 @@ TEST(TestNodeTransform, TestTransform) {
     GlfwMock mock;
     FTEngine::setup(true);
 
-    auto node = std::make_shared<MockNode>();
+    auto node = std::make_shared<MockNodeTransform>();
 
     expectMatrixEqual(node->getPositionTransform()->getTransformMatrix(), glm::mat4());
     node->setPosition(glm::vec3(5, 3, 9));
@@ -100,7 +100,7 @@ TEST(TestNodeTransform, TestAnchorPointSimple) {
     GlfwMock mock;
     FTEngine::setup(true);
 
-    auto node = std::make_shared<MockNode>();
+    auto node = std::make_shared<MockNodeTransform>();
 
     expectMatrixEqual(node->getPositionTransform()->getTransformMatrix(), glm::mat4());
     node->setPosition(glm::vec3(5, 3, 9));
@@ -125,7 +125,7 @@ TEST(TestNodeTransform, TestAnchorPointScale) {
     GlfwMock mock;
     FTEngine::setup(true);
 
-    auto node = std::make_shared<MockNode>();
+    auto node = std::make_shared<MockNodeTransform>();
 
     expectMatrixEqual(node->getPositionTransform()->getTransformMatrix(), glm::mat4());
     node->setPosition(glm::vec3(5, 3, 9));
@@ -151,7 +151,7 @@ TEST(TestNodeTransform, TestAnchorPointRotate) {
     GlfwMock mock;
     FTEngine::setup(true);
 
-    auto node = std::make_shared<MockNode>();
+    auto node = std::make_shared<MockNodeTransform>();
 
     expectMatrixEqual(node->getPositionTransform()->getTransformMatrix(), glm::mat4());
     node->setPosition(glm::vec3(5, 3, 9));

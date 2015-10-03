@@ -11,7 +11,7 @@ public:
 
     virtual bool load() override;
 
-    void updateMvpUniforms(const GLfloat* mvp);
+    virtual void updateMvpUniforms(const GLfloat* mvp);
 
     virtual bool compile() override {
         return createShaderProgram(vertex_shader_source_, fragment_shader_source_);

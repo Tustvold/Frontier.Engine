@@ -39,7 +39,7 @@ public:
     virtual void visit() override {
         camera_->preDraw();
         std::stack<glm::mat4> matrix_stack;
-        matrix_stack.push(camera_->getViewProjectionMatrix());
+        matrix_stack.push(glm::mat4());
         visitChildren(camera_, matrix_stack);
     }
 

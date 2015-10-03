@@ -4,11 +4,13 @@
 
 class FTTransformRotation : public FTTransform {
 public:
-    virtual void updateMatrices() override {
+    virtual bool updateMatrices() override {
         if (transform_dirty_) {
             transform_matrix = glm::toMat4(rotation_quat_);
             transform_dirty_ = false;
+            return true;
         }
+        return false;
     }
 
     void setRotationQuaterion(const glm::quat& quat) {

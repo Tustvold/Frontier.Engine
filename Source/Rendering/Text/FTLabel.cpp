@@ -17,8 +17,6 @@ FTLabel::FTLabel(const std::basic_string<char>& fontpath, const std::basic_strin
     setTexture(texture);
     loadIndexedMeshData(data, !is_mutable);
 
-    setFrustrumCull(false);
-
     if (is_mutable)
         mesh_data_ = std::move(data);
 

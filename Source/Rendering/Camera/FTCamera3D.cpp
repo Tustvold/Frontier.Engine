@@ -2,6 +2,8 @@
 #include <glm/gtc/matrix_access.hpp>
 #include <Rendering/FTDirector.h>
 #include <Rendering/Scene/FTNode.h>
+#include <glm/detail/type_mat.hpp>
+#include <glm/detail/type_vec4.hpp>
 
 
 FTCamera3D::FTCamera3D() : position_(0, 0, 0), rotation_euler_radians(0, 0), rotation_dirty_(true), update_view_frustrum_(true), fov_(45) {
@@ -12,10 +14,21 @@ FTCamera3D::~FTCamera3D() {
     
 }
 
+
 bool FTCamera3D::testNodeVisible(const FTNodeBase* node) const {
-    glm::vec3 half_extents = node->getSize()/2.0f;
-    glm::vec3 center = node->getPosition() + half_extents;
+    glm::vec3 half_extents = node->getAABHalfExtents();
+    glm::vec3 center = node->getAABCenter();
+    
     return testBoundingBox(center, half_extents);
+}
+
+bool FTCamera3D::testBoundingBox(glm::vec3& center, glm::vec3& halfextents) const {
+    for (int i = 0; i < 6; i++) {
+        glm::vec3 res = center + vec3xor(halfextents, frustrum_planes_sign_flipped_[i]);
+        if (glm::dot(res, *(glm::vec3*)&(frustrum_planes_[i].getConstData())) <= -frustrum_planes_[i].getConstData().w)
+            return false;
+    }
+    return true;
 }
 
 glm::vec4 normalizeVec4(const glm::vec4& vec) {

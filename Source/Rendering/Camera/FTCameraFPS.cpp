@@ -12,6 +12,7 @@ FTCameraFPS::FTCameraFPS() : move_speed_(15.0f), rotation_speed_(0.005f) {
     right_state_ = input_manager->getKeyState("Right", GLFW_KEY_D);
     up_state_ = input_manager->getKeyState("Up", GLFW_KEY_SPACE);
     down_state_ = input_manager->getKeyState("Down", GLFW_KEY_LEFT_SHIFT);
+    freeze_frustrum_state_ = input_manager->getKeyState("Freeze Frustrum", GLFW_KEY_EQUAL);
 
     auto pre_draw_delegate = Gallant::Delegate1<const FTPreDrawEvent&>(this, &FTCameraFPS::update);
     FTEngine::getEventManager()->getEventDispatcher<FTEngineEventDispatcher>()->registerDelegate(pre_draw_delegate);
@@ -52,17 +53,17 @@ void FTCameraFPS::update(const FTPreDrawEvent& event) {
         view_matrix_dirty_ = true;
     }
 
-    update_view_frustrum_ = true;
     if (up_state_->isPressed()) {
         position_.y += dt * move_speed_;
         view_matrix_dirty_ = true;
-        update_view_frustrum_ = false;
     }
 
     if (down_state_->isPressed()) {
         position_.y -= dt * move_speed_;
         view_matrix_dirty_ = true;
     }
+
+    update_view_frustrum_ = !freeze_frustrum_state_->isPressed();
 }
 
 void FTCameraFPS::mouseMoveEvent(const FTMouseMoveEvent& event) {

@@ -20,8 +20,11 @@ public:
         return transform_matrix.getConstData();
     }
 
-    virtual void updateMatrices() {
+    // Update this transform's matrix return true if it needed updating
+    virtual bool updateMatrices() {
+        auto original_value = transform_dirty_;
         transform_dirty_ = false;
+        return original_value;
     }
 
     virtual bool getDirty() {

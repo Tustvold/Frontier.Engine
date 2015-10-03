@@ -19,12 +19,14 @@ class FTCompositeTransform : public FTTransform {
         return transform1_->getDirty() || transform2_->getDirty();
     }
 
-    void updateMatrices() override {
-        if (getDirty()) {
-            transform1_->updateMatrices();
-            transform2_->updateMatrices();
+    bool updateMatrices() override {
+        bool update = transform1_->updateMatrices();
+        update |= transform2_->updateMatrices();
+        if (update) {
             transform_matrix = transform1_->getTransformMatrix() * transform2_->getTransformMatrix();
+            return true;
         }
+        return false;
     }
 
 protected:
@@ -50,13 +52,15 @@ public:
         return transform1_->getDirty() || transform2_->getDirty() || transform3_->getDirty();
     }
 
-    void updateMatrices() override {
-        if (getDirty()) {
-            transform1_->updateMatrices();
-            transform2_->updateMatrices();
-            transform3_->updateMatrices();
+    bool updateMatrices() override {
+        bool updated = transform1_->updateMatrices();
+        updated |= transform2_->updateMatrices();
+        updated |= transform3_->updateMatrices();
+            
+        if (updated) {
             transform_matrix = transform1_->getTransformMatrix() * transform2_->getTransformMatrix() * transform3_->getTransformMatrix();
         }
+        return updated;
     }
 
 protected:

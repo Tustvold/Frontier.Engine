@@ -40,10 +40,10 @@ public:
     }
 
     bool testNodeVisible(const FTNodeBase* node) const override {
-        auto& position = node->getPosition();
-        auto& size = node->getSize();
+        auto& center = node->getAABCenter();
+        auto& half_extents = node->getAABHalfExtents();
 
-        return position.x <= screen_rect_.x_ + screen_rect_.width_ && position.x + size.x >= screen_rect_.x_ && position.y <= screen_rect_.y_ + screen_rect_.height_ && position.y + size.y >= screen_rect_.y_;
+        return center.x - half_extents.x <= screen_rect_.x_ + screen_rect_.width_ && center.x + half_extents.x >= screen_rect_.x_ && center.y - half_extents.y <= screen_rect_.y_ + screen_rect_.height_ && center.y + half_extents.y >= screen_rect_.y_;
     }
 
 private:

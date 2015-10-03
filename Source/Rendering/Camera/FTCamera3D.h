@@ -84,14 +84,7 @@ public:
         update_view_frustrum_ = should_update_view_frustrum;
     }
 
-    bool testBoundingBox(glm::vec3& center, glm::vec3& halfextents) const override {
-        for (int i = 0; i < 6; i++) {
-            glm::vec3 res = center + vec3xor(halfextents, frustrum_planes_sign_flipped_[i]);
-            if (glm::dot(res, *(glm::vec3*)&(frustrum_planes_[i].getConstData())) <= -frustrum_planes_[i].getConstData().w)
-                return false;
-        }
-        return true;
-    }
+    bool testBoundingBox(glm::vec3& center, glm::vec3& halfextents) const override;
 
     bool testNodeVisible(const FTNodeBase* node) const override;
 

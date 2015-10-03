@@ -21,6 +21,7 @@ private:
     std::shared_ptr<FTKeyState> right_state_;
     std::shared_ptr<FTKeyState> up_state_;
     std::shared_ptr<FTKeyState> down_state_;
+    std::shared_ptr<FTKeyState> freeze_frustrum_state_;
 
     void update(const FTPreDrawEvent& event);
     void mouseMoveEvent(const FTMouseMoveEvent& event);
