@@ -1,4 +1,5 @@
 #pragma once
+#include <Frontier.h>
 
 template <typename T>
 class FTCircularBuffer {

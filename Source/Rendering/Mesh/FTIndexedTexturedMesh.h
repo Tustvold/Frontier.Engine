@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include <Rendering/Shader/FTVertexTextureShaderProgram.h>
 #include <Rendering/Mesh/FTIndexedMesh.h>
 #include <Rendering/Textures/FTTexture.h>
 
@@ -21,11 +20,10 @@ public:
     void draw() override {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture_->getTextureId());
-        glUniform1i(shader_program_->getTextureUniformId(), 0);
+        glUniform1i(current_shader_program_->getTextureUniformId(), 0);
         FTIndexedMesh::draw();
     }
 
 protected:
-    GLuint uv_buffer_id_;
     std::shared_ptr<FTTexture> texture_;
 };

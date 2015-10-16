@@ -14,7 +14,7 @@ public:
         setEnabled(enabled);
     }
 
-    
+
 };
 
 TEST(TestInputManager, TestKeyStatePressed) {
@@ -52,7 +52,7 @@ TEST(TestInputManager, TestKeyStateReleased) {
     // We don't expect the state to get updated until the next world tick
     EXPECT_TRUE(state->isPressed());
 
-    engine_event_dispatcher->raiseEvent(FTPreDrawEvent(1.0, 60.0));
+    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
 
     EXPECT_FALSE(state->isPressed());
 
@@ -80,7 +80,7 @@ TEST(TestInputManager, TestMapKey) {
     // We don't expect the state to get updated until the next world tick
     EXPECT_TRUE(state->isPressed());
 
-    engine_event_dispatcher->raiseEvent(FTPreDrawEvent(1.0, 60.0));
+    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
 
     EXPECT_FALSE(state->isPressed());
 
@@ -98,7 +98,7 @@ TEST(TestInputManager, TestMouseDown) {
     EXPECT_CALL(del1, onMouseDown(testing::_)).Times(0);
 
     EXPECT_CALL(del2, onMouseDown(FTMouseButtonPressedEvent(DBL_MAX, DBL_MAX, GLFW_MOUSE_BUTTON_LEFT, true)))
-        .WillOnce(testing::Return(true));
+                                                                                                             .WillOnce(testing::Return(true));
 
     EXPECT_CALL(del3, onMouseDown(testing::_)).Times(0);
 
@@ -125,10 +125,10 @@ TEST(TestInputManager, TestMouseDownChained) {
     EXPECT_CALL(del1, onMouseDown(testing::_)).Times(0);
 
     EXPECT_CALL(del2, onMouseDown(FTMouseButtonPressedEvent(DBL_MAX, DBL_MAX, GLFW_MOUSE_BUTTON_LEFT, true)))
-        .WillOnce(testing::Return(false));
+                                                                                                             .WillOnce(testing::Return(false));
 
     EXPECT_CALL(del3, onMouseDown(FTMouseButtonPressedEvent(DBL_MAX, DBL_MAX, GLFW_MOUSE_BUTTON_LEFT, true)))
-        .WillOnce(testing::Return(true));
+                                                                                                             .WillOnce(testing::Return(true));
 
 
     FTEngine::getInputManager()->addMouseDelegate(&del1);
@@ -154,12 +154,12 @@ TEST(TestInputManager, TestMouseMoved) {
     EXPECT_CALL(del1, onMouseDown(testing::_)).Times(0);
 
     EXPECT_CALL(del2, onMouseDown(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)))
-        .InSequence(s)
-        .WillOnce(testing::Return(false));
+                                                                                                     .InSequence(s)
+                                                                                                     .WillOnce(testing::Return(false));
 
     EXPECT_CALL(del3, onMouseDown(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)))
-        .InSequence(s)
-        .WillOnce(testing::Return(true));
+                                                                                                     .InSequence(s)
+                                                                                                     .WillOnce(testing::Return(true));
 
     EXPECT_CALL(del1, onMouseMove(testing::_, testing::_)).Times(0);
 
@@ -192,12 +192,12 @@ TEST(TestInputManager, TestMouseExit) {
     EXPECT_CALL(del1, onMouseDown(testing::_)).Times(0);
 
     EXPECT_CALL(del2, onMouseDown(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)))
-        .InSequence(s)
-        .WillOnce(testing::Return(false));
+                                                                                                     .InSequence(s)
+                                                                                                     .WillOnce(testing::Return(false));
 
     EXPECT_CALL(del3, onMouseDown(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)))
-        .InSequence(s)
-        .WillOnce(testing::Return(true));
+                                                                                                     .InSequence(s)
+                                                                                                     .WillOnce(testing::Return(true));
 
     EXPECT_CALL(del1, onMouseMove(testing::_, testing::_)).Times(0);
 
@@ -233,29 +233,29 @@ TEST(TestInputManager, TestMultipleMouseButtons) {
     testing::Sequence s;
 
     EXPECT_CALL(del, onMouseDown(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)))
-        .InSequence(s)
-        .WillOnce(testing::Return(true));
+                                                                                                    .InSequence(s)
+                                                                                                    .WillOnce(testing::Return(true));
 
     EXPECT_CALL(del, onMouseDown(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_RIGHT, false)))
-        .InSequence(s)
-        .WillOnce(testing::Return(true));
+                                                                                                     .InSequence(s)
+                                                                                                     .WillOnce(testing::Return(true));
 
     EXPECT_CALL(del, onMouseMove(testing::_, GLFW_MOUSE_BUTTON_LEFT))
-        .Times(1)
-        .InSequence(s);
+                                                                     .Times(1)
+                                                                     .InSequence(s);
 
-    
+
     EXPECT_CALL(del, onMouseMove(testing::_, GLFW_MOUSE_BUTTON_RIGHT))
-        .Times(1)
-        .InSequence(s);
+                                                                      .Times(1)
+                                                                      .InSequence(s);
 
     EXPECT_CALL(del, onMouseRelease(FTMouseButtonReleasedEvent(480, 60, GLFW_MOUSE_BUTTON_RIGHT, false)))
-        .Times(1)
-        .InSequence(s);
+                                                                                                         .Times(1)
+                                                                                                         .InSequence(s);
 
     EXPECT_CALL(del, onMouseRelease(FTMouseButtonReleasedEvent(480, 60, GLFW_MOUSE_BUTTON_LEFT, false)))
-        .Times(1)
-        .InSequence(s);
+                                                                                                        .Times(1)
+                                                                                                        .InSequence(s);
 
     FTEngine::getInputManager()->addMouseDelegate(&del);
 

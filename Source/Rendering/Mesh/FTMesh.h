@@ -1,8 +1,8 @@
 #pragma once
-#include <GL/glew.h>
-#include <Rendering/Scene/FTNode.h>
-#include <Rendering/Textures/FTTexture.h>
+#include <Frontier.h>
+#include <Rendering/Scene/FTShaderNode.h>
 #include <Util/FTMath.h>
+#include <Rendering/Mesh/FTVertex.h>
 
 
 template <typename VertexType>
@@ -46,7 +46,7 @@ private:
 
 // Renders an attached mesh - note it does not bind a shader program nor update any matrices
 template <typename ShaderProgram, typename VertexType>
-class FTMesh : public FTNode<ShaderProgram> {
+class FTMesh : public FTShaderNode<ShaderProgram> {
 public:
 
     FTMesh() : vertex_array_id_(0), vertex_buffer_id_(0), num_vertices_(0), max_num_vertices_(0), primitive_type_(GL_TRIANGLES), render_wireframe_(false), is_loaded_(false), is_static_(true) {
@@ -87,7 +87,7 @@ public:
 
     // Loads a mesh described by an FTMesh object
     // Cleanup specifies whether it should unbind the VAO after it has finished creating it
-    virtual void loadMeshData(const std::shared_ptr<FTMeshData<VertexType>>& data, bool is_static, bool cleanup = true) {
+    virtual void loadMeshData(FTMeshData<VertexType>* data, bool is_static, bool cleanup = true) {
         FTAssert(!is_loaded_, "Trying to load mesh data for already loaded mesh");
         is_static_ = is_static;
 
@@ -132,7 +132,7 @@ public:
         glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), data, GL_DYNAMIC_DRAW);
     }
 
-    virtual void setMeshData(const std::shared_ptr<FTMeshData<VertexType>>& data) {
+    virtual void setMeshData(FTMeshData<VertexType>* data) {
         FTAssert(is_loaded_, "Trying to set mesh data for unloaded mesh - consider using LoadMeshData instead");
 
         // Update mesh data
@@ -140,15 +140,15 @@ public:
             num_vertices_ = (GLuint)data->getVertexCount();
             // We can update the existing buffer
             modifyVertices(0, num_vertices_, data->getVertices().data());
-        }
-        else {
+        } else {
             num_vertices_ = (GLuint)data->getVertexCount();
             // We must re-create the buffer
             resizeVertexBuffer(num_vertices_, data->getVertices().data());
         }
     }
 
-    virtual void pre_draw() override {
+    virtual void pre_draw(const glm::mat4& mvp) override {
+        FTShaderNode<ShaderProgram>::pre_draw(mvp);
         if (!is_loaded_) {
             FTLogError("Trying to draw mesh before calling load!");
             return;
@@ -165,6 +165,7 @@ public:
     }
 
     virtual void post_draw() override {
+        FTShaderNode<ShaderProgram>::post_draw();
         glBindVertexArray(0);
 
         if (render_wireframe_)

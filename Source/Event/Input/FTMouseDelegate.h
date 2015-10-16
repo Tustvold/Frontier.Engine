@@ -4,7 +4,7 @@
 class FTMouseDelegate {
 public:
     FTMouseDelegate() : priority_(0), is_enabled_(0) {
-        
+
     }
 
     virtual ~FTMouseDelegate() {

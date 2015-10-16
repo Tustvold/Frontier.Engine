@@ -20,35 +20,6 @@
 #include <math.h>
 #include <Util/FTLog.h>
 
-
-
-static void FTLog(const char* format, ...) {
-    va_list args;
-    va_start(args, format);
-
-    FTLogPrint("Info: ", format, args);
-
-    va_end(args);
-}
-
-static void FTLogWarn(const char* format, ...) {
-    va_list args;
-    va_start(args, format);
-
-    FTLogPrint("Warning: ", format, args);
-
-    va_end(args);
-}
-
-static void FTLogError(const char* format, ...) {
-    va_list args;
-    va_start(args, format);
-
-    FTLogPrint("Error: ", format, args);
-
-    va_end(args);
-}
-
 class FTException : public std::exception {
 public:
     explicit FTException(const char* message) : msg_(message) {
@@ -58,7 +29,7 @@ public:
     virtual ~FTException() throw () {
     }
 
-    virtual const char* what() const throw () {
+    virtual const char* what() const throw () override {
         return msg_.c_str();
     }
 
@@ -66,25 +37,32 @@ private:
     std::string msg_;
 };
 
-static void FTAssert(bool value, const char* format, ...) {
-    if (value)
-        return;
-    va_list args;
-    va_start(args, format);
-    FTLogPrint("Fatal: ", format, args);
-
-    va_end(args);
-    throw FTException("Uncaught FTException");
+#define FTAssert(value, format, ...) if (!(value)) { \
+    FTLogPrint(false, "Assertion failed with error: "); \
+    FTLogPrint(false, format, __VA_ARGS__); \
+    FTLogPrint(true, " at %s:%i",__FILE__, __LINE__); \
+    throw FTException("Failed FTAssert"); \
 }
 
-#define FTLOG(...) FTLog(__VA_ARGS__)
+// Provide constructors for smart pointers which can infer the required type
+// from the provided pointer
+template <typename T>
+std::unique_ptr<T> construct_unique(T* ptr) {
+    return std::unique_ptr<T>(ptr);
+}
 
-// A number of functions (mainly those talking to OpenGL) assumes that the glm vectors 
+template <typename T>
+std::shared_ptr<T> construct_shared(T* ptr) {
+    return std::shared_ptr<T>(ptr);
+}
+
+// A number of functions (mainly those talking to OpenGL) assume that the glm vectors 
 // are not padded. We make sure this assumption holds here
 static_assert(sizeof(glm::vec2) == sizeof(GLfloat) * 2, "glm::vec2 has been padded by the compiler");
 static_assert(sizeof(glm::vec3) == sizeof(GLfloat) * 3, "glm::vec3 has been padded by the compiler");
 static_assert(sizeof(glm::vec4) == sizeof(GLfloat) * 4, "glm::vec4 has been padded by the compiler");
 
+// Note there is a bug in VS which means that you can't use this on a templated struct
 #if defined(_MSC_VER)
 #define ALIGNED_(x) __declspec(align(x))
 #else

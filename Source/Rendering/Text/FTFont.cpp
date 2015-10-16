@@ -1,12 +1,11 @@
-﻿#include "FTFont.h"
-#include "freetype-gl.h"
+﻿#include "freetype-gl.h"
+#include "FTFont.h"
 #include <Rendering/Mesh/FTIndexedTexturedMesh.h>
+#include <Util/FTFileManager.h>
 
-FTFont::FTFont(const std::basic_string<char>& filename) : font_texture_(new FTFontTexture(texture_atlas_new(512, 512, 1))), font_name_(std::move(filename)) {
-    //font_name_->retain();
-
-    //FTLOG("Loaded font                : %s", filename);
-    //FTLOG("Texture occupancy          : %.2f%%", 100.0*texture_atlas->used / (float)(texture_atlas->width*texture_atlas->height));
+FTFont::FTFont(const std::string& filename) : font_texture_(new FTFontTexture(texture_atlas_new(512, 512, 1))) {
+    font_path_ = FTEngine::getFileManager()->getPathToFile(filename);
+    FTAssert(font_path_ != "", "Failed to find font: %s", filename);
 }
 
 FTFont::~FTFont() {
@@ -24,7 +23,7 @@ ftgl::texture_font_t* FTFont::cacheFontSize(int size) {
     if (it != fonts_.end())
         return it->second;
 
-    ftgl::texture_font_t* font = texture_font_new_from_file(font_texture_->getTextureAtlas(), (float)(size), font_name_.c_str());
+    ftgl::texture_font_t* font = texture_font_new_from_file(font_texture_->getTextureAtlas(), (float)(size), font_path_.c_str());
     size_t missed = texture_font_load_glyphs(font, cache);
 
     fonts_[size] = font;
@@ -34,14 +33,14 @@ ftgl::texture_font_t* FTFont::cacheFontSize(int size) {
     return font;
 }
 
-std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture<glm::vec2>, uint16_t>> FTFont::generateMeshForString(const std::basic_string<wchar_t>& text, int size, glm::vec2& pen) {
+FTIndexedMeshData<FTVertexColorTexture<glm::vec2>, uint16_t>* FTFont::generateMeshForString(const std::basic_string<wchar_t>& text, int size, glm::vec2& pen) {
     size_t length = text.length();
-    auto data = std::make_shared<FTIndexedMeshData<FTVertexColorTexture<glm::vec2>, uint16_t>>(4 * length, 6 * length);
+    auto data = new FTIndexedMeshData<FTVertexColorTexture<glm::vec2>, uint16_t>(4 * length, 6 * length);
     populateMeshDataForString(data, text, size, pen);
     return data;
 }
 
-void FTFont::populateMeshDataForString(std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture<glm::vec2>, uint16_t>>& data, const std::basic_string<wchar_t>& text, int size, glm::vec2& pen) {
+void FTFont::populateMeshDataForString(FTIndexedMeshData<FTVertexColorTexture<glm::vec2>, uint16_t>* data, const std::basic_string<wchar_t>& text, int size, glm::vec2& pen) {
     ftgl::texture_font_t* font = cacheFontSize(size);
     size_t length = text.length();
     auto& vertices = data->getVertices();

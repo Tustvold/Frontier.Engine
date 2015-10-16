@@ -1,9 +1,10 @@
 ﻿#pragma once
 
-namespace details {
+namespace details
+{
     template <typename T>
     struct VectorInfo {
-        
+
     };
 
     template <>
@@ -72,7 +73,7 @@ struct FTVertex : public IFTVertex {
             GL_FALSE, // normalized?
             sizeof(FTVertex), // stride
             (void*)0 // array buffer offset
-            );
+        );
         glEnableVertexAttribArray(kVertexAttribLocation);
     };
 };
@@ -110,7 +111,7 @@ struct FTVertexColor {
             GL_FALSE,
             sizeof(FTVertexColor),
             (void*)0
-            );
+        );
 
         glVertexAttribPointer(
             kColorAttribLocation,
@@ -119,7 +120,7 @@ struct FTVertexColor {
             GL_FALSE,
             sizeof(FTVertexColor),
             (void*)(sizeof(PosType))
-            );
+        );
         glEnableVertexAttribArray(kVertexAttribLocation);
         glEnableVertexAttribArray(kColorAttribLocation);
     };
@@ -158,7 +159,7 @@ struct FTVertexTexture {
             GL_FALSE,
             sizeof(FTVertexTexture),
             (void*)0
-            );
+        );
 
         glVertexAttribPointer(
             kUVAttribLocation,
@@ -167,7 +168,7 @@ struct FTVertexTexture {
             GL_FALSE,
             sizeof(FTVertexTexture),
             (void*)(sizeof(PosType))
-            );
+        );
 
         glEnableVertexAttribArray(kVertexAttribLocation);
         glEnableVertexAttribArray(kUVAttribLocation);
@@ -206,7 +207,7 @@ struct FTVertexColorTexture {
             GL_FALSE,
             sizeof(FTVertexColorTexture),
             (void*)0
-            );
+        );
         glVertexAttribPointer(
             kColorAttribLocation,
             3,
@@ -214,7 +215,7 @@ struct FTVertexColorTexture {
             GL_FALSE,
             sizeof(FTVertexColorTexture),
             (void*)(sizeof(PosType))
-            );
+        );
 
         glVertexAttribPointer(
             kUVAttribLocation,
@@ -223,7 +224,7 @@ struct FTVertexColorTexture {
             GL_FALSE,
             sizeof(FTVertexColorTexture),
             (void*)(sizeof(PosType) + sizeof(glm::vec3))
-            );
+        );
 
         glEnableVertexAttribArray(kVertexAttribLocation);
         glEnableVertexAttribArray(kUVAttribLocation);

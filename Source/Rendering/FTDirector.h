@@ -1,46 +1,50 @@
 #pragma once
+#include <Frontier.h>
+#include <Event/Engine/FTEngineEvents.h>
 
-#include <ThirdParty/Signals/Signal.h>
-#include "Scene/FTScene.h"
-#include <Event/Engine/FTEngineEventDispatcher.h>
-struct FTWindowResizeEvent;
+class FTScene;
 class FTCamera;
-struct GLFWwindow;
+class FTShaderCache;
+class FTFontCache;
+class FTActionManager;
 
-// Class which manages drawing the world
-// This class is not thread safe and should only be called from the OpenGL thread
+// Class which manages the scene hierarchy
 class FTDirector {
     friend class FTEngine;
 public:
-    int run();
 
-    glm::vec2 getWindowSize() {
-        return window_size_;
+    void setCurrentScene(const std::shared_ptr<FTScene>& scene);
+
+    FTShaderCache* getShaderCache() {
+        return shader_cache_;
     }
 
-    void setCurrentScene(std::shared_ptr<FTScene>& scene) {
-        scene_ = scene;
+    FTFontCache* getFontCache() {
+        return font_cache_;
     }
 
-    GLFWwindow* getWindow() const {
-        return window_;
-    };
-
-    void draw();
+    FTActionManager* getActionManager() {
+        return action_manager_;
+    }
 
 private:
     FTDirector();
     ~FTDirector();
 
-    int setup();
+    void setup();
+
+    void cleanup();
 
     void loadDefaultFonts();
 
-    void windowSizeChangeEvent(const FTWindowResizeEvent& event);
+    void update(const FTDrawEvent& event);
+
+
+    FTShaderCache* shader_cache_;
+    FTFontCache* font_cache_;
+    FTActionManager* action_manager_;
 
     std::shared_ptr<FTScene> scene_;
-    GLFWwindow* window_;
-    glm::vec2 window_size_;
 
-    double last_tick_time_;
+    double fps_time_acc_;
 };

@@ -1,15 +1,34 @@
 #pragma once
+#include <Frontier.h>
 #include <Event/FTEvent.h>
 
-struct FTPreDrawEvent : public FTEvent {
-    FTPreDrawEvent() : delta_time_(0), average_fps_(0) {
-        
+struct FTUpdateEvent : public FTEvent {
+    FTUpdateEvent() : delta_time_(0) {
+
     }
 
-    FTPreDrawEvent(double delta_time, double average_fps) : delta_time_(delta_time), average_fps_(average_fps) {
-        
+    explicit FTUpdateEvent(double delta_time) : delta_time_(delta_time) {
+
+    }
+
+    double delta_time_;
+
+    bool operator ==(const FTUpdateEvent& other) const {
+        return delta_time_ == other.delta_time_;
+    }
+};
+
+
+struct FTDrawEvent : public FTEvent {
+    FTDrawEvent() : delta_time_(0), average_fps_(0), window_(nullptr) {
+
     }
 
     double delta_time_;
     double average_fps_;
+    GLFWwindow* window_;
+
+    bool operator ==(const FTDrawEvent& other) const {
+        return delta_time_ == other.delta_time_ && average_fps_ == other.average_fps_ && window_ == other.window_;
+    }
 };

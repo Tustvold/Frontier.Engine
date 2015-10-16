@@ -4,7 +4,7 @@
 struct FTMouseMoveEvent : public FTEvent {
 public:
     FTMouseMoveEvent(double x, double y, double delta_x, double delta_y) : x_(x), y_(y), delta_x_(delta_x), delta_y_(delta_y) {
-        
+
     }
 
     double x_;
@@ -18,7 +18,7 @@ public:
 };
 
 struct FTMouseEnterEvent : public FTEvent {
-    
+
 };
 
 struct FTMouseExitEvent : public FTEvent {
@@ -26,8 +26,8 @@ struct FTMouseExitEvent : public FTEvent {
 };
 
 struct FTMouseButtonPressedEvent : public FTEvent {
-    
-    FTMouseButtonPressedEvent(double cursor_x, double cursor_y, int mouse_button, bool outside_window) 
+
+    FTMouseButtonPressedEvent(double cursor_x, double cursor_y, int mouse_button, bool outside_window)
         : cursor_x_(cursor_x), cursor_y_(cursor_y), mouse_button_(mouse_button), outside_window_(outside_window) {
     }
 

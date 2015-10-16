@@ -1,6 +1,7 @@
 
 
 set(SOURCES ${SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/MockLoader.cpp
     PARENT_SCOPE)
 
 
@@ -8,4 +9,6 @@ set (HEADERS ${HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/MockEngineEventDispatcher.h
     ${CMAKE_CURRENT_SOURCE_DIR}/MockShader.h
     ${CMAKE_CURRENT_SOURCE_DIR}/ExpectUtils.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/MockLoader.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/MockAction.h
     PARENT_SCOPE)

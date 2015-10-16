@@ -2,14 +2,14 @@
 #include "FTEngineEvents.h"
 #include <Event/FTEventDispatcher.h>
 
-class FTEngineEventDispatcher : public FTEventDispatcher<FTPreDrawEvent> {
-    friend class FTDirector;
+class FTEngineEventDispatcher : public FTEventDispatcher<FTUpdateEvent, FTDrawEvent> {
+    friend class FTEngine;
 public:
     FTEngineEventDispatcher() {
-        
+
     }
 
     virtual ~FTEngineEventDispatcher() {
-        
+
     }
 };

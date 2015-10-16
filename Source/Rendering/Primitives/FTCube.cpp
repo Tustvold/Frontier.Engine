@@ -1,6 +1,5 @@
 ﻿#include "FTCube.h"
 #include <Rendering/Shader/FTShaderCache.h>
-#include <Rendering/Shader/FTVertexColorShaderProgram.h>
 
 FTCube::FTCube(const glm::vec3 face_colors[6]) : FTIndexedMesh() {
 
@@ -136,7 +135,7 @@ FTCube::FTCube(const glm::vec3 face_colors[6]) : FTIndexedMesh() {
     data->setVertexCount(vertex_index);
     data->setIndexCount(indices_index);
 
-    loadIndexedMeshData(data, true);
+    loadIndexedMeshData(data.get(), true);
 }
 
 FTCube::~FTCube() {

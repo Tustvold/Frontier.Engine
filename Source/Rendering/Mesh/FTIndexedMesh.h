@@ -1,5 +1,4 @@
 #pragma once
-#include <GL/glew.h>
 #include "FTMesh.h"
 
 template <typename VertexType, typename IndexType>
@@ -53,7 +52,7 @@ public:
     // Creates empty VBOs of the passed size
     // These can then be populated using the setIndexedMeshData functions
     void loadEmptyIndexedMesh(GLuint vertex_count, GLuint index_count, bool cleanup = true) {
-        FTMesh::loadEmptyMesh(vertex_count, false);
+        FTMesh<ShaderProgram, VertexType>::loadEmptyMesh(vertex_count, false);
         max_num_inidices_ = index_count;
         num_indices_ = 0;
         glGenBuffers(1, &index_buffer_id_);
@@ -67,8 +66,8 @@ public:
         }
     }
 
-    void loadIndexedMeshData(const std::shared_ptr<FTIndexedMeshData<VertexType, IndexType>>& data, bool is_static, bool cleanup = true) {
-        loadMeshData(std::static_pointer_cast<FTMeshData<VertexType>>(data), is_static, false);
+    void loadIndexedMeshData(FTIndexedMeshData<VertexType, IndexType>* data, bool is_static, bool cleanup = true) {
+        loadMeshData(data, is_static, false);
 
         num_indices_ = (GLuint)data->getIndexCount();
         max_num_inidices_ = num_indices_;
@@ -84,16 +83,15 @@ public:
         }
     }
 
-    virtual void setIndexedMeshData(const std::shared_ptr<FTIndexedMeshData<VertexType, IndexType>>& data) {
-        setMeshData(std::static_pointer_cast<FTMeshData<VertexType>>(data));
+    virtual void setIndexedMeshData(FTIndexedMeshData<VertexType, IndexType>* data) {
+        setMeshData(data);
         // Update mesh data
         if (max_num_inidices_ >= data->getIndexCount()) {
             num_indices_ = (GLuint)data->getIndexCount();
             // We can update the existing buffer
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id_);
             glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, num_indices_ * sizeof(IndexType), data->getIndices().data());
-        }
-        else {
+        } else {
             num_indices_ = (GLuint)data->getIndexCount();
             max_num_inidices_ = num_indices_;
             // We must re-create the buffer
@@ -102,7 +100,6 @@ public:
         }
     }
 
-    
 
     void draw() override {
         glDrawElements(
@@ -120,11 +117,11 @@ protected:
     GLuint index_buffer_id_;
 
 private:
-    virtual void loadMeshData(const std::shared_ptr<FTMeshData<VertexType>>& data, bool is_static, bool cleanup) override {
+    virtual void loadMeshData(FTMeshData<VertexType>* data, bool is_static, bool cleanup) override {
         FTMesh::loadMeshData(data, is_static, cleanup);
     }
 
-    virtual void setMeshData(const std::shared_ptr<FTMeshData<VertexType>>& data) override {
+    virtual void setMeshData(FTMeshData<VertexType>* data) override {
         FTMesh::setMeshData(data);
     }
 

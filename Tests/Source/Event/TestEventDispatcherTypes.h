@@ -3,8 +3,11 @@
 #include <Event/FTEventDispatcher.h>
 #include <Event/FTEvent.h>
 
-class MockEvent1 : public FTEvent {};
-class MockEvent2 : public FTEvent {};
+class MockEvent1 : public FTEvent {
+};
+
+class MockEvent2 : public FTEvent {
+};
 
 class MockEventDispatcher : public FTEventDispatcher<MockEvent1> {
 public:

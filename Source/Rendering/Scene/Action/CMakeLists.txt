@@ -1,0 +1,19 @@
+set (SOURCES ${SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTActionManager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTIntervalAction.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTMoveToAction.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTActionSequence.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTRepeatAction.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTCallFuncAction.cpp
+    PARENT_SCOPE)
+
+set (HEADERS ${HEADERS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTActionManager.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTAction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTIntervalAction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTMoveToAction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTActionSequence.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTRepeatAction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTCallFuncAction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTCallDelegateAction.h
+    PARENT_SCOPE)

@@ -1,8 +1,4 @@
 #pragma once
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <Frontier.h>
-#include <Util/FTAlignedData.h>
 #include <Util/FTRect.h>
 #include <Rendering/Camera/FTCamera.h>
 #include <Util/FTMath.h>
@@ -14,42 +10,7 @@ public:
 
     virtual ~FTCamera3D();
 
-    const glm::mat4& getViewMatrix() const override {
-        return view_matrix_.getConstData();
-    }
-
-    const glm::mat4& getProjectionMatrix() const override {
-        return projection_matrix_.getConstData();
-    }
-
-    const glm::mat4& getViewProjectionMatrix() const override {
-        return view_projection_matrix_.getConstData();
-    }
-
-    void preDraw() override {
-        FTCamera::preDraw();
-        if (projection_matrix_dirty_) {
-            projection_matrix_ = glm::perspective(fov_, (float)screen_rect_.width_ / (float)screen_rect_.height_, near_clipping_plane_, far_clipping_plane_);
-        }
-        if (view_matrix_dirty_) {
-            if (rotation_dirty_) {
-                look_direction_ = glm::vec3(cos(rotation_euler_radians.y) * sin(rotation_euler_radians.x), sin(rotation_euler_radians.y), cos(rotation_euler_radians.y) * -cos(rotation_euler_radians.x));
-
-                right_vector_ = glm::vec3(cos(rotation_euler_radians.x), 0, sin(rotation_euler_radians.x));
-                up_vector_ = glm::cross(right_vector_, look_direction_);
-
-                rotation_dirty_ = false;
-            }
-            view_matrix_ = glm::lookAt(position_, look_direction_ + position_, up_vector_);
-        }
-        if (view_matrix_dirty_ || projection_matrix_dirty_) {
-            view_projection_matrix_ = projection_matrix_.getData() * view_matrix_.getData();
-            if (update_view_frustrum_)
-                regenerateViewFrustrum();
-            view_matrix_dirty_ = false;
-            projection_matrix_dirty_ = false;
-        }
-    }
+    void preDraw() override;
 
     void setUpVector(const glm::vec3& up_vector) {
         view_matrix_dirty_ = true;
@@ -84,15 +45,21 @@ public:
         update_view_frustrum_ = should_update_view_frustrum;
     }
 
-    bool testBoundingBox(glm::vec3& center, glm::vec3& halfextents) const override;
+    bool testBoundingBox(glm::vec3& center, glm::vec3& halfextents) const;
 
-    bool testNodeVisible(const FTNodeBase* node) const override;
+    bool testNodeVisible(const FTNode* node) const override;
+
+    const glm::vec3& getUpVector() {
+        return up_vector_;
+    }
+
+    const glm::vec3& getForwardVector() {
+        return look_direction_;
+    }
+
+    FTRaycast generateRaycastForMousePos(double x, double y) override;
 
 protected:
-
-    FTAlignedData<glm::mat4> projection_matrix_;
-    FTAlignedData<glm::mat4> view_matrix_;
-    FTAlignedData<glm::mat4> view_projection_matrix_;
 
     FTAlignedData<glm::vec4> frustrum_planes_[6];
     glm::vec3 frustrum_planes_sign_flipped_[6];
@@ -110,11 +77,6 @@ protected:
     float fov_;
 
 private:
-
-    /*void screensizeChange(float width, float height) {
-		screen_size_ = glm::vec2(width, height);
-		projection_matrix_dirty_ = true;
-	}*/
 
     void regenerateViewFrustrum();
 };

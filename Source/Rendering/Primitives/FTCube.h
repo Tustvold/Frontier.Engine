@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <Rendering/Mesh/FTIndexedMesh.h>
-#include <Rendering/Scene/Transform/FTTransformUtil.h>
 #include <Rendering/Shader/FTVertexColorShaderProgram.h>
+#include <Rendering/Mesh/FTVertex.h>
 
 class FTCube : public FTIndexedMesh<FTVertexColorShaderProgram, FTVertexColor<glm::vec3>, uint16_t> {
 public:

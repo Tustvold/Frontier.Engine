@@ -2,7 +2,7 @@
 #include <Frontier.h>
 
 FTEventManager::FTEventManager() {
-    
+
 }
 
 FTEventManager::~FTEventManager() {

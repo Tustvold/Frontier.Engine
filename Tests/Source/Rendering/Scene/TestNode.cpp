@@ -1,74 +1,74 @@
-#include <glfwmock.h>
+#include <Mock/MockLoader.h>
 #include <FTEngine.h>
-#include <Rendering/Scene/FTNode.h>
+#include <Rendering/Scene/FTShaderNode.h>
 #include <Mock/MockShader.h>
 #include <Mock/ExpectUtils.h>
 #include <Rendering/Camera/FTCamera2D.h>
+#include <Rendering/Scene/FTView.h>
+#include <Rendering/Scene/FTScene.h>
 
-class MockNodeDraw : public FTNode<MockShader> {
+class MockNodeDraw : public FTNode {
 
 public:
-    
-    MOCK_METHOD0(pre_draw, void());
+
+    MOCK_METHOD1(pre_draw, void(const glm::mat4&));
     MOCK_METHOD0(draw, void());
     MOCK_METHOD0(post_draw, void());
-    MOCK_METHOD3(visitChildren, void(const std::shared_ptr<FTCamera>& camera, std::stack<glm::mat4>& matrix_stack, bool parent_updated));
+    MOCK_METHOD1(onAddedToView, void(FTView* view));
+    MOCK_METHOD1(onAddedToScene, void(FTScene* scene));
+
+    void callParentAddedToView(FTView* view) {
+        FTNode::onAddedToView(view);
+    }
+
+    void callParentAddedToScene(FTScene* scene) {
+        FTNode::onAddedToScene(scene);
+    }
 };
 
-class MockNodeChildren : public FTNode<MockShader> {
-    std::vector<std::shared_ptr<FTNodeBase>> children_;
+class MockNodeChildren : public FTNode {
 public:
-    void visitChildren(const std::shared_ptr<FTCamera>& camera, std::stack<glm::mat4>& matrix_stack, bool parent_updated) override {
-        for (auto it = children_.begin(); it != children_.end(); ++it) {
-            (*it)->visit(camera, matrix_stack, parent_updated);
-        }
-    }
 
     MOCK_METHOD0(draw, void());
-
-    void addChild(const std::shared_ptr<FTNodeBase>& child) {
-        children_.push_back(child);
-    }
 };
 
 
 TEST(TestNode, TestCallOrder) {
-    GlfwMock mock;
-    FTEngine::setup(true);
+    MockLoader mock;
 
     auto camera = std::static_pointer_cast<FTCamera>(std::make_shared<FTCamera2D>());
-    camera->setScreenRect(FTRect<int>(0, 0, 100, 100));
+    auto screensize = FTEngine::getWindowSize();
+    camera->setDrawRectRelative(FTRect<float>(0, 0, 100.0f / screensize.x, 100.0f / screensize.y));
     std::stack<glm::mat4> matrix_stack;
     matrix_stack.push(glm::mat4());
     MockNodeDraw node;
 
     testing::InSequence s;
-    EXPECT_CALL(node, pre_draw());
+    EXPECT_CALL(node, pre_draw(testing::_));
     EXPECT_CALL(node, draw());
     EXPECT_CALL(node, post_draw());
-    EXPECT_CALL(node, visitChildren(camera, testing::_, testing::_));
 
-    node.visit(camera, matrix_stack, false);
+    node.visit(camera.get(), matrix_stack, false);
 
-    FTEngine::cleanup();
 }
 
 
 TEST(TestNode, TestCulling) {
-    GlfwMock mock;
-    FTEngine::setup(true);
+    MockLoader loader;
 
     auto camera = std::static_pointer_cast<FTCamera>(std::make_shared<FTCamera2D>());
-    camera->setScreenRect(FTRect<int>(0, 0, 100, 100));
+
+    auto screensize = FTEngine::getWindowSize();
+    camera->setDrawRectRelative(FTRect<float>(0, 0, 100.0f / screensize.x, 100.0f / screensize.y));
     std::stack<glm::mat4> matrix_stack;
     matrix_stack.push(glm::mat4());
     MockNodeChildren node;
     node.setSize(glm::vec2(50, 80));
     node.setFrustrumCull(true);
-    
+
     EXPECT_CALL(node, draw());
 
-    node.visit(camera, matrix_stack, false);
+    node.visit(camera.get(), matrix_stack, false);
 
 
     testing::Mock::VerifyAndClearExpectations(&node);
@@ -77,17 +77,17 @@ TEST(TestNode, TestCulling) {
 
     node.setPosition(glm::vec2(-55, -85));
 
-    node.visit(camera, matrix_stack, false);
+    node.visit(camera.get(), matrix_stack, false);
 
-    
+
     testing::Mock::VerifyAndClearExpectations(&node);
 
     EXPECT_CALL(node, draw()).Times(0);
 
     node.setPosition(glm::vec2(-0.1f, -0.1f));
     node.setAnchorPoint(glm::vec2(1.0f, 0.0f));
-    
-    node.visit(camera, matrix_stack, false);
+
+    node.visit(camera.get(), matrix_stack, false);
 
     testing::Mock::VerifyAndClearExpectations(&node);
 
@@ -96,7 +96,7 @@ TEST(TestNode, TestCulling) {
     node.setPosition(glm::vec2(100.1f, 0.0f));
     node.setAnchorPoint(glm::vec2(0.0f, 0.0f));
 
-    node.visit(camera, matrix_stack, false);
+    node.visit(camera.get(), matrix_stack, false);
 
     testing::Mock::VerifyAndClearExpectations(&node);
 
@@ -105,48 +105,47 @@ TEST(TestNode, TestCulling) {
 
     node.setRotationQuaternion(glm::angleAxis((float)M_PI, glm::vec3(0, 0, 1)));
 
-    node.visit(camera, matrix_stack, false);
+    node.visit(camera.get(), matrix_stack, false);
 
-    FTEngine::cleanup();
 }
 
 TEST(TestNode, TestCullingHierarchy) {
-    GlfwMock mock;
-    FTEngine::setup(true);
+    MockLoader mock;
 
     auto camera = std::static_pointer_cast<FTCamera>(std::make_shared<FTCamera2D>());
-    camera->setScreenRect(FTRect<int>(0, 0, 100, 100));
+    auto screensize = FTEngine::getWindowSize();
+    camera->setDrawRectRelative(FTRect<float>(0, 0, 100.0f / screensize.x, 100.0f / screensize.y));
     std::stack<glm::mat4> matrix_stack;
     matrix_stack.push(glm::mat4());
     MockNodeChildren parent;
     auto child = std::make_shared<MockNodeChildren>();
-    parent.addChild(std::static_pointer_cast<FTNodeBase>(child));
+    parent.addChild(std::static_pointer_cast<FTNode>(child));
     child->setSize(glm::vec2(50, 80));
     child->setFrustrumCull(true);
 
     EXPECT_CALL(parent, draw()).Times(testing::AnyNumber());
     EXPECT_CALL(*child.get(), draw());
 
-    parent.visit(camera, matrix_stack, false);
+    parent.visit(camera.get(), matrix_stack, false);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
 
     parent.setPosition(glm::vec2(-100, -100));
     EXPECT_CALL(*child.get(), draw()).Times(0);
-    parent.visit(camera, matrix_stack, false);
+    parent.visit(camera.get(), matrix_stack, false);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
 
     child->setPosition(glm::vec2(100, 100));
     EXPECT_CALL(*child.get(), draw());
-    parent.visit(camera, matrix_stack, false);
+    parent.visit(camera.get(), matrix_stack, false);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
     parent.setPosition(glm::vec2(50, 50));
 
     child->setPosition(glm::vec2(60, 0));
     EXPECT_CALL(*child.get(), draw()).Times(0);
-    parent.visit(camera, matrix_stack, false);
+    parent.visit(camera.get(), matrix_stack, false);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
     parent.setPosition(glm::vec2(50, 50));
@@ -154,7 +153,7 @@ TEST(TestNode, TestCullingHierarchy) {
 
     child->setPosition(glm::vec2(60, 0));
     EXPECT_CALL(*child.get(), draw());
-    parent.visit(camera, matrix_stack, false);
+    parent.visit(camera.get(), matrix_stack, false);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
     parent.setPosition(glm::vec2(0, 0));
@@ -162,13 +161,48 @@ TEST(TestNode, TestCullingHierarchy) {
 
     child->setPosition(glm::vec2(110, 50));
     EXPECT_CALL(*child.get(), draw()).Times(0);
-    parent.visit(camera, matrix_stack, false);
+    parent.visit(camera.get(), matrix_stack, false);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
     child->setRotationQuaternion(glm::angleAxis((float)M_PI, glm::vec3(0, 0, 1)));
     EXPECT_CALL(*child.get(), draw());
-    parent.visit(camera, matrix_stack, false);
+    parent.visit(camera.get(), matrix_stack, false);
 
+}
 
-    FTEngine::cleanup();
+TEST(TestNode, TestOnAddedToParent) {
+    MockLoader loader;
+
+    auto scene = std::make_shared<FTScene>();
+    auto view = std::make_shared<FTView>();
+    scene->addView(view);
+
+    auto node1 = std::make_shared<MockNodeDraw>();
+    auto node2 = std::make_shared<MockNodeDraw>();
+    auto node3 = std::make_shared<MockNodeDraw>();
+
+    EXPECT_CALL(*node1, onAddedToView(view.get())).Times(0);
+    EXPECT_CALL(*node2, onAddedToView(view.get())).Times(0);
+    EXPECT_CALL(*node3, onAddedToView(view.get())).Times(0);
+
+    node2->addChild(node3);
+    node1->addChild(node2);
+
+    testing::Mock::VerifyAndClearExpectations(node1.get());
+    testing::Mock::VerifyAndClearExpectations(node2.get());
+    testing::Mock::VerifyAndClearExpectations(node3.get());
+
+    testing::Sequence s1;
+    testing::Sequence s2;
+    testing::Sequence s3;
+
+    EXPECT_CALL(*node1, onAddedToView(view.get())).InSequence(s1).WillOnce(testing::Invoke(node1.get(), &MockNodeDraw::callParentAddedToView));
+    EXPECT_CALL(*node2, onAddedToView(view.get())).InSequence(s2).WillOnce(testing::Invoke(node2.get(), &MockNodeDraw::callParentAddedToView));
+    EXPECT_CALL(*node3, onAddedToView(view.get())).InSequence(s3).WillOnce(testing::Invoke(node3.get(), &MockNodeDraw::callParentAddedToView));
+
+    EXPECT_CALL(*node1, onAddedToScene(scene.get())).InSequence(s1).WillOnce(testing::Invoke(node1.get(), &MockNodeDraw::callParentAddedToScene));
+    EXPECT_CALL(*node2, onAddedToScene(scene.get())).InSequence(s2).WillOnce(testing::Invoke(node2.get(), &MockNodeDraw::callParentAddedToScene));
+    EXPECT_CALL(*node3, onAddedToScene(scene.get())).InSequence(s3).WillOnce(testing::Invoke(node3.get(), &MockNodeDraw::callParentAddedToScene));
+
+    view->addChild(node1);
 }

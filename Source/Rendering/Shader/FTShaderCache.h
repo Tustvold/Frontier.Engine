@@ -1,14 +1,12 @@
 #pragma once
 #include <Frontier.h>
-#include <GL/glew.h>
 #include "FTShaderProgram.h"
-#include <typeindex>
 #include <unordered_map>
-#include <memory>
+#include <typeindex>
 
 // Caches the GLPrograms allowing their reuse across the application
 class FTShaderCache {
-    friend class FTEngine;
+    friend class FTDirector;
 public:
 
     template <typename Type>

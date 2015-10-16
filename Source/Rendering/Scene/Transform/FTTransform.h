@@ -1,6 +1,5 @@
 #pragma once
 #include <glm/glm.hpp>
-#include <glm/gtx/euler_angles.hpp>
 #include <Util/FTAlignedData.h>
 
 // Creates and manages a transform

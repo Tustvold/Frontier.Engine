@@ -4,7 +4,7 @@
 struct FTKeyPressedEvent : public FTEvent {
 public:
     FTKeyPressedEvent(int key, int scancode, int mods) : key_(key), scancode_(scancode), mods_(mods) {
-        
+
     }
 
     int key_;

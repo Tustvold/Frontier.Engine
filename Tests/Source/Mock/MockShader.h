@@ -11,13 +11,13 @@ public:
     void use() override {
 
     }
-    
+
     void cleanup() override {
 
     }
-    
+
     virtual ~MockShader() {
-        
+
     }
 
     bool load() override {

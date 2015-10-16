@@ -1,39 +1,48 @@
 ﻿#pragma once
 #include <Rendering/FTDrawable.h>
-#include <Rendering/Camera/FTCamera.h>
-#include <Rendering/Shader/FTShaderCache.h>
 #include <Rendering/Scene/Transform/FTTransformUtil.h>
-#include <Rendering/Shader/FTVertexShaderProgram.h>
-#include <FTEngine.h>
 #include <stack>
-#include <Util/FTMath.h>
+#include <vector>
+#include "Action/FTAction.h"
 
-class FTNodeBase : public FTDrawable, public FTTransform {
+class FTView;
+class FTScene;
+class FTCamera;
+
+// The base class of all elements in the scene hierarchy
+class FTNode : public FTDrawable, public FTTransform {
 public:
 
+    explicit FTNode();
+
     // Override to provide custom frustrum culling code
-    virtual bool isVisible(const std::shared_ptr<FTCamera>& camera) {
-        return camera->testNodeVisible(this);
+    virtual bool isVisible(FTCamera* camera);
+
+    virtual void pre_draw(const glm::mat4& mvp) {
     }
 
-    virtual void pre_draw() = 0;
-    virtual void post_draw() = 0;
-    virtual void visit(const std::shared_ptr<FTCamera>& camera, std::stack<glm::mat4>& matrix_stack, bool parent_updated) = 0;
-
-    // Iterate over children you wish to draw - this allows usage of non-standard containers for children
-    virtual void visitChildren(const std::shared_ptr<FTCamera>& camera, std::stack<glm::mat4>& matrix_stack, bool parent_updated) {
-        
+    virtual void draw() override {
     }
+
+    virtual void post_draw() {
+    }
+
+    // Override to provide custom transforms, custom frustrum culling, children, etc
+    virtual void visit(FTCamera* camera, std::stack<glm::mat4>& matrix_stack, bool parent_updated);
+
+    void addChild(const std::shared_ptr<FTNode>& child);
+
+    void addChild(std::shared_ptr<FTNode>&& child);
 
     void setPosition(const glm::vec2& position) {
-        setPosition(glm::vec3(position.x, position.y,0));
+        setPosition(glm::vec3(position.x, position.y, 0));
     }
 
     void setPosition(const glm::vec3& position) {
         transform_dirty_ = true;
         unaltered_position_ = position;
 
-        position_transform_->setPosition(position - anchor_point_*size_);
+        position_transform_->setPosition(position - anchor_point_ * size_);
     }
 
     void setScale(const glm::vec2& scale) {
@@ -88,55 +97,9 @@ public:
         perform_frustrum_cull_ = should_cull;
     }
 
-    virtual bool updateMatrices() override {
-        if (!getDirty())
-            return false;
-        scale_transform_->updateMatrices();
-        rotation_transform_->updateMatrices();
-        
+    virtual bool updateMatrices() override;
 
-        auto rotate_scale_matrix = rotation_transform_->getTransformMatrix() * scale_transform_->getTransformMatrix();
-        glm::vec4 offset = glm::vec4(-anchor_point_.x * size_.x, -anchor_point_.y * size_.y, -anchor_point_.z * size_.z, 1);
-
-        auto rotated_scale_offset = rotate_scale_matrix * offset;
-
-        position_transform_->setPosition(glm::vec3(unaltered_position_.x + rotated_scale_offset.x, unaltered_position_.y + rotated_scale_offset.y, unaltered_position_.z + rotated_scale_offset.z));
-        position_transform_->updateMatrices();
-
-        transform_matrix = position_transform_->getTransformMatrix() * rotate_scale_matrix;
-        transform_dirty_ = false;
-        return true;
-    }
-
-    virtual void updateAAB(const glm::mat4& model_matrix) {
-        glm::vec4 positions[8] = {
-            glm::vec4(0, 0, 0, 1),
-            glm::vec4(size_.x, 0, 0, 1),
-            glm::vec4(0, size_.y, 0, 1),
-            glm::vec4(0, 0, size_.z, 1),
-            glm::vec4(size_.x, size_.y, 0, 1),
-            glm::vec4(size_.x, 0, size_.z, 1),
-            glm::vec4(0, size_.y, size_.z, 1),
-            glm::vec4(size_.x, size_.y, size_.z, 1)
-        };
-
-        auto min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
-        auto max = glm::vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
-
-        for (int i = 0; i < 8; i++) {
-            auto transformed = model_matrix * positions[i];
-            max.x = FTMAX(transformed.x, max.x);
-            max.y = FTMAX(transformed.y, max.y);
-            max.z = FTMAX(transformed.z, max.z);
-
-            min.x = FTMIN(transformed.x, min.x);
-            min.y = FTMIN(transformed.y, min.y);
-            min.z = FTMIN(transformed.z, min.z);
-        }
-
-        aab_extents_ = (max - min) / 2.0f;
-        aab_center_ = (max + min) / 2.0f;
-    }
+    virtual void updateAAB(const glm::mat4& model_matrix);
 
     const glm::vec3& getAABCenter() const {
         return aab_center_;
@@ -146,16 +109,31 @@ public:
         return aab_extents_;
     }
 
-protected:
-    FTNodeBase() : perform_frustrum_cull_(false), rotation_transform_(new FTTransformRotation), position_transform_(new FTTransformPosition()), scale_transform_(new FTTransformScale()) {
-        
+    bool getActionsPaused() const {
+        return paused_;
     }
-    
+
+    // Whether this node is within the hierarchy of the active scene
+    bool getIsActive() const {
+        return is_active_;
+    }
+
+    void runAction(std::unique_ptr<FTAction>&& action);
+
+    void pauseAllActions() {
+        paused_ = true;
+    }
+
+    void resumeAllActions() {
+        paused_ = false;
+    }
+protected:
     glm::vec3 size_;
     glm::vec3 anchor_point_;
     glm::vec3 unaltered_position_;
     bool perform_frustrum_cull_;
-    bool compute_aab_;
+    bool paused_; // Whether the actions on this instance are paused
+    bool is_active_; // Whether this instance is connected to a running scene
 
     glm::vec3 aab_center_;
     glm::vec3 aab_extents_;
@@ -163,57 +141,17 @@ protected:
     std::unique_ptr<FTTransformRotation> rotation_transform_;
     std::unique_ptr<FTTransformPosition> position_transform_;
     std::unique_ptr<FTTransformScale> scale_transform_;
-};
+    std::vector<std::shared_ptr<FTNode>> children_;
+    FTNode* parent_;
+    FTView* view_;
+    FTScene* scene_;
 
-// The base class of everything within the scene heirarchy
-// Manages a shader program which it populates with the camera data
-template <typename ShaderProgram>
-class FTNode : public FTNodeBase {
-public:
-   
-    static_assert(std::is_base_of<FTVertexShaderProgram, ShaderProgram>::value, "FTVertexShaderProgram is not base of ShaderProgram");
-    explicit FTNode() :
-        shader_program_(FTEngine::getShaderCache()->getShaderProgram<ShaderProgram>()) {
+    // Called after this node is added to the hierarchy of an FTView
+    virtual void onAddedToView(FTView* view);
 
-    }
+    virtual void onAddedToScene(FTScene* scene);
 
-    // Override to provide custom transforms, custom frustrum culling, children, etc
-    virtual void visit(const std::shared_ptr<FTCamera>& camera, std::stack<glm::mat4>& matrix_stack, bool parent_updated) override {
-        parent_updated |= updateMatrices();
-        glm::mat4 model_matrix = matrix_stack.top() * getTransformMatrix();
-        if (perform_frustrum_cull_) {
-            if (parent_updated)
-                updateAAB(model_matrix);
-            if (!isVisible(camera))
-                return;
-        }
-        
-        glm::mat4 mvp = camera->getViewProjectionMatrix() * model_matrix;
-        shader_program_->use();
-        shader_program_->updateMvpUniforms(&mvp[0][0]);
+    virtual void onEnter();
 
-        this->pre_draw();
-        this->draw();
-        this->post_draw();
-        shader_program_->cleanup();
-
-        matrix_stack.push(model_matrix);
-        visitChildren(camera, matrix_stack, parent_updated);
-        matrix_stack.pop();
-    }
-
-    void draw() override {
-
-    }
-
-    void pre_draw() override {
-
-    }
-
-    void post_draw() override {
-
-    }
-
-protected:
-    std::shared_ptr<ShaderProgram> shader_program_;
+    virtual void onExit();
 };

@@ -9,7 +9,7 @@ FTFontCache::~FTFontCache() {
     FTLOG("FTFontCache Destroyed");
 }
 
-bool FTFontCache::loadFont(const std::basic_string<char>& filename) {
+bool FTFontCache::loadFont(const std::string& filename) {
     if (loaded_fonts_.find(filename) != loaded_fonts_.end()) {
         return false;
     }

@@ -3,6 +3,8 @@
 #include <Frontier.h>
 #include <Event/Mouse/FTMouseEvents.h>
 #include <Event/Mouse/FTMouseEventDispatcher.h>
+#include <Event/Engine/FTEngineEventDispatcher.h>
+#include <Event/FTEventManager.h>
 
 FTCameraFPS::FTCameraFPS() : move_speed_(15.0f), rotation_speed_(0.005f) {
     auto input_manager = FTEngine::getInputManager();
@@ -14,23 +16,17 @@ FTCameraFPS::FTCameraFPS() : move_speed_(15.0f), rotation_speed_(0.005f) {
     down_state_ = input_manager->getKeyState("Down", GLFW_KEY_LEFT_SHIFT);
     freeze_frustrum_state_ = input_manager->getKeyState("Freeze Frustrum", GLFW_KEY_EQUAL);
 
-    auto pre_draw_delegate = Gallant::Delegate1<const FTPreDrawEvent&>(this, &FTCameraFPS::update);
-    FTEngine::getEventManager()->getEventDispatcher<FTEngineEventDispatcher>()->registerDelegate(pre_draw_delegate);
-
-    auto mouse_move_delegate = Gallant::Delegate1<const FTMouseMoveEvent&>(this, &FTCameraFPS::mouseMoveEvent);
-    FTEngine::getEventManager()->getEventDispatcher<FTMouseEventDispatcher>()->registerDelegate(mouse_move_delegate);
+    FTEngine::getEventManager()->registerDelegate<FTEngineEventDispatcher>(this, &FTCameraFPS::update);
+    FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(this, &FTCameraFPS::mouseMoveEvent);
 }
 
 
 FTCameraFPS::~FTCameraFPS() {
-    auto pre_draw_delegate = Gallant::Delegate1<const FTPreDrawEvent&>(this, &FTCameraFPS::update);
-    FTEngine::getEventManager()->getEventDispatcher<FTEngineEventDispatcher>()->unregisterDelegate(pre_draw_delegate);
-
-    auto mouse_move_delegate = Gallant::Delegate1<const FTMouseMoveEvent&>(this, &FTCameraFPS::mouseMoveEvent);
-    FTEngine::getEventManager()->getEventDispatcher<FTMouseEventDispatcher>()->unregisterDelegate(mouse_move_delegate);
+    FTEngine::getEventManager()->unregisterDelegate<FTEngineEventDispatcher>(this, &FTCameraFPS::update);
+    FTEngine::getEventManager()->unregisterDelegate<FTMouseEventDispatcher>(this, &FTCameraFPS::mouseMoveEvent);
 }
 
-void FTCameraFPS::update(const FTPreDrawEvent& event) {
+void FTCameraFPS::update(const FTUpdateEvent& event) {
     float dt = (float)event.delta_time_;
 
     if (forward_state_->isPressed()) {

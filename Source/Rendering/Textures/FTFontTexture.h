@@ -1,7 +1,8 @@
 ﻿#pragma once
 #include "FTTexture.h"
 
-namespace ftgl {
+namespace ftgl
+{
     struct texture_atlas_t;
 }
 

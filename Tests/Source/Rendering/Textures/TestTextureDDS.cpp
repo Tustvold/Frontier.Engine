@@ -1,9 +1,12 @@
 #include <Rendering/Textures/FTTextureDDS.h>
-#include <glewmock.hpp>
+#include <glfwmock.h>
+#include <FTEngine.h>
 
 using ::testing::_;
 TEST(TestTextureDDS, TestLoadTextureDDS) {
-    GlewMock mock;
+    GlfwMock mock;
+    FTEngine::setup(true);
+
 
     EXPECT_CALL(mock, gl_GenTextures(1,_));
     EXPECT_CALL(mock,
@@ -16,13 +19,18 @@ TEST(TestTextureDDS, TestLoadTextureDDS) {
     EXPECT_EQ(texture->getWidth(), 512);
     EXPECT_EQ(texture->getHeight(), 512);
     EXPECT_EQ(texture->getMipMapCount(), 1);
+
+    FTEngine::cleanup();
 }
 
 TEST(TestTextureDDS, TestAssertions) {
-    GlewMock mock;
+
+    GlfwMock mock;
+    FTEngine::setup(true);
 
     // Test fails gracefully when called with non-existent file
     EXPECT_THROW(std::make_unique<FTTextureDDS>("This is not a file"), FTException);
     // Test fails gracefully when called with a non DDS file
     EXPECT_THROW(std::make_unique<FTTextureDDS>("Resources/Fonts/Vera.ttf"), FTException);
+    FTEngine::cleanup();
 }

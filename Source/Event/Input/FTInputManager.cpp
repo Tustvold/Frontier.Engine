@@ -3,6 +3,7 @@
 #include <Event/FTEventManager.h>
 #include <Event/Engine/FTEngineEventDispatcher.h>
 #include <algorithm>
+#include <FTEngine.h>
 
 FTInputManager::FTInputManager() {
     for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST + 1; i++)
@@ -10,31 +11,18 @@ FTInputManager::FTInputManager() {
 }
 
 void FTInputManager::setup() {
-    auto keyPressedDelegate = Gallant::Delegate1<const FTKeyPressedEvent&>(this, &FTInputManager::keyPressedEvent);
-    FTEngine::getEventManager()->getEventDispatcher<FTKeyboardEventDispatcher>()->registerDelegate(keyPressedDelegate);
-
-    auto keyReleasedDelegate = Gallant::Delegate1<const FTKeyReleasedEvent&>(this, &FTInputManager::keyReleasedEvent);
-    FTEngine::getEventManager()->getEventDispatcher<FTKeyboardEventDispatcher>()->registerDelegate(keyReleasedDelegate);
-
-    auto preDrawDelegate = Gallant::Delegate1<const FTPreDrawEvent&>(this, &FTInputManager::update);
-    FTEngine::getEventManager()->getEventDispatcher<FTEngineEventDispatcher>()->registerDelegate(preDrawDelegate);
-
-    auto mouseButtonPressedDelegate = Gallant::Delegate1<const FTMouseButtonPressedEvent&>(this, &FTInputManager::mouseButtonPressedEvent);
-    FTEngine::getEventManager()->getEventDispatcher<FTMouseEventDispatcher>()->registerDelegate(mouseButtonPressedDelegate);
-
-    auto mouseButtonReleasedDelegate = Gallant::Delegate1<const FTMouseButtonReleasedEvent&>(this, &FTInputManager::mouseButtonReleasedEvent);
-    FTEngine::getEventManager()->getEventDispatcher<FTMouseEventDispatcher>()->registerDelegate(mouseButtonReleasedDelegate);
-
-    auto mouseMoveDelegate = Gallant::Delegate1<const FTMouseMoveEvent&>(this, &FTInputManager::mouseMovedEvent);
-    FTEngine::getEventManager()->getEventDispatcher<FTMouseEventDispatcher>()->registerDelegate(mouseMoveDelegate);
+    FTEngine::getEventManager()->registerDelegate<FTKeyboardEventDispatcher>(this, &FTInputManager::keyPressedEvent);
+    FTEngine::getEventManager()->registerDelegate<FTKeyboardEventDispatcher>(this, &FTInputManager::keyReleasedEvent);
+    FTEngine::getEventManager()->registerDelegate<FTEngineEventDispatcher>(this, &FTInputManager::update);
+    FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(this, &FTInputManager::mouseButtonPressedEvent);
+    FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(this, &FTInputManager::mouseButtonReleasedEvent);
+    FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(this, &FTInputManager::mouseMovedEvent);
 }
 
 FTInputManager::~FTInputManager() {
     FTLOG("Input Manager destroyed");
     // As the input manager is destroyed after the EventManager we don't unregister the events registered in setup
 }
-
-
 
 
 const std::shared_ptr<FTKeyState>& FTInputManager::getKeyState(const std::string& name, int default_mapping) {
@@ -105,7 +93,7 @@ void FTInputManager::mouseMovedEvent(const FTMouseMoveEvent& event) {
     }
 }
 
-void FTInputManager::update(const FTPreDrawEvent& event) {
+void FTInputManager::update(const FTUpdateEvent& event) {
     for (auto it = name_to_key_state_.begin(); it != name_to_key_state_.end(); ++it) {
         auto& state = it->second;
         state->pressed_count_ -= state->released_count_;
@@ -114,10 +102,9 @@ void FTInputManager::update(const FTPreDrawEvent& event) {
 }
 
 void FTInputManager::sortMouseDelegates() {
-    std::stable_sort(mouse_delegates_.begin(),mouse_delegates_.end(),[](FTMouseDelegate* a, FTMouseDelegate* b)
-    {
-        return a->getPriority() > b->getPriority();
-    });
+    std::stable_sort(mouse_delegates_.begin(), mouse_delegates_.end(), [](FTMouseDelegate* a, FTMouseDelegate* b) {
+                         return a->getPriority() > b->getPriority();
+                     });
 }
 
 void FTInputManager::addMouseDelegate(FTMouseDelegate* delegate) {

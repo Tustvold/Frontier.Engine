@@ -6,7 +6,7 @@
 class MockMouseEventListener {
 public:
     MOCK_METHOD1(mouseMoveEvent, void(const FTMouseMoveEvent&));
-    MOCK_METHOD1(mouseEnterEvent, void(const FTMouseEnterEvent&)); 
+    MOCK_METHOD1(mouseEnterEvent, void(const FTMouseEnterEvent&));
     MOCK_METHOD1(mouseExitEvent, void(const FTMouseExitEvent&));
     MOCK_METHOD1(mouseButtonPressedEvent, void(const FTMouseButtonPressedEvent&));
     MOCK_METHOD1(mouseButtonReleasedEvent, void(const FTMouseButtonReleasedEvent&));
@@ -66,8 +66,7 @@ TEST(TestMouseEventDispatcher, TestEnterExitPosPurge) {
 
     testing::InSequence s;
 
-   
-    
+
     EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(200, 100, 0, 0)));
     EXPECT_CALL(listener, mouseEnterEvent(testing::_));
     EXPECT_CALL(listener, mouseExitEvent(testing::_));

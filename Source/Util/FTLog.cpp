@@ -1,25 +1,36 @@
 #include "FTLog.h"
 #include <stdio.h>
 
+#define USE_VS_CONSOLE
+#define LOG_BUFFER_SIZE 1024
+
 #ifdef WIN32
 #include <Windows.h>
+#include <mutex>
 
-#define USE_VS_CONSOLE
+// This is to prevent corruption when printing from multiple threads
+static std::mutex log_mutex;
+static char log_buffer[LOG_BUFFER_SIZE];
 
-void FTLogPrint(const char* prefix, const char* format, va_list args) {
+void FTLogPrint(bool print_new_line, const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    log_mutex.lock();
 #ifdef USE_VS_CONSOLE
-    char buff[1024];
 
-    _vsnprintf_s(buff, sizeof(buff), 1024, format, args);
 
-    OutputDebugStringA(prefix);
-    OutputDebugStringA(buff);
-    OutputDebugStringA("\n");
+    _vsnprintf_s(log_buffer, sizeof(log_buffer), LOG_BUFFER_SIZE, format, args);
+
+    OutputDebugStringA(log_buffer);
+    if (print_new_line)
+        OutputDebugStringA("\n");
 
 #else
-	printf(prefix);
 	vprintf(format, args);
-	printf("\n");
+    if (print_new_line)
+	    printf("\n");
 #endif
+    log_mutex.unlock();
+    va_end(args);
 }
 #endif

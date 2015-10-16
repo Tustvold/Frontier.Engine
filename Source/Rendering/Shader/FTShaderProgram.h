@@ -1,8 +1,6 @@
 #pragma once
-#include <GL/glew.h>
 #include <vector>
-#include <frontier.h>
-#include <Rendering/Mesh/FTVertex.h>
+#include <Frontier.h>
 
 // Base class for ShaderProgram Objects
 // These encapsulate OpenGl program functionality
@@ -12,7 +10,7 @@ public:
 
     virtual ~FTShaderProgram() {
         if (program_id_ != 0)
-            glDeleteProgram(program_id_);
+        glDeleteProgram(program_id_);
     }
 
     virtual bool load() {
@@ -32,7 +30,7 @@ public:
 protected:
 
     FTShaderProgram() : program_id_(0) {
-        
+
     }
 
     GLuint program_id_;

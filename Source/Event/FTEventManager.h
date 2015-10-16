@@ -1,16 +1,14 @@
 #pragma once
 
+#include <Frontier.h>
 #include <unordered_map>
 #include <typeindex>
-#include <Frontier.h>
 
 class FTEventDispatcherBase;
 
 class FTEventManager {
     friend class FTEngine;
 public:
-
-    
 
     template <typename Type>
     std::shared_ptr<Type> getEventDispatcher() {
@@ -31,6 +29,20 @@ public:
         const std::type_index& type = typeid(Type);
         FTAssert(event_dispatchers_.find(type) == event_dispatchers_.end(), "FTEventDispatcher already registered");
         event_dispatchers_[type] = dispatcher;
+    }
+
+    template <typename Dispatcher, typename Event, typename X, typename Y>
+    void registerDelegate(Y* obj, void (X::*func)(const Event& p1)) {
+        static_assert(std::is_base_of<FTEventDispatcherBase, Dispatcher>::value, "Dispatcher is not a subclass of FTEventDispatcherBase");
+        std::shared_ptr<Dispatcher> dispatcher = getEventDispatcher<Dispatcher>();
+        dispatcher->template registerDelegate<Event, X, Y>(obj, func);
+    }
+
+    template <typename Dispatcher, typename Event, typename X, typename Y>
+    void unregisterDelegate(Y* obj, void (X::*func)(const Event& p1)) {
+        static_assert(std::is_base_of<FTEventDispatcherBase, Dispatcher>::value, "Dispatcher is not a subclass of FTEventDispatcherBase");
+        std::shared_ptr<Dispatcher> dispatcher = getEventDispatcher<Dispatcher>();
+        dispatcher->template unregisterDelegate<Event, X, Y>(obj, func);
     }
 
 private:

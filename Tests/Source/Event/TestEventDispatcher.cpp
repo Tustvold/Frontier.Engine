@@ -7,8 +7,7 @@ TEST(TestEventDispatcher, TestCallsDelegateSingle) {
 
     EXPECT_CALL(*listener, callback(testing::_));
 
-    auto delegate = Gallant::Delegate1<const MockEvent1&>(listener, &MockEventListener1::callback);
-    dispatcher->registerDelegate(delegate);
+    dispatcher->registerDelegate(listener, &MockEventListener1::callback);
     dispatcher->sendMockEvent1();
 
     delete dispatcher;
@@ -22,15 +21,34 @@ TEST(TestEventDispatcher, TestCallsDelegateDouble) {
 
     EXPECT_CALL(*listener2, callback(testing::_));
     EXPECT_CALL(*listener, callback(testing::_)).Times(0);
-    Gallant::Delegate1<const MockEvent1&> delegate1(listener, &MockEventListener1::callback);
-    Gallant::Delegate1<const MockEvent2&> delegate2(listener2, &MockEventListener2::callback);
 
-    dispatcher->registerDelegate(delegate1);
-    dispatcher->registerDelegate(delegate2);
+    dispatcher->registerDelegate(listener, &MockEventListener1::callback);
+    dispatcher->registerDelegate(listener2, &MockEventListener2::callback);
 
     dispatcher->sendMockEvent2();
 
     delete dispatcher;
     delete listener;
     delete listener2;
+}
+
+TEST(TestEventDispatcher, TestUnregister) {
+    auto listener = new MockEventListener1();
+    auto dispatcher = new MockEventDispatcher();
+
+    testing::InSequence s;
+
+    EXPECT_CALL(*listener, callback(testing::_));
+
+
+    dispatcher->registerDelegate(listener, &MockEventListener1::callback);
+    dispatcher->sendMockEvent1();
+
+    EXPECT_CALL(*listener, callback(testing::_)).Times(0);
+
+    dispatcher->unregisterDelegate(listener, &MockEventListener1::callback);
+    dispatcher->sendMockEvent1();
+
+    delete dispatcher;
+    delete listener;
 }

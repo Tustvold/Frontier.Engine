@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #include <Rendering/Camera/FTCamera.h>
-#include <Util/FTAlignedData.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 class FTCamera2D : public FTCamera {
 public:
+
 
     FTCamera2D() {
         setClippingPlanes(0, 1);
@@ -15,38 +15,11 @@ public:
 
     }
 
-    const glm::mat4& getViewMatrix() const override {
-        return view_matrix.getConstData();
+    FTRaycast generateRaycastForMousePos(double x, double y) override {
+        return FTRaycast(glm::vec3((float)x, (float)y, 0.0f), glm::vec3(0, 0, -1.0f));
     }
 
-    const glm::mat4& getProjectionMatrix() const override {
-        return projection_matrix_.getConstData();
-    }
+    void preDraw() override;
 
-    const glm::mat4& getViewProjectionMatrix() const override {
-        return projection_matrix_.getConstData();
-    }
-
-    void preDraw() override {
-        FTCamera::preDraw();
-        if (projection_matrix_dirty_) {
-            projection_matrix_ = glm::ortho<float>(0, (float)screen_rect_.width_, 0, (float)screen_rect_.height_, near_clipping_plane_, far_clipping_plane_);
-            projection_matrix_dirty_ = false;
-        }
-    }
-
-    bool testBoundingBox(glm::vec3& center, glm::vec3& halfextents) const override {
-        return true;
-    }
-
-    bool testNodeVisible(const FTNodeBase* node) const override {
-        auto& center = node->getAABCenter();
-        auto& half_extents = node->getAABHalfExtents();
-
-        return center.x - half_extents.x <= screen_rect_.x_ + screen_rect_.width_ && center.x + half_extents.x >= screen_rect_.x_ && center.y - half_extents.y <= screen_rect_.y_ + screen_rect_.height_ && center.y + half_extents.y >= screen_rect_.y_;
-    }
-
-private:
-    FTAlignedData<glm::mat4> projection_matrix_;
-    FTAlignedData<glm::mat4> view_matrix;
+    bool testNodeVisible(const FTNode* node) const override;
 };

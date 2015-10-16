@@ -5,10 +5,10 @@ public:
 
 protected:
     FTEvent() {
-        
+
     }
 
     virtual ~FTEvent() {
-        
+
     }
 };

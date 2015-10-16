@@ -56,7 +56,7 @@ public:
         bool updated = transform1_->updateMatrices();
         updated |= transform2_->updateMatrices();
         updated |= transform3_->updateMatrices();
-            
+
         if (updated) {
             transform_matrix = transform1_->getTransformMatrix() * transform2_->getTransformMatrix() * transform3_->getTransformMatrix();
         }

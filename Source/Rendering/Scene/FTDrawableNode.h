@@ -1,11 +1,11 @@
 #pragma once
-#include <Rendering/Scene/FTNode.h>
+#include <Rendering/Scene/FTShaderNode.h>
 
-// A FTNode which renders a provided FTDrawable
+// A FTShaderNode which renders a provided FTDrawable
 template <typename ShaderProgram>
-class FTDrawableNode : public FTNode<ShaderProgram> {
+class FTDrawableNode : public FTShaderNode<ShaderProgram> {
 public:
-    explicit FTDrawableNode(std::unique_ptr<FTDrawable> drawable) : FTNode(), drawable_(std::move(drawable)) {
+    explicit FTDrawableNode(std::unique_ptr<FTDrawable> drawable) : FTShaderNode(), drawable_(std::move(drawable)) {
 
     }
 

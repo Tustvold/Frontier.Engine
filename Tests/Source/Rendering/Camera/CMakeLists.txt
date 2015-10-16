@@ -1,6 +1,7 @@
 
 set (SOURCES ${SOURCES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/TestCamera3D.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/TestCamera.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/TestRaycast.cpp
 PARENT_SCOPE)
 
 set (HEADERS ${HEADERS}
