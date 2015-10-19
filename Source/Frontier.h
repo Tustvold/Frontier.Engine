@@ -19,30 +19,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <Util/FTLog.h>
+#include <Util/FTAssert.h>
 
-class FTException : public std::exception {
-public:
-    explicit FTException(const char* message) : msg_(message) {
-
-    }
-
-    virtual ~FTException() throw () {
-    }
-
-    virtual const char* what() const throw () override {
-        return msg_.c_str();
-    }
-
-private:
-    std::string msg_;
-};
-
-#define FTAssert(value, format, ...) if (!(value)) { \
-    FTLogPrint(false, "Assertion failed with error: "); \
-    FTLogPrint(false, format, __VA_ARGS__); \
-    FTLogPrint(true, " at %s:%i",__FILE__, __LINE__); \
-    throw FTException("Failed FTAssert"); \
-}
 
 // Provide constructors for smart pointers which can infer the required type
 // from the provided pointer

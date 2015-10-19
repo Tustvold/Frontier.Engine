@@ -12,7 +12,7 @@
 static std::mutex log_mutex;
 static char log_buffer[LOG_BUFFER_SIZE];
 
-void FTLogPrint(bool print_new_line, const char* format, ...) {
+void FTLogPrint(const char* prefix, bool print_new_line, const char* format, ...) {
     va_list args;
     va_start(args, format);
     log_mutex.lock();
@@ -21,11 +21,13 @@ void FTLogPrint(bool print_new_line, const char* format, ...) {
 
     _vsnprintf_s(log_buffer, sizeof(log_buffer), LOG_BUFFER_SIZE, format, args);
 
+    OutputDebugStringA(prefix);
     OutputDebugStringA(log_buffer);
     if (print_new_line)
         OutputDebugStringA("\n");
 
 #else
+    printf(prefix);
 	vprintf(format, args);
     if (print_new_line)
 	    printf("\n");
