@@ -5,7 +5,7 @@
 
 FTFont::FTFont(const std::string& filename) : font_texture_(new FTFontTexture(texture_atlas_new(512, 512, 1))) {
     font_path_ = FTEngine::getFileManager()->getPathToFile(filename);
-    FTAssert(font_path_ != "", "Failed to find font: %s", filename);
+    FTAssert(font_path_ != "", "Failed to find font: %s", filename.c_str());
 }
 
 FTFont::~FTFont() {
