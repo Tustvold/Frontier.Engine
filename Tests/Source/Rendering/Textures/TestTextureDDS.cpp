@@ -2,6 +2,17 @@
 #include <glfwmock.h>
 #include <FTEngine.h>
 
+#if __cplusplus < 201402L
+// no make_unique support
+namespace std {
+    template<typename T, typename ...Args>
+    std::unique_ptr<T> make_unique( Args&& ...args )
+    {
+            return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
+    }
+}
+#endif
+
 using ::testing::_;
 TEST(TestTextureDDS, TestLoadTextureDDS) {
     GlfwMock mock;
