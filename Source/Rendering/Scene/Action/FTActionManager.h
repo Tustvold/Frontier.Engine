@@ -1,6 +1,7 @@
 #pragma once
 #include <Frontier.h>
 #include <unordered_map>
+#include <vector>
 #include <Event/Engine/FTEngineEvents.h>
 
 class FTNode;
