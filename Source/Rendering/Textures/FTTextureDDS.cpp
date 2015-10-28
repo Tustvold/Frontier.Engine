@@ -16,6 +16,11 @@ FTTextureDDS::~FTTextureDDS() {
 #define FOURCC_DXT3 0x33545844 // Equivalent to "DXT3" in ASCII
 #define FOURCC_DXT5 0x35545844 // Equivalent to "DXT5" in ASCII
 
+/* HACK: no fopen_s on non-Windows systems */
+#ifndef WIN32
+#   define fopen_s(pFile,filename,mode) ((*(pFile))=fopen((filename),(mode)))==NULL
+#endif
+
 // Code from http://www.opengl-tutorial.org/beginners-tutorials/tutorial-5-a-textured-cube/
 GLuint FTTextureDDS::loadDDS(const std::string& provided_path) {
     unsigned char header[124];
