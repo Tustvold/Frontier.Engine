@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include <GL/glew.h>
 #include <ThirdParty/Signals/Signal.h>
 #include <Frontier.h>
