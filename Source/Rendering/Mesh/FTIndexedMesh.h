@@ -9,11 +9,11 @@ public:
 
     }
 
-    FTIndexedMeshData(size_t vertexCount, size_t indexCount) : FTMeshData(vertexCount), index_count_(0) {
+    FTIndexedMeshData(size_t vertexCount, size_t indexCount) : FTMeshData<VertexType>(vertexCount), index_count_(0) {
         indices_.reserve(indexCount);
     }
 
-    FTIndexedMeshData(std::vector<VertexType>& vertices, std::vector<IndexType>& indices) : FTMeshData(vertices), index_count_(0) {
+    FTIndexedMeshData(std::vector<VertexType>& vertices, std::vector<IndexType>& indices) : FTMeshData<VertexType>(vertices), index_count_(0) {
         indices_ = std::move(indices);
     }
 
@@ -62,7 +62,7 @@ public:
 
         if (cleanup) {
             glBindVertexArray(0);
-            is_loaded_ = true;
+            this->is_loaded_ = true;
         }
     }
 
@@ -79,7 +79,7 @@ public:
 
         if (cleanup) {
             glBindVertexArray(0);
-            is_loaded_ = true;
+            this->is_loaded_ = true;
         }
     }
 
@@ -118,14 +118,14 @@ protected:
 
 private:
     virtual void loadMeshData(FTMeshData<VertexType>* data, bool is_static, bool cleanup) override {
-        FTMesh::loadMeshData(data, is_static, cleanup);
+        FTMesh<ShaderProgram,VertexType>::loadMeshData(data, is_static, cleanup);
     }
 
     virtual void setMeshData(FTMeshData<VertexType>* data) override {
-        FTMesh::setMeshData(data);
+        FTMesh<ShaderProgram,VertexType>::setMeshData(data);
     }
 
     virtual void loadEmptyMesh(GLuint vertex_count, bool cleanup) override {
-        FTMesh::loadEmptyMesh(vertex_count, cleanup);
+        FTMesh<ShaderProgram,VertexType>::loadEmptyMesh(vertex_count, cleanup);
     }
 };
