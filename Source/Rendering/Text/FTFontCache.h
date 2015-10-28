@@ -14,7 +14,7 @@ public:
             loadFont(string);
             it = loaded_fonts_.find(string);
         }
-        FTAssert(it != loaded_fonts_.end(), "Could not find Font %s", string);
+        FTAssert(it != loaded_fonts_.end(), "Could not find Font %s", string.c_str());
         return it->second;
     }
 

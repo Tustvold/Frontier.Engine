@@ -35,6 +35,8 @@ target_link_libraries(Frontier.Engine.Tests
 
 # Move back into Frontier.Engine directory within Visual Studio
 set_target_properties(Frontier.Engine.Tests PROPERTIES FOLDER Frontier.Engine)
+target_compile_features ( Frontier.Engine.Tests PRIVATE cxx_static_assert
+    cxx_auto_type )
 
 add_custom_command(TARGET Frontier.Engine.Tests POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory

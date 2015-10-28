@@ -4,8 +4,11 @@
 
 template <typename ShaderProgram, typename VertexType, typename IndexType>
 class FTIndexedTexturedMesh : public FTIndexedMesh<ShaderProgram, VertexType, IndexType> {
+private:
+    typedef FTIndexedMesh<ShaderProgram, VertexType, IndexType> FTIndexedMeshBase_;
+
 public:
-    FTIndexedTexturedMesh() : FTIndexedMesh() {
+    FTIndexedTexturedMesh() : FTIndexedMeshBase_() {
 
     }
 
@@ -20,8 +23,8 @@ public:
     void draw() override {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture_->getTextureId());
-        glUniform1i(current_shader_program_->getTextureUniformId(), 0);
-        FTIndexedMesh::draw();
+        glUniform1i(this->current_shader_program_->getTextureUniformId(), 0);
+        FTIndexedMeshBase_::draw();
     }
 
 protected:

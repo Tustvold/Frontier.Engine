@@ -5,6 +5,17 @@
 #include <Rendering/FTDirector.h>
 #include <Rendering/Scene/Action/FTRepeatAction.h>
 
+#if __cplusplus < 201402L
+// no make_unique support
+namespace std {
+    template<typename T, typename ...Args>
+    std::unique_ptr<T> make_unique( Args&& ...args )
+    {
+            return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
+    }
+}
+#endif
+
 TEST(TestRepeatAction, TestSimple) {
     MockLoader loader;
     auto engine_event_dispatcher = loader.getMockEngineEventDispatcher();

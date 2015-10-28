@@ -17,9 +17,9 @@ private:
     std::string msg_;
 };
 
-#define FTAssert(value, format, ...) if (!(value)) { \
+#define FTAssert(value, ...) if (!(value)) { \
     FTLogPrint("", false, "Assertion failed with error: "); \
-    FTLogPrint("", false, format, __VA_ARGS__); \
+    FTLogPrint("", false, __VA_ARGS__); \
     FTLogPrint("", true, " at %s:%i",__FILE__, __LINE__); \
     throw FTException("Failed FTAssert"); \
 }

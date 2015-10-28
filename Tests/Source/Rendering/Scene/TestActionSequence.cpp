@@ -6,6 +6,17 @@
 #include <Rendering/Scene/FTView.h>
 #include <Rendering/Scene/FTScene.h>
 
+#if __cplusplus < 201402L
+// no make_unique support
+namespace std {
+    template<typename T, typename ...Args>
+    std::unique_ptr<T> make_unique( Args&& ...args )
+    {
+            return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
+    }
+}
+#endif
+
 TEST(TestActionSequence, TestSimple) {
     MockLoader loader;
     auto engine_event_dispatcher = loader.getMockEngineEventDispatcher();

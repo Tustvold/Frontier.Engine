@@ -2,6 +2,7 @@
 #include <FTEngine.h>
 #include <Util/FTFileManager.h>
 
+#include <string.h> // for strncmp
 
 FTTextureDDS::FTTextureDDS(const std::string& filename) {
     texture_id_ = loadDDS(filename);
@@ -15,18 +16,23 @@ FTTextureDDS::~FTTextureDDS() {
 #define FOURCC_DXT3 0x33545844 // Equivalent to "DXT3" in ASCII
 #define FOURCC_DXT5 0x35545844 // Equivalent to "DXT5" in ASCII
 
+/* HACK: no fopen_s on non-Windows systems */
+#ifndef WIN32
+#   define fopen_s(pFile,filename,mode) ((*(pFile))=fopen((filename),(mode)))==NULL
+#endif
+
 // Code from http://www.opengl-tutorial.org/beginners-tutorials/tutorial-5-a-textured-cube/
 GLuint FTTextureDDS::loadDDS(const std::string& provided_path) {
     unsigned char header[124];
 
     auto imagepath = FTEngine::getFileManager()->getPathToFile(provided_path);
-    FTAssert(imagepath != "", "File %s not found", provided_path);
+    FTAssert(imagepath != "", "File %s not found", provided_path.c_str());
 
     FILE* fp;
 
     /* try to open the file */
     auto err = fopen_s(&fp, imagepath.c_str(), "rb");
-    FTAssert(err == 0, "File %s could not be opened!", imagepath);
+    FTAssert(err == 0, "File %s could not be opened!", imagepath.c_str());
 
 
     /* verify the type of file */

@@ -6,6 +6,8 @@
 
 #ifdef WIN32
 #include <Windows.h>
+#endif
+
 #include <mutex>
 
 // This is to prevent corruption when printing from multiple threads
@@ -16,7 +18,7 @@ void FTLogPrint(const char* prefix, bool print_new_line, const char* format, ...
     va_list args;
     va_start(args, format);
     log_mutex.lock();
-#ifdef USE_VS_CONSOLE
+#if defined(USE_VS_CONSOLE) && defined(WIN32)
 
 
     _vsnprintf_s(log_buffer, sizeof(log_buffer), LOG_BUFFER_SIZE, format, args);
@@ -27,7 +29,7 @@ void FTLogPrint(const char* prefix, bool print_new_line, const char* format, ...
         OutputDebugStringA("\n");
 
 #else
-    printf(prefix);
+    printf("%s", prefix);
 	vprintf(format, args);
     if (print_new_line)
 	    printf("\n");
@@ -35,4 +37,3 @@ void FTLogPrint(const char* prefix, bool print_new_line, const char* format, ...
     log_mutex.unlock();
     va_end(args);
 }
-#endif

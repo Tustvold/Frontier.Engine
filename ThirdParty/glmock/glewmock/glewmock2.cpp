@@ -1,4 +1,5 @@
 #include "glewmock2.hpp"
+#include <stdexcept>
 
 
 GlewMock2::GlewMock2() {
@@ -28,7 +29,7 @@ void mockgl_GetProgramiv(GLuint program, GLenum pname, GLint* param) {
         *param = 0;
         break;
     default:
-        throw new std::exception("Unsupported GetProgramIV Enum");
+        throw new std::invalid_argument("Unsupported GetProgramIV Enum");
     }
 }
 
@@ -55,7 +56,7 @@ void mockgl_GetShaderiv(GLuint shader, GLenum pname, GLint* param) {
         *param = 0;
         break;
     default:
-        throw new std::exception("Unsupported GetShaderIV Enum");
+        throw new std::invalid_argument("Unsupported GetShaderIV Enum");
     }
 }
 

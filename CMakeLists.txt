@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.2)
 SET( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules"
                        "${CMAKE_MODULE_PATH}" )
 
@@ -65,7 +65,8 @@ SET (FRONTIER_ENGINE_LIBS
 target_include_directories ( Frontier.Engine PUBLIC
     ${FRONTIER_ENGINE_INCLUDES}
 )
-
+target_compile_features ( Frontier.Engine PRIVATE cxx_static_assert
+    cxx_auto_type )
 
 # Testing
 option(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)

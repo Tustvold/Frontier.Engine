@@ -1,6 +1,6 @@
 #ifndef GLEWMOCK_H
 #define GLEWMOCK_H
-#include "gl/glew.h"
+#include "GL/glew.h"
 #include "gmock/gmock.h"
 #include "glewmock2.hpp"
 
