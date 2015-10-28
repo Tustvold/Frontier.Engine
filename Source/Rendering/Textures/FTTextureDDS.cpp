@@ -2,6 +2,7 @@
 #include <FTEngine.h>
 #include <Util/FTFileManager.h>
 
+#include <string.h> // for strncmp
 
 FTTextureDDS::FTTextureDDS(const std::string& filename) {
     texture_id_ = loadDDS(filename);
