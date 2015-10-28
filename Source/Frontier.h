@@ -34,6 +34,20 @@ std::shared_ptr<T> construct_shared(T* ptr) {
     return std::shared_ptr<T>(ptr);
 }
 
+// MSVC doesn't appear to set __cplusplus correctly
+#ifndef _MSC_VER
+#if __cplusplus < 201402L
+// no make_unique support
+namespace std {
+    template<typename T, typename ...Args>
+    std::unique_ptr<T> make_unique(Args&& ...args)
+    {
+        return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+    }
+}
+#endif
+#endif
+
 // A number of functions (mainly those talking to OpenGL) assume that the glm vectors 
 // are not padded. We make sure this assumption holds here
 static_assert(sizeof(glm::vec2) == sizeof(GLfloat) * 2, "glm::vec2 has been padded by the compiler");

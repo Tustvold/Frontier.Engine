@@ -9,4 +9,4 @@ target_include_directories(glmock PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../../glew/include
     ${CMAKE_CURRENT_SOURCE_DIR}/)
 
-target_compile_features(glmock PRIVATE cxx_thread_local)
+target_compile_features(glmock PRIVATE cxx_auto_type)

@@ -5,17 +5,6 @@
 #include <Rendering/Camera/FTCamera3D.h>
 #include <Mock/ExpectUtils.h>
 
-#if __cplusplus < 201402L
-// no make_unique support
-namespace std {
-    template<typename T, typename ...Args>
-    std::unique_ptr<T> make_unique( Args&& ...args )
-    {
-            return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
-    }
-}
-#endif
-
 TEST(TestCamera, TestRaycast2D) {
     GlfwMock mock;
     FTEngine::setup(true); {
