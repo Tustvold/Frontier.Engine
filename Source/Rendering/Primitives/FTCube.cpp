@@ -136,6 +136,8 @@ FTCube::FTCube(const glm::vec3 face_colors[6]) : FTIndexedMesh() {
     data->setIndexCount(indices_index);
 
     loadIndexedMeshData(data.get(), true);
+
+    setSize(glm::vec3(1, 1, 1));
 }
 
 FTCube::~FTCube() {
