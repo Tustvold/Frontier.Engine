@@ -20,13 +20,13 @@ GLuint FTTextureDDS::loadDDS(const std::string& provided_path) {
     unsigned char header[124];
 
     auto imagepath = FTEngine::getFileManager()->getPathToFile(provided_path);
-    FTAssert(imagepath != "", "File %s not found", provided_path);
+    FTAssert(imagepath != "", "File %s not found", provided_path.c_str());
 
     FILE* fp;
 
     /* try to open the file */
     auto err = fopen_s(&fp, imagepath.c_str(), "rb");
-    FTAssert(err == 0, "File %s could not be opened!", imagepath);
+    FTAssert(err == 0, "File %s could not be opened!", imagepath.c_str());
 
 
     /* verify the type of file */
