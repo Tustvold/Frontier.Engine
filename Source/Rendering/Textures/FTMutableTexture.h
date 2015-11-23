@@ -3,15 +3,16 @@
 #include <Frontier.h>
 #include "FTTexture.h"
 
+static_assert(sizeof(glm::tvec4<uint8_t>) == 4, "RGBA Pixel has been padded by compiler");
+
 class FTMutableTexture : public FTTexture {
 public:
-    
 
     FTMutableTexture();
 
     virtual ~FTMutableTexture();
 
-    void setPixels(GLuint* pixels, GLuint width, GLuint height);
+    void setPixels(glm::tvec4<uint8_t>* pixels, GLuint width, GLuint height);
 
     GLuint getTextureId() override {
         return texture_id_;

@@ -43,10 +43,12 @@ public:
         float v = glm::dot(q, direction_);
         float d = radius_squared - (c2 - v*v);
 
+
+        d = v - sqrtf(d);
         if (d < 0.0)
             return false;
 
-        d_out = v - sqrtf(d);
+        d_out = d;
         intersection = d_out * direction_ + origin_;
         return true;
     }

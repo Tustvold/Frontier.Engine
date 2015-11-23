@@ -19,7 +19,7 @@ FTMutableTexture::~FTMutableTexture() {
     height_ = 0;
 }
 
-void FTMutableTexture::setPixels(GLuint* pixels, GLuint width, GLuint height) {
+void FTMutableTexture::setPixels(glm::tvec4<uint8_t>* pixels, GLuint width, GLuint height) {
     width_ = width;
     height_ = height;
     
