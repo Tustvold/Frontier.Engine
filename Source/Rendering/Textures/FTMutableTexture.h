@@ -1,13 +1,17 @@
-﻿#pragma once
-#include "FTTexture.h"
-#include "Frontier.h"
+#pragma once
 
-class FTTextureDDS : public FTTexture {
+#include <Frontier.h>
+#include "FTTexture.h"
+
+class FTMutableTexture : public FTTexture {
 public:
     
 
-    explicit FTTextureDDS(const std::string& filename);
-    virtual ~FTTextureDDS();
+    FTMutableTexture();
+
+    virtual ~FTMutableTexture();
+
+    void setPixels(GLuint* pixels, GLuint width, GLuint height);
 
     GLuint getTextureId() override {
         return texture_id_;
@@ -22,9 +26,8 @@ public:
     }
 
 protected:
+
     GLuint texture_id_;
     unsigned int width_;
     unsigned int height_;
-private:
-    GLuint loadDDS(const std::string& filename);
 };

@@ -30,8 +30,6 @@ void FTDirector::setup() {
     font_cache_ = new FTFontCache();
     action_manager_ = new FTActionManager();
 
-    loadDefaultFonts();
-
     FTEngine::getEventManager()->registerDelegate<FTEngineEventDispatcher>(this, &FTDirector::update);
 }
 
@@ -40,10 +38,6 @@ void FTDirector::cleanup() {
         scene_->onExit();
     scene_.reset();
     FTEngine::getEventManager()->unregisterDelegate<FTEngineEventDispatcher>(this, &FTDirector::update);
-}
-
-void FTDirector::loadDefaultFonts() {
-    font_cache_->loadFont("Resources/Fonts/Vera.ttf");
 }
 
 void FTDirector::update(const FTDrawEvent& event) {

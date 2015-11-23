@@ -8,7 +8,7 @@ public:
     virtual ~FTRaycast() {
     }
 
-    FTRaycast(const glm::vec3& origin, const glm::vec3& direction) : origin_(origin), direction_(direction) {
+    FTRaycast(const glm::vec3& origin, const glm::vec3& direction) : origin_(origin), direction_(glm::normalize(direction)) {
 
     }
 
@@ -34,6 +34,20 @@ public:
             return false;
         }
         intersection = origin_ + direction_ * (numerator / denom);
+        return true;
+    }
+
+    bool intersectsSphere(const glm::vec3& sphere_center, float radius_squared, glm::vec3& intersection, float& d_out) const {
+        glm::vec3 q = sphere_center - origin_;
+        float c2 = glm::length2(q);
+        float v = glm::dot(q, direction_);
+        float d = radius_squared - (c2 - v*v);
+
+        if (d < 0.0)
+            return false;
+
+        d_out = v - sqrtf(d);
+        intersection = d_out * direction_ + origin_;
         return true;
     }
 

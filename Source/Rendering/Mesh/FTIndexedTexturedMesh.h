@@ -16,8 +16,12 @@ public:
 
     }
 
-    void setTexture(std::shared_ptr<FTTexture> texture) {
+    void setTexture(const std::shared_ptr<FTTexture>& texture) {
         texture_ = texture;
+    }
+
+    void setTexture(std::shared_ptr<FTTexture>&& texture) {
+        texture_ = std::move(texture);
     }
 
     void draw() override {

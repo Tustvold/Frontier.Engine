@@ -15,15 +15,15 @@ public:
 
     void setCurrentScene(const std::shared_ptr<FTScene>& scene);
 
-    FTShaderCache* getShaderCache() {
+    FTShaderCache* getShaderCache() const {
         return shader_cache_;
     }
 
-    FTFontCache* getFontCache() {
+    FTFontCache* getFontCache() const {
         return font_cache_;
     }
 
-    FTActionManager* getActionManager() {
+    FTActionManager* getActionManager() const {
         return action_manager_;
     }
 
@@ -34,8 +34,6 @@ private:
     void setup();
 
     void cleanup();
-
-    void loadDefaultFonts();
 
     void update(const FTDrawEvent& event);
 

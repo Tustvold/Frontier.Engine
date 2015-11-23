@@ -4,7 +4,7 @@
 
 #include <string.h> // for strncmp
 
-FTTextureDDS::FTTextureDDS(const std::string& filename) {
+FTTextureDDS::FTTextureDDS(const std::string& filename) : width_(0), height_(0) {
     texture_id_ = loadDDS(filename);
 }
 

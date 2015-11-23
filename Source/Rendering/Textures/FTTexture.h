@@ -11,25 +11,18 @@ public:
 
     }
 
-    unsigned int getWidth() const {
-        return width_;
-    }
+    virtual size_t getWidth() const = 0;
 
-    unsigned int getHeight() const {
-        return height_;
-    }
+    virtual size_t getHeight() const = 0;
 
     unsigned int getMipMapCount() const {
         return mipmap_count_;
     }
 
 protected:
-    FTTexture() : width_(0), height_(0), mipmap_count_(1) {
+    FTTexture() : mipmap_count_(1) {
 
     }
 
-
-    unsigned int width_;
-    unsigned int height_;
     unsigned int mipmap_count_;
 };
