@@ -12,9 +12,12 @@ public:
 
     void preDraw() override;
 
-    void setUpVector(const glm::vec3& up_vector) {
+    void setVectors(const glm::vec3& up_vector, const glm::vec3& right_vector) {
+        up_vector_ = glm::normalize(up_vector);
+        right_vector_ = glm::normalize(right_vector);
+        look_direction_ = glm::cross(up_vector_, right_vector_);
         view_matrix_dirty_ = true;
-        up_vector_ = up_vector;
+        rotation_dirty_ = false;
     }
 
     void setPosition(const glm::vec3& pos) {
