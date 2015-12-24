@@ -1,11 +1,11 @@
 #include <Mock/MockLoader.h>
-#include <Rendering/Scene/Action/FTAction.h>
+#include <Rendering/Action/FTAction.h>
 #include <FTEngine.h>
-#include <Rendering/Scene/FTNode.h>
+#include <Rendering/FTNode.h>
 #include <Mock/MockEngineEventDispatcher.h>
-#include <Rendering/Scene/Action/FTActionManager.h>
+#include <Rendering/Action/FTActionManager.h>
 #include <Rendering/FTDirector.h>
-#include <Rendering/Scene/FTScene.h>
+#include <Rendering/FTScene.h>
 #include <Mock/MockAction.h>
 
 TEST(TestActionManager, TestAddRemove) {

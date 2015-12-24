@@ -1,5 +1,5 @@
 #include "FTCamera2D.h"
-#include <Rendering/Scene/FTNode.h>
+#include <Rendering/FTNode.h>
 
 void FTCamera2D::preDraw() {
     FTCamera::preDraw();

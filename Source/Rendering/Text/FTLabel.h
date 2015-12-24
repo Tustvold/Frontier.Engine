@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <Rendering/Scene/FTNode.h>
+#include <Rendering/FTNode.h>
 #include <Rendering/Mesh/FTIndexedTexturedMesh.h>
 #include "FTFont.h"
 #include <Rendering/Shader/FTFontShader.h>

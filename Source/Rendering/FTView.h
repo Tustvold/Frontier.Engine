@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <Rendering/Camera/FTCamera.h>
-#include <Rendering/Scene/FTNode.h>
+#include <Rendering/FTNode.h>
 
 // Subclass of FTNode which manages a camera
 class FTView : public FTNode {

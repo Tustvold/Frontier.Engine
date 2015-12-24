@@ -1,6 +1,6 @@
 #pragma once
 #include <Frontier.h>
-#include <Rendering/Scene/FTShaderNode.h>
+#include <Rendering/FTShaderNode.h>
 #include <Util/FTMath.h>
 #include <Rendering/Mesh/FTVertex.h>
 

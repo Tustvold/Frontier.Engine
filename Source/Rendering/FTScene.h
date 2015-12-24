@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <Frontier.h>
-#include <Rendering/Scene/FTView.h>
+#include <Rendering/FTView.h>
 #include <vector>
 
 // The root object of every scene, contains a list of the FTLayers to be drawn

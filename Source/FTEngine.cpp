@@ -6,7 +6,7 @@
 #include "Rendering/Text/FTFontCache.h"
 #include "Event/FTEventManager.h"
 #include "Util/FTFileManager.h"
-#include "Rendering/Scene/Action/FTActionManager.h"
+#include "Rendering/Action/FTActionManager.h"
 #include "Event/Engine/FTEngineEventDispatcher.h"
 #include <sstream>
 

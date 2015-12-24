@@ -3,8 +3,8 @@
 #include <FTEngine.h>
 #include <Event/Engine/FTEngineEventDispatcher.h>
 #include <Event/FTEventManager.h>
-#include <Rendering/Scene/FTScene.h>
-#include "Scene/Action/FTActionManager.h"
+#include <Rendering/FTScene.h>
+#include "Rendering/Action/FTActionManager.h"
 #include "Text/FTFontCache.h"
 
 void FTDirector::setCurrentScene(const std::shared_ptr<FTScene>& scene) {

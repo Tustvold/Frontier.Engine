@@ -4,7 +4,7 @@
 #include <Event/FTEventManager.h>
 #include <Event/Engine/FTEngineEventDispatcher.h>
 #include <algorithm>
-#include <Rendering/Scene/FTNode.h>
+#include <Rendering/FTNode.h>
 
 void FTActionManager::addAction(FTNode* target, std::unique_ptr<FTAction>&& action) {
     action->onStart(target);

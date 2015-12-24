@@ -1,5 +1,5 @@
 #include <Mock/MockLoader.h>
-#include <Rendering/Scene/FTScene.h>
+#include <Rendering/FTScene.h>
 #include <Rendering/FTDirector.h>
 
 class MockSceneEnterExit : public FTScene {

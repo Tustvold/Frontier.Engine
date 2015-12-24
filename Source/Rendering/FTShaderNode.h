@@ -1,5 +1,5 @@
 #pragma once
-#include <Rendering/Scene/FTNode.h>
+#include <Rendering/FTNode.h>
 #include <Rendering/Shader/FTVertexShaderProgram.h>
 #include <Rendering/Shader/FTShaderCache.h>
 #include <FTEngine.h>

@@ -1,9 +1,9 @@
 #include <Mock/MockLoader.h>
 #include <Mock/MockAction.h>
-#include <Rendering/Scene/FTView.h>
-#include <Rendering/Scene/FTScene.h>
+#include <Rendering/FTView.h>
+#include <Rendering/FTScene.h>
 #include <Rendering/FTDirector.h>
-#include <Rendering/Scene/Action/FTRepeatAction.h>
+#include <Rendering/Action/FTRepeatAction.h>
 
 TEST(TestRepeatAction, TestSimple) {
     MockLoader loader;

@@ -1,5 +1,5 @@
 #pragma once
-#include <Rendering/Scene/FTShaderNode.h>
+#include <Rendering/FTShaderNode.h>
 
 // A FTShaderNode which renders a provided FTDrawable
 template <typename ShaderProgram>

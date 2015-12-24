@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Rendering/Scene/FTNode.h>
+#include <Rendering/FTNode.h>
 #include <FTEngine.h>
 
 // An FTNode with the same size as the window

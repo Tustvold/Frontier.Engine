@@ -1,4 +1,4 @@
-#include <Rendering/Scene/FTNode.h>
+#include <Rendering/FTNode.h>
 #include <Util/FTMath.h>
 #include <Rendering/Camera/FTCamera.h>
 #include <Rendering/FTDirector.h>

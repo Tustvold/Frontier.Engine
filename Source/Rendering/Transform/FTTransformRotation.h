@@ -1,5 +1,5 @@
 #pragma once
-#include <Rendering/Scene/Transform/FTTransform.h>
+#include <Rendering/Transform/FTTransform.h>
 #include <glm/gtx/quaternion.hpp>
 
 class FTTransformRotation : public FTTransform {

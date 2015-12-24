@@ -2,7 +2,7 @@
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <Rendering/Scene/FTNode.h>
+#include <Rendering/FTNode.h>
 #include <glm/detail/type_mat.hpp>
 #include <glm/detail/type_vec2.hpp>
 #include <glm/detail/type_vec4.hpp>

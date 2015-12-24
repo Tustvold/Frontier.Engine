@@ -1,11 +1,11 @@
 #include <Mock/MockLoader.h>
 #include <FTEngine.h>
-#include <Rendering/Scene/FTShaderNode.h>
+#include <Rendering/FTShaderNode.h>
 #include <Mock/MockShader.h>
 #include <Mock/ExpectUtils.h>
 #include <Rendering/Camera/FTCamera2D.h>
-#include <Rendering/Scene/FTView.h>
-#include <Rendering/Scene/FTScene.h>
+#include <Rendering/FTView.h>
+#include <Rendering/FTScene.h>
 
 class MockNodeDraw : public FTNode {
 

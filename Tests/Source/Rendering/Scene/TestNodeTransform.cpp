@@ -1,6 +1,6 @@
 #include <Mock/MockLoader.h>
 #include <FTEngine.h>
-#include <Rendering/Scene/FTShaderNode.h>
+#include <Rendering/FTShaderNode.h>
 #include <Mock/MockShader.h>
 #include <Mock/ExpectUtils.h>
 

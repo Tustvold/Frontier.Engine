@@ -1,5 +1,5 @@
 #pragma once
-#include <Rendering/Scene/Action/FTAction.h>
+#include <Rendering/Action/FTAction.h>
 
 class MockAction : public FTAction {
 

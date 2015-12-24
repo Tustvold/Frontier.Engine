@@ -1,5 +1,5 @@
 #include <Frontier.h>
-#include <Rendering/Scene/Transform/FTTransform.h>
+#include <Rendering/Transform/FTTransform.h>
 
 // Represents a composite transform
 // The transform is calculated as transform1*transform2*transform3

@@ -1,10 +1,10 @@
 #include <Mock/MockLoader.h>
 #include <Mock/MockAction.h>
-#include <Rendering/Scene/Action/FTActionSequence.h>
+#include <Rendering/Action/FTActionSequence.h>
 #include <Rendering/FTDirector.h>
-#include <Rendering/Scene/FTNode.h>
-#include <Rendering/Scene/FTView.h>
-#include <Rendering/Scene/FTScene.h>
+#include <Rendering/FTNode.h>
+#include <Rendering/FTView.h>
+#include <Rendering/FTScene.h>
 
 TEST(TestActionSequence, TestSimple) {
     MockLoader loader;
