@@ -43,9 +43,11 @@ public:
         float v = glm::dot(q, direction_);
         float d = radius_squared - (c2 - v*v);
 
+        if (d < 0.0f)
+            return false;
 
         d = v - sqrtf(d);
-        if (d < 0.0)
+        if (d < 0.0f)
             return false;
 
         d_out = d;

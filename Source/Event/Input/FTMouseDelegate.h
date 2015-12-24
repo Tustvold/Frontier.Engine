@@ -3,7 +3,7 @@
 // A targeted delegate to facilitate UI 
 class FTMouseDelegate {
 public:
-    FTMouseDelegate() : priority_(0), is_enabled_(0) {
+    FTMouseDelegate(int priority) : priority_(priority), is_enabled_(0) {
 
     }
 
@@ -13,10 +13,6 @@ public:
     virtual bool onMouseDown(const FTMouseButtonPressedEvent& event) = 0;
     virtual void onMouseMove(const FTMouseMoveEvent&, int mouse_button) = 0;
     virtual void onMouseRelease(const FTMouseButtonReleasedEvent& event) = 0;
-
-    void setPriority(int priority) {
-        priority_ = priority;
-    }
 
     int getPriority() const {
         return priority_;

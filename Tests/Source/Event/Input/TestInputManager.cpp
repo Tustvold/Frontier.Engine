@@ -9,8 +9,7 @@ public:
     MOCK_METHOD2(onMouseMove, void(const FTMouseMoveEvent&, int));
     MOCK_METHOD1(onMouseRelease, void(const FTMouseButtonReleasedEvent&));
 
-    MockMouseDelegate(int priority, bool enabled) {
-        setPriority(priority);
+    MockMouseDelegate(int priority, bool enabled) : FTMouseDelegate(priority) {
         setEnabled(enabled);
     }
 
