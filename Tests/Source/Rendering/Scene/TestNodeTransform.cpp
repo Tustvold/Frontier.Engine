@@ -57,7 +57,7 @@ TEST(TestNodeTransform, TestTransform) {
     node->setScale(glm::vec3(2, 6, 9));
     auto quat = glm::angleAxis((float)M_PI_2, glm::vec3(0, 0, 1));
     node->setRotationQuaternion(quat);
-    node->updateMatrices();
+    node->visit(glm::mat4(), false);
 
     auto expectedPosition = glm::mat4(
         1, 0, 0, 0,
@@ -98,7 +98,7 @@ TEST(TestNodeTransform, TestAnchorPointSimple) {
     node->setPosition(glm::vec3(5, 3, 9));
     node->setSize(glm::vec3(48, 24, 96));
     node->setAnchorPoint(glm::vec3(0.25f, 0.75f, 0.3f));
-    node->updateMatrices();
+    node->visit(glm::mat4(), false);
 
     auto expectedPosition = glm::mat4(
         1, 0, 0, 0,
@@ -120,7 +120,7 @@ TEST(TestNodeTransform, TestAnchorPointScale) {
     node->setSize(glm::vec3(48, 24, 96));
     node->setScale(glm::vec3(56, 3, 9));
     node->setAnchorPoint(glm::vec3(0.25f, 0.75f, 0.3f));
-    node->updateMatrices();
+    node->visit(glm::mat4(), false);
 
     auto expectedPosition = glm::mat4(
         1, 0, 0, 0,
@@ -143,7 +143,7 @@ TEST(TestNodeTransform, TestAnchorPointRotate) {
     node->setScale(glm::vec3(56, 3, 9));
     node->setRotationQuaternion(glm::angleAxis((float)M_PI_2, glm::vec3(0, 0, 1)));
     node->setAnchorPoint(glm::vec3(0.25f, 0.75f, 0.3f));
-    node->updateMatrices();
+    node->visit(glm::mat4(), false);
 
     auto expectedPosition = glm::mat4(
         1, 0, 0, 0,

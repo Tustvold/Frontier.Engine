@@ -10,13 +10,30 @@ class FTScene;
 class FTCamera;
 
 // The base class of all elements in the scene hierarchy
-class FTNode : public FTDrawable, public FTTransform {
+class FTNode : public FTDrawable {
 public:
 
-    explicit FTNode();
+    enum Flags {
+        TransformDirty = 1,
+        ChildNodeDirty = 1 << 1,
+        FrustrumCullEnabled = 1 << 2,
+        IsActive = 1 << 3,
+        Paused = 1 << 4,
+        
+        InitialFlags = FrustrumCullEnabled | TransformDirty | ChildNodeDirty
+    };
+
+    enum Masks {
+        DirtyMask = TransformDirty | ChildNodeDirty,
+        AABDirtyMask = TransformDirty | ChildNodeDirty,
+    };
+
+    FTNode();
 
     // Override to provide custom frustrum culling code
     virtual bool isVisible(FTCamera* camera);
+
+    virtual void performDraw(FTCamera* camera);
 
     virtual void pre_draw(const glm::mat4& mvp) {
     }
@@ -27,8 +44,16 @@ public:
     virtual void post_draw() {
     }
 
-    // Override to provide custom transforms, custom frustrum culling, children, etc
-    virtual void visit(FTCamera* camera, std::stack<glm::mat4>& matrix_stack, bool parent_updated);
+    void setDirty(Flags dirty_raw) {
+        int dirty = dirty_raw & DirtyMask;
+        if ((flags_ & dirty) == dirty)
+            return;
+        flags_ |= dirty;
+        if (parent_)
+            parent_->setDirty(ChildNodeDirty);
+    }
+
+    virtual void visit(const glm::mat4& parent_matrix, bool parent_updated);
 
     void addChild(const std::shared_ptr<FTNode>& child);
 
@@ -39,7 +64,7 @@ public:
     }
 
     void setPosition(const glm::vec3& position) {
-        transform_dirty_ = true;
+        setDirty(TransformDirty);
         unaltered_position_ = position;
 
         position_transform_->setPosition(position - anchor_point_ * size_);
@@ -50,12 +75,12 @@ public:
     }
 
     void setScale(const glm::vec3& scale) {
-        transform_dirty_ = true;
+        setDirty(TransformDirty);
         scale_transform_->setScale(scale);
     }
 
     void setRotationQuaternion(const glm::quat& quat) {
-        transform_dirty_ = true;
+        setDirty(TransformDirty);
         rotation_transform_->setRotationQuaterion(quat);
     }
 
@@ -76,7 +101,7 @@ public:
     }
 
     void setSize(const glm::vec3& size) {
-        transform_dirty_ = true;
+        setDirty(TransformDirty);
         size_ = size;
     }
 
@@ -89,17 +114,20 @@ public:
     }
 
     void setAnchorPoint(const glm::vec3& anchor_point) {
-        transform_dirty_ = true;
+        setDirty(TransformDirty);
         anchor_point_ = anchor_point;
     }
 
     void setFrustrumCull(bool should_cull) {
-        perform_frustrum_cull_ = should_cull;
+        if (should_cull)
+            flags_ |= FrustrumCullEnabled;
+        else
+            flags_ &= ~FrustrumCullEnabled;
     }
 
-    virtual bool updateMatrices() override;
+    virtual bool updateMatrices(const glm::mat4& parent_matrix);
 
-    virtual void updateAAB(const glm::mat4& model_matrix);
+    virtual void updateAAB();
 
     const glm::vec3& getAABCenter() const {
         return aab_center_;
@@ -110,30 +138,44 @@ public:
     }
 
     bool getActionsPaused() const {
-        return paused_;
+        return (flags_ & Paused) != 0;
     }
 
     // Whether this node is within the hierarchy of the active scene
     bool getIsActive() const {
-        return is_active_;
+        return (flags_ & IsActive) != 0;
     }
 
     void runAction(std::unique_ptr<FTAction>&& action);
 
     void pauseAllActions() {
-        paused_ = true;
+        flags_ |= Paused;
     }
 
     void resumeAllActions() {
-        paused_ = false;
+        flags_ &= ~Paused;
     }
+
+    const glm::mat4& getTransformMatrix() const {
+        return transform_matrix_.getConstData();
+    }
+
+    const glm::mat4& getModelMatrix() const {
+        return model_matrix_.getConstData();
+    }
+
+    const glm::mat4& getModelMatrixInverse() {
+        if (model_matrix_inv_dirty_)
+            model_matrix_inv_ = glm::inverse(model_matrix_.getConstData());
+        return model_matrix_inv_.getConstData();
+    }
+
 protected:
     glm::vec3 size_;
     glm::vec3 anchor_point_;
     glm::vec3 unaltered_position_;
-    bool perform_frustrum_cull_;
-    bool paused_; // Whether the actions on this instance are paused
-    bool is_active_; // Whether this instance is connected to a running scene
+
+    int flags_;
 
     glm::vec3 aab_center_;
     glm::vec3 aab_extents_;
@@ -141,7 +183,14 @@ protected:
     std::unique_ptr<FTTransformRotation> rotation_transform_;
     std::unique_ptr<FTTransformPosition> position_transform_;
     std::unique_ptr<FTTransformScale> scale_transform_;
+
+    FTAlignedData<glm::mat4> transform_matrix_;
+    FTAlignedData<glm::mat4> model_matrix_;
+    FTAlignedData<glm::mat4> model_matrix_inv_;
+    bool model_matrix_inv_dirty_;
+
     std::vector<std::shared_ptr<FTNode>> children_;
+
     FTNode* parent_;
     FTView* view_;
     FTScene* scene_;
@@ -154,4 +203,6 @@ protected:
     virtual void onEnter();
 
     virtual void onExit();
+
+
 };

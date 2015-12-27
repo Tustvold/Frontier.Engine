@@ -1,5 +1,6 @@
 #pragma once
 #include "FTNode.h"
+#include <Util/FTMath.h>
 
 class FTLayoutNode : public FTNode {
 public:

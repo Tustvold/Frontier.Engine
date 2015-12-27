@@ -5,7 +5,7 @@
 // Creates and manages a transform
 class FTTransform {
 public:
-    FTTransform() {
+    FTTransform() : transform_dirty_(true) {
         transform_matrix = glm::mat4();
     }
 

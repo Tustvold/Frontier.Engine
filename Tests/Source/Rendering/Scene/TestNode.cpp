@@ -39,8 +39,7 @@ TEST(TestNode, TestCallOrder) {
     auto camera = std::static_pointer_cast<FTCamera>(std::make_shared<FTCamera2D>());
     auto screensize = FTEngine::getWindowSize();
     camera->setDrawRectRelative(FTRect<float>(0, 0, 100.0f / screensize.x, 100.0f / screensize.y));
-    std::stack<glm::mat4> matrix_stack;
-    matrix_stack.push(glm::mat4());
+    glm::mat4 parent_matrix;
     MockNodeDraw node;
 
     testing::InSequence s;
@@ -48,7 +47,8 @@ TEST(TestNode, TestCallOrder) {
     EXPECT_CALL(node, draw());
     EXPECT_CALL(node, post_draw());
 
-    node.visit(camera.get(), matrix_stack, false);
+    node.visit(parent_matrix, false);
+    node.performDraw(camera.get());
 
 }
 
@@ -60,15 +60,14 @@ TEST(TestNode, TestCulling) {
 
     auto screensize = FTEngine::getWindowSize();
     camera->setDrawRectRelative(FTRect<float>(0, 0, 100.0f / screensize.x, 100.0f / screensize.y));
-    std::stack<glm::mat4> matrix_stack;
-    matrix_stack.push(glm::mat4());
+    glm::mat4 parent_matrix;
     MockNodeChildren node;
     node.setSize(glm::vec2(50, 80));
-    node.setFrustrumCull(true);
 
     EXPECT_CALL(node, draw());
 
-    node.visit(camera.get(), matrix_stack, false);
+    node.visit(parent_matrix, false);
+    node.performDraw(camera.get());
 
 
     testing::Mock::VerifyAndClearExpectations(&node);
@@ -77,7 +76,8 @@ TEST(TestNode, TestCulling) {
 
     node.setPosition(glm::vec2(-55, -85));
 
-    node.visit(camera.get(), matrix_stack, false);
+    node.visit(parent_matrix, false);
+    node.performDraw(camera.get());
 
 
     testing::Mock::VerifyAndClearExpectations(&node);
@@ -87,7 +87,8 @@ TEST(TestNode, TestCulling) {
     node.setPosition(glm::vec2(-0.1f, -0.1f));
     node.setAnchorPoint(glm::vec2(1.0f, 0.0f));
 
-    node.visit(camera.get(), matrix_stack, false);
+    node.visit(parent_matrix, false);
+    node.performDraw(camera.get());
 
     testing::Mock::VerifyAndClearExpectations(&node);
 
@@ -96,7 +97,8 @@ TEST(TestNode, TestCulling) {
     node.setPosition(glm::vec2(100.1f, 0.0f));
     node.setAnchorPoint(glm::vec2(0.0f, 0.0f));
 
-    node.visit(camera.get(), matrix_stack, false);
+    node.visit(parent_matrix, false);
+    node.performDraw(camera.get());
 
     testing::Mock::VerifyAndClearExpectations(&node);
 
@@ -105,7 +107,8 @@ TEST(TestNode, TestCulling) {
 
     node.setRotationQuaternion(glm::angleAxis((float)M_PI, glm::vec3(0, 0, 1)));
 
-    node.visit(camera.get(), matrix_stack, false);
+    node.visit(parent_matrix, false);
+    node.performDraw(camera.get());
 
 }
 
@@ -115,37 +118,39 @@ TEST(TestNode, TestCullingHierarchy) {
     auto camera = std::static_pointer_cast<FTCamera>(std::make_shared<FTCamera2D>());
     auto screensize = FTEngine::getWindowSize();
     camera->setDrawRectRelative(FTRect<float>(0, 0, 100.0f / screensize.x, 100.0f / screensize.y));
-    std::stack<glm::mat4> matrix_stack;
-    matrix_stack.push(glm::mat4());
+    glm::mat4 parent_matrix;
     MockNodeChildren parent;
     auto child = std::make_shared<MockNodeChildren>();
     parent.addChild(std::static_pointer_cast<FTNode>(child));
     child->setSize(glm::vec2(50, 80));
-    child->setFrustrumCull(true);
 
     EXPECT_CALL(parent, draw()).Times(testing::AnyNumber());
     EXPECT_CALL(*child.get(), draw());
 
-    parent.visit(camera.get(), matrix_stack, false);
+    parent.visit(parent_matrix, false);
+    parent.performDraw(camera.get());
 
     testing::Mock::VerifyAndClearExpectations(child.get());
 
     parent.setPosition(glm::vec2(-100, -100));
     EXPECT_CALL(*child.get(), draw()).Times(0);
-    parent.visit(camera.get(), matrix_stack, false);
+    parent.visit(parent_matrix, false);
+    parent.performDraw(camera.get());
 
     testing::Mock::VerifyAndClearExpectations(child.get());
 
     child->setPosition(glm::vec2(100, 100));
     EXPECT_CALL(*child.get(), draw());
-    parent.visit(camera.get(), matrix_stack, false);
+    parent.visit(parent_matrix, false);
+    parent.performDraw(camera.get());
 
     testing::Mock::VerifyAndClearExpectations(child.get());
     parent.setPosition(glm::vec2(50, 50));
 
     child->setPosition(glm::vec2(60, 0));
     EXPECT_CALL(*child.get(), draw()).Times(0);
-    parent.visit(camera.get(), matrix_stack, false);
+    parent.visit(parent_matrix, false);
+    parent.performDraw(camera.get());
 
     testing::Mock::VerifyAndClearExpectations(child.get());
     parent.setPosition(glm::vec2(50, 50));
@@ -153,7 +158,8 @@ TEST(TestNode, TestCullingHierarchy) {
 
     child->setPosition(glm::vec2(60, 0));
     EXPECT_CALL(*child.get(), draw());
-    parent.visit(camera.get(), matrix_stack, false);
+    parent.visit(parent_matrix, false);
+    parent.performDraw(camera.get());
 
     testing::Mock::VerifyAndClearExpectations(child.get());
     parent.setPosition(glm::vec2(0, 0));
@@ -161,12 +167,14 @@ TEST(TestNode, TestCullingHierarchy) {
 
     child->setPosition(glm::vec2(110, 50));
     EXPECT_CALL(*child.get(), draw()).Times(0);
-    parent.visit(camera.get(), matrix_stack, false);
+    parent.visit(parent_matrix, false);
+    parent.performDraw(camera.get());
 
     testing::Mock::VerifyAndClearExpectations(child.get());
     child->setRotationQuaternion(glm::angleAxis((float)M_PI, glm::vec3(0, 0, 1)));
     EXPECT_CALL(*child.get(), draw());
-    parent.visit(camera.get(), matrix_stack, false);
+    parent.visit(parent_matrix, false);
+    parent.performDraw(camera.get());
 
 }
 

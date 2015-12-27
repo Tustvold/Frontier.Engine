@@ -4,6 +4,7 @@
 
 // Subclass of FTNode which manages a camera
 class FTView : public FTNode {
+private:
     friend class FTScene;
 public:
     explicit FTView() {
@@ -14,12 +15,11 @@ public:
 
     }
 
-    virtual void visit() {
+    void performDraw() {
         camera_->preDraw();
-        std::stack<glm::mat4> matrix_stack;
-        matrix_stack.push(glm::mat4());
-        FTNode::visit(camera_.get(), matrix_stack, false);
+        FTNode::performDraw(camera_.get());
     }
+
 
     void setCamera(const std::shared_ptr<FTCamera>& camera) {
         camera_ = camera;

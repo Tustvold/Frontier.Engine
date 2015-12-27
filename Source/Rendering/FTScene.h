@@ -17,7 +17,8 @@ public:
 
     virtual void draw() {
         for (auto it = views_.begin(); it != views_.end(); ++it) {
-            (*it)->visit();
+            (*it)->visit(glm::mat4(), false);
+            (*it)->performDraw();
         }
     }
 
