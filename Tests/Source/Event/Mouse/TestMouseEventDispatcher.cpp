@@ -25,8 +25,10 @@ TEST(TestMouseEventDispatcher, TestMouseMove) {
     EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(200,100,0,0)));
     EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(240, 80, 40, -20)));
 
-    mock.mouse_pos_callback_(nullptr, 200, 100);
-    mock.mouse_pos_callback_(nullptr, 240, 80);
+    auto screensize = FTEngine::getWindowSize();
+
+    mock.mouse_pos_callback_(nullptr, 200, screensize.y - 100);
+    mock.mouse_pos_callback_(nullptr, 240, screensize.y - 80);
 
     FTEngine::cleanup();
 }
@@ -72,12 +74,14 @@ TEST(TestMouseEventDispatcher, TestEnterExitPosPurge) {
     EXPECT_CALL(listener, mouseExitEvent(testing::_));
     EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(240, 80, 0, 0)));
 
-    mock.mouse_pos_callback_(nullptr, 200, 100);
+    auto screensize = FTEngine::getWindowSize();
+
+    mock.mouse_pos_callback_(nullptr, 200, screensize.y - 100);
 
     mock.mouse_enter_callback_(nullptr, GL_TRUE);
     mock.mouse_enter_callback_(nullptr, GL_FALSE);
 
-    mock.mouse_pos_callback_(nullptr, 240, 80);
+    mock.mouse_pos_callback_(nullptr, 240, screensize.y - 80);
 
     FTEngine::cleanup();
 }
@@ -103,8 +107,10 @@ TEST(TestMouseEventDispatcher, TestMouseButtonSimple) {
     EXPECT_CALL(listener, mouseButtonPressedEvent(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)));
     EXPECT_CALL(listener, mouseButtonReleasedEvent(FTMouseButtonReleasedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)));
 
-    mock.mouse_pos_callback_(nullptr, 200, 100);
-    mock.mouse_pos_callback_(nullptr, 240, 80);
+    auto screensize = FTEngine::getWindowSize();
+
+    mock.mouse_pos_callback_(nullptr, 200, screensize.y - 100);
+    mock.mouse_pos_callback_(nullptr, 240, screensize.y - 80);
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, 0);
 
@@ -131,10 +137,12 @@ TEST(TestMouseEventDispatcher, TestMouseButtonExit) {
     EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(200, 100, 0, 0)));
     EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(240, 80, 40, -20)));
     EXPECT_CALL(listener, mouseButtonPressedEvent(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)));
-    EXPECT_CALL(listener, mouseButtonReleasedEvent(FTMouseButtonReleasedEvent(DBL_MAX, DBL_MAX, GLFW_MOUSE_BUTTON_LEFT, true)));
+    EXPECT_CALL(listener, mouseButtonReleasedEvent(FTMouseButtonReleasedEvent(-1, -1, GLFW_MOUSE_BUTTON_LEFT, true)));
 
-    mock.mouse_pos_callback_(nullptr, 200, 100);
-    mock.mouse_pos_callback_(nullptr, 240, 80);
+    auto screensize = FTEngine::getWindowSize();
+
+    mock.mouse_pos_callback_(nullptr, 200, screensize.y - 100);
+    mock.mouse_pos_callback_(nullptr, 240, screensize.y - 80);
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
     mock.mouse_enter_callback_(nullptr, GL_FALSE);
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, 0);

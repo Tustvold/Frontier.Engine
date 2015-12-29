@@ -34,7 +34,7 @@ TEST(TestNodeTransform, TestGetSet) {
     EXPECT_EQ(node->getScale(), glm::vec3(1, 5, 21));
 
     node->setScale(glm::vec2(3, 8));
-    EXPECT_EQ(node->getScale(), glm::vec3(3, 8, 0));
+    EXPECT_EQ(node->getScale(), glm::vec3(3, 8, 1));
 
     node->setSize(glm::vec3(1, 5, 21));
     EXPECT_EQ(node->getSize(), glm::vec3(1, 5, 21));

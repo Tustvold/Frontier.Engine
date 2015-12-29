@@ -10,6 +10,7 @@ add_subdirectory(Action)
 set (SOURCES ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTDirector.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FTNode.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTButton2D.cpp
     PARENT_SCOPE)
 
 set (HEADERS ${HEADERS}
@@ -22,4 +23,5 @@ set (HEADERS ${HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTLayoutNode.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTShaderNode.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTWindowSizeNode.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTButton2D.h
     PARENT_SCOPE)

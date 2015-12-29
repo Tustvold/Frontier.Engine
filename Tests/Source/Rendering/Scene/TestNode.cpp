@@ -10,7 +10,6 @@
 class MockNodeDraw : public FTNode {
 
 public:
-
     MOCK_METHOD1(pre_draw, void(const glm::mat4&));
     MOCK_METHOD0(draw, void());
     MOCK_METHOD0(post_draw, void());
@@ -213,4 +212,8 @@ TEST(TestNode, TestOnAddedToParent) {
     EXPECT_CALL(*node3, onAddedToScene(scene.get())).InSequence(s3).WillOnce(testing::Invoke(node3.get(), &MockNodeDraw::callParentAddedToScene));
 
     view->addChild(node1);
+}
+
+TEST(TestNode, TestMouseInput) {
+    MockLoader loader;
 }

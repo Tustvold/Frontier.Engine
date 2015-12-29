@@ -4,21 +4,24 @@
 #include <stack>
 #include <vector>
 #include "Action/FTAction.h"
+#include <Event/Input/FTMouseDelegate.h>
 
 class FTView;
 class FTScene;
 class FTCamera;
 
 // The base class of all elements in the scene hierarchy
-class FTNode : public FTDrawable {
+class FTNode : public FTDrawable, public FTMouseDelegate {
 public:
+
 
     enum Flags {
         TransformDirty = 1,
         ChildNodeDirty = 1 << 1,
         FrustrumCullEnabled = 1 << 2,
         IsActive = 1 << 3,
-        Paused = 1 << 4,
+        ActionsPaused = 1 << 4,
+        MouseInputEnabled = 1 << 5,
         
         InitialFlags = FrustrumCullEnabled | TransformDirty | ChildNodeDirty
     };
@@ -29,6 +32,31 @@ public:
     };
 
     FTNode();
+
+    virtual ~FTNode();
+
+    bool onMouseDown(const FTMouseButtonPressedEvent& event) override {
+        return false;
+    }
+
+    void onMouseDrag(const FTMouseMoveEvent&, int mouse_button) override {
+
+    }
+
+    void onMouseRelease(const FTMouseButtonReleasedEvent& event) override {
+
+    }
+
+    bool onMouseMove(const FTMouseMoveEvent& event) override {
+        return false;
+    }
+
+    void setMouseInputEnabled(bool enabled);
+
+    bool getMouseDelegateEnabled() const override {
+        // TODO: Determine this based on flags
+        return true;
+    }
 
     // Override to provide custom frustrum culling code
     virtual bool isVisible(FTCamera* camera);
@@ -71,7 +99,7 @@ public:
     }
 
     void setScale(const glm::vec2& scale) {
-        setScale(glm::vec3(scale.x, scale.y, 0));
+        setScale(glm::vec3(scale.x, scale.y, 1));
     }
 
     void setScale(const glm::vec3& scale) {
@@ -92,7 +120,7 @@ public:
         return rotation_transform_->getRotationQuaternion();
     }
 
-    const glm::vec3& getScale() const {
+    virtual const glm::vec3& getScale() const {
         return scale_transform_->getScale();
     }
 
@@ -105,7 +133,7 @@ public:
         size_ = size;
     }
 
-    const glm::vec3& getSize() const {
+    virtual const glm::vec3& getSize() const {
         return size_;
     }
 
@@ -138,7 +166,7 @@ public:
     }
 
     bool getActionsPaused() const {
-        return (flags_ & Paused) != 0;
+        return (flags_ & ActionsPaused) != 0;
     }
 
     // Whether this node is within the hierarchy of the active scene
@@ -149,11 +177,11 @@ public:
     void runAction(std::unique_ptr<FTAction>&& action);
 
     void pauseAllActions() {
-        flags_ |= Paused;
+        flags_ |= ActionsPaused;
     }
 
     void resumeAllActions() {
-        flags_ &= ~Paused;
+        flags_ &= ~ActionsPaused;
     }
 
     const glm::mat4& getTransformMatrix() const {

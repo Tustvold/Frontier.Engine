@@ -12,13 +12,6 @@ public:
 
     }
 
-    bool intersectsRect2D(const glm::vec2& origin, const glm::vec2& size, glm::vec2& intersection) const {
-        if (!(origin.x <= origin_.x && origin.x + size.x >= origin_.x && origin.y <= origin_.y && origin.y + size.y >= origin_.y))
-            return false;
-        intersection = glm::vec2(origin_.x, origin_.y);
-        return true;
-    };
-
     // Whether this ray intersects a given plane. Will return false if no solution exists. If there is a solution intersection will be
     // set to the coressponding value. If the line is in the plane intersection will be set to point_in_plane
     bool intersectsPlane(const glm::vec3& perpendicular, const glm::vec3& point_in_plane, glm::vec3& intersection) const {

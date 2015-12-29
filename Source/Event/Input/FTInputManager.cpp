@@ -17,6 +17,7 @@ void FTInputManager::setup() {
     FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(this, &FTInputManager::mouseButtonPressedEvent);
     FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(this, &FTInputManager::mouseButtonReleasedEvent);
     FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(this, &FTInputManager::mouseMovedEvent);
+    FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(this, &FTInputManager::mouseExitEvent);
 }
 
 FTInputManager::~FTInputManager() {
@@ -72,7 +73,7 @@ void FTInputManager::mouseButtonPressedEvent(const FTMouseButtonPressedEvent& ev
     FTMouseDelegate* delegate = nullptr;
     for (auto it = mouse_delegates_.begin(); it != mouse_delegates_.end(); ++it) {
         delegate = *it;
-        if (delegate->getIsEnabled() && delegate->onMouseDown(event))
+        if (delegate->getMouseDelegateEnabled() && delegate->onMouseDown(event))
             break;
     }
     active_mouse_delegates_[event.mouse_button_] = delegate;
@@ -83,12 +84,29 @@ void FTInputManager::mouseButtonReleasedEvent(const FTMouseButtonReleasedEvent& 
     if (active_mouse_delegates_[event.mouse_button_] == nullptr)
         return;
     active_mouse_delegates_[event.mouse_button_]->onMouseRelease(event);
+    active_mouse_delegates_[event.mouse_button_] = nullptr;
 }
 
 void FTInputManager::mouseMovedEvent(const FTMouseMoveEvent& event) {
+    for (auto it = mouse_delegates_.begin(); it != mouse_delegates_.end(); ++it) {
+        auto delegate = *it;
+        if (delegate->getMouseDelegateEnabled() && delegate->onMouseMove(event))
+            break;
+    }
+
+
     for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST + 1; i++) {
         if (active_mouse_delegates_[i] != nullptr) {
-            active_mouse_delegates_[i]->onMouseMove(event, i);
+            active_mouse_delegates_[i]->onMouseDrag(event, i);
+        }
+    }
+}
+
+void FTInputManager::mouseExitEvent(const FTMouseExitEvent& event) {
+    for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST + 1; i++) {
+        if (active_mouse_delegates_[i] != nullptr) {
+            active_mouse_delegates_[i]->onMouseRelease(FTMouseButtonReleasedEvent(-1, -1, i, true));
+            active_mouse_delegates_[i] = nullptr;
         }
     }
 }

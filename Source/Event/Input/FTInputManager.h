@@ -25,12 +25,11 @@ public:
 
 private:
     int pressed_count_;
-    // This is baked into pressed_count_ at the next draw event
+    // This is baked into pressed_count_ at the next update event
     int released_count_;
 };
 
 // Singleton which handles input
-// Will in future support rebinding keys
 class FTInputManager {
     friend class FTEngine;
 public:
@@ -55,6 +54,7 @@ private:
     void mouseButtonPressedEvent(const FTMouseButtonPressedEvent& event);
     void mouseButtonReleasedEvent(const FTMouseButtonReleasedEvent& event);
     void mouseMovedEvent(const FTMouseMoveEvent& event);
+    void mouseExitEvent(const FTMouseExitEvent& event);
 
     void update(const FTUpdateEvent& event);
     void sortMouseDelegates();

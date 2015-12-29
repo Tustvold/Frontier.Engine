@@ -4,23 +4,42 @@
 #include <Rendering/FTDirector.h>
 #include "Action/FTActionManager.h"
 
+#define DEFAULT_MOUSE_INPUT_PRIORITY 128
+#include <Event/Input/FTInputManager.h>
 
-FTNode::FTNode() :
-                              flags_(InitialFlags),
-                              rotation_transform_(new FTTransformRotation),
-                              position_transform_(new FTTransformPosition()),
-                              scale_transform_(new FTTransformScale()),
-                              model_matrix_inv_dirty_(true),
-                              parent_(nullptr),
-                              view_(nullptr),
-                              scene_(nullptr) {
+FTNode::FTNode() : FTMouseDelegate(DEFAULT_MOUSE_INPUT_PRIORITY),
+                   flags_(InitialFlags),
+                   rotation_transform_(new FTTransformRotation),
+                   position_transform_(new FTTransformPosition()),
+                   scale_transform_(new FTTransformScale()),
+                   model_matrix_inv_dirty_(true),
+                   parent_(nullptr),
+                   view_(nullptr),
+                   scene_(nullptr) {
 
+}
+
+FTNode::~FTNode() {
+    if (flags_ & MouseInputEnabled)
+        FTEngine::getInputManager()->removeMouseDelegate(this);
+
+}
+
+void FTNode::setMouseInputEnabled(bool enabled) {
+    if (enabled == ((flags_ & MouseInputEnabled) != 0))
+        return;
+    if (enabled) {
+        FTEngine::getInputManager()->addMouseDelegate(this);
+        flags_ |= MouseInputEnabled;
+    } else {
+        FTEngine::getInputManager()->removeMouseDelegate(this);
+        flags_ &= ~MouseInputEnabled;
+    }
 }
 
 bool FTNode::isVisible(FTCamera* camera) {
     return camera->testNodeVisible(this);
 }
-
 
 
 void FTNode::addChild(const std::shared_ptr<FTNode>& child) {
@@ -71,7 +90,7 @@ bool FTNode::updateMatrices(const glm::mat4& parent_matrix) {
 
         transform_matrix_ = position_transform_->getTransformMatrix() * rotate_scale_matrix;
     }
-    
+
     model_matrix_ = parent_matrix * transform_matrix_.getConstData();
 
     flags_ &= ~TransformDirty;
@@ -80,13 +99,11 @@ bool FTNode::updateMatrices(const glm::mat4& parent_matrix) {
 }
 
 
-
 void FTNode::visit(const glm::mat4& parent_matrix, bool parent_updated) {
     auto original_dirty = flags_ & DirtyMask;
     if (!parent_updated && original_dirty == 0)
         return;
 
-    
 
     if (original_dirty & TransformDirty || parent_updated)
         updateMatrices(parent_matrix);
@@ -97,7 +114,7 @@ void FTNode::visit(const glm::mat4& parent_matrix, bool parent_updated) {
 
     if (original_dirty & AABDirtyMask || parent_updated)
         updateAAB();
-    
+
     flags_ &= ~ChildNodeDirty;
 }
 
@@ -106,12 +123,12 @@ void FTNode::performDraw(FTCamera* camera) {
         return;
 
     glm::mat4 mvp = camera->getViewProjectionMatrix() * model_matrix_.getConstData();
-    
+
     this->pre_draw(mvp);
     this->draw();
     this->post_draw();
-    
-    
+
+
     for (auto it = children_.begin(); it != children_.end(); ++it) {
         (*it)->performDraw(camera);
     }

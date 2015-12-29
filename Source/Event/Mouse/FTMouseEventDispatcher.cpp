@@ -6,7 +6,7 @@ static Gallant::Delegate3<GLFWwindow*, double, double> mouse_move_event_delegate
 static Gallant::Delegate2<GLFWwindow*, int> mouse_enter_event_delegate;
 static Gallant::Delegate4<GLFWwindow*, int, int, int> mouse_button_event_delegate;
 
-FTMouseEventDispatcher::FTMouseEventDispatcher() : has_last_mouse_pos_(false), last_mouse_pos_x_(DBL_MAX), last_mouse_pos_y_(DBL_MAX) {
+FTMouseEventDispatcher::FTMouseEventDispatcher() : has_last_mouse_pos_(false), last_mouse_pos_x_(-1), last_mouse_pos_y_(-1) {
     mouse_move_event_delegate.Bind(this, &FTMouseEventDispatcher::mouseMoveEvent);
     mouse_enter_event_delegate.Bind(this, &FTMouseEventDispatcher::mouseEnterEvent);
     mouse_button_event_delegate.Bind(this, &FTMouseEventDispatcher::mouseButtonEvent);
@@ -26,6 +26,9 @@ FTMouseEventDispatcher::~FTMouseEventDispatcher() {
 }
 
 void FTMouseEventDispatcher::mouseMoveEvent(GLFWwindow* window, double x, double y) {
+    // Convert window coordinates to normal coords - (0,0) in the bottom left
+    y = FTEngine::getWindowSize().y - y;
+
     double delta_x = 0;
     double delta_y = 0;
     if (has_last_mouse_pos_) {
@@ -46,8 +49,8 @@ void FTMouseEventDispatcher::mouseEnterEvent(GLFWwindow* window, int enter) {
     }
     // We purge last position data as the delta is meaningless if the mouse has exited and then re-entered the window
     has_last_mouse_pos_ = false;
-    last_mouse_pos_x_ = DBL_MAX ;
-    last_mouse_pos_y_ = DBL_MAX ;
+    last_mouse_pos_x_ = -1 ;
+    last_mouse_pos_y_ = -1 ;
 }
 
 void FTMouseEventDispatcher::mouseButtonEvent(GLFWwindow* window, int button, int action, int mods) {

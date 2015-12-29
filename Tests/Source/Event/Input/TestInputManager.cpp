@@ -5,14 +5,20 @@
 
 class MockMouseDelegate : public FTMouseDelegate {
 public:
-    MOCK_METHOD1(onMouseDown, bool(const FTMouseButtonPressedEvent&));
-    MOCK_METHOD2(onMouseMove, void(const FTMouseMoveEvent&, int));
-    MOCK_METHOD1(onMouseRelease, void(const FTMouseButtonReleasedEvent&));
-
-    MockMouseDelegate(int priority, bool enabled) : FTMouseDelegate(priority) {
-        setEnabled(enabled);
+    bool getMouseDelegateEnabled() const override {
+        return true;
     }
 
+    MOCK_METHOD1(onMouseDown, bool(const FTMouseButtonPressedEvent&));
+    MOCK_METHOD2(onMouseDrag, void(const FTMouseMoveEvent&, int));
+    MOCK_METHOD1(onMouseRelease, void(const FTMouseButtonReleasedEvent&));
+
+    MOCK_METHOD1(onMouseMove, bool(const FTMouseMoveEvent&));
+
+    MockMouseDelegate(int priority) : FTMouseDelegate(priority) {
+    }
+
+    
 
 };
 
@@ -90,13 +96,13 @@ TEST(TestInputManager, TestMouseDown) {
     GlfwMock mock;
     FTEngine::setup(true);
 
-    MockMouseDelegate del1(5, true);
-    MockMouseDelegate del2(8, true);
-    MockMouseDelegate del3(7, true);
+    MockMouseDelegate del1(5);
+    MockMouseDelegate del2(8);
+    MockMouseDelegate del3(7);
 
     EXPECT_CALL(del1, onMouseDown(testing::_)).Times(0);
 
-    EXPECT_CALL(del2, onMouseDown(FTMouseButtonPressedEvent(DBL_MAX, DBL_MAX, GLFW_MOUSE_BUTTON_LEFT, true)))
+    EXPECT_CALL(del2, onMouseDown(FTMouseButtonPressedEvent(-1, -1, GLFW_MOUSE_BUTTON_LEFT, true)))
                                                                                                              .WillOnce(testing::Return(true));
 
     EXPECT_CALL(del3, onMouseDown(testing::_)).Times(0);
@@ -116,17 +122,17 @@ TEST(TestInputManager, TestMouseDownChained) {
     GlfwMock mock;
     FTEngine::setup(true);
 
-    MockMouseDelegate del1(5, true);
-    MockMouseDelegate del2(8, true);
-    MockMouseDelegate del3(7, true);
+    MockMouseDelegate del1(5);
+    MockMouseDelegate del2(8);
+    MockMouseDelegate del3(7);
 
 
     EXPECT_CALL(del1, onMouseDown(testing::_)).Times(0);
 
-    EXPECT_CALL(del2, onMouseDown(FTMouseButtonPressedEvent(DBL_MAX, DBL_MAX, GLFW_MOUSE_BUTTON_LEFT, true)))
+    EXPECT_CALL(del2, onMouseDown(FTMouseButtonPressedEvent(-1, -1, GLFW_MOUSE_BUTTON_LEFT, true)))
                                                                                                              .WillOnce(testing::Return(false));
 
-    EXPECT_CALL(del3, onMouseDown(FTMouseButtonPressedEvent(DBL_MAX, DBL_MAX, GLFW_MOUSE_BUTTON_LEFT, true)))
+    EXPECT_CALL(del3, onMouseDown(FTMouseButtonPressedEvent(-1, -1, GLFW_MOUSE_BUTTON_LEFT, true)))
                                                                                                              .WillOnce(testing::Return(true));
 
 
@@ -144,11 +150,17 @@ TEST(TestInputManager, TestMouseMoved) {
     GlfwMock mock;
     FTEngine::setup(true);
 
-    MockMouseDelegate del1(5, true);
-    MockMouseDelegate del2(8, true);
-    MockMouseDelegate del3(7, true);
+    MockMouseDelegate del1(5);
+    MockMouseDelegate del2(8);
+    MockMouseDelegate del3(7);
 
     testing::Sequence s;
+
+    EXPECT_CALL(del1, onMouseMove(testing::_)).Times(0);
+
+    EXPECT_CALL(del2, onMouseMove(testing::_)).InSequence(s).WillOnce(testing::Return(false));
+
+    EXPECT_CALL(del3, onMouseMove(testing::_)).InSequence(s).WillOnce(testing::Return(true));
 
     EXPECT_CALL(del1, onMouseDown(testing::_)).Times(0);
 
@@ -159,21 +171,25 @@ TEST(TestInputManager, TestMouseMoved) {
     EXPECT_CALL(del3, onMouseDown(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)))
                                                                                                      .InSequence(s)
                                                                                                      .WillOnce(testing::Return(true));
+    
 
-    EXPECT_CALL(del1, onMouseMove(testing::_, testing::_)).Times(0);
+    EXPECT_CALL(del2, onMouseMove(testing::_)).InSequence(s).WillOnce(testing::Return(true));
 
-    EXPECT_CALL(del2, onMouseMove(testing::_, testing::_)).Times(0);
+    EXPECT_CALL(del1, onMouseDrag(testing::_, testing::_)).Times(0);
 
-    EXPECT_CALL(del3, onMouseMove(testing::_, GLFW_MOUSE_BUTTON_LEFT)).Times(1).InSequence(s);
+    EXPECT_CALL(del2, onMouseDrag(testing::_, testing::_)).Times(0);
 
+    EXPECT_CALL(del3, onMouseDrag(testing::_, GLFW_MOUSE_BUTTON_LEFT)).Times(1).InSequence(s);
 
     FTEngine::getInputManager()->addMouseDelegate(&del1);
     FTEngine::getInputManager()->addMouseDelegate(&del2);
     FTEngine::getInputManager()->addMouseDelegate(&del3);
 
-    mock.mouse_pos_callback_(nullptr, 240, 80);
+    auto screensize = FTEngine::getWindowSize();
+
+    mock.mouse_pos_callback_(nullptr, 240, screensize.y - 80);
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
-    mock.mouse_pos_callback_(nullptr, 480, 60);
+    mock.mouse_pos_callback_(nullptr, 480, screensize.y - 60);
 
     FTEngine::cleanup();
 }
@@ -182,11 +198,15 @@ TEST(TestInputManager, TestMouseExit) {
     GlfwMock mock;
     FTEngine::setup(true);
 
-    MockMouseDelegate del1(5, true);
-    MockMouseDelegate del2(8, true);
-    MockMouseDelegate del3(7, true);
+    MockMouseDelegate del1(5);
+    MockMouseDelegate del2(8);
+    MockMouseDelegate del3(7);
 
     testing::Sequence s;
+
+    EXPECT_CALL(del2, onMouseMove(testing::_)).InSequence(s).WillOnce(testing::Return(false));
+
+    EXPECT_CALL(del3, onMouseMove(testing::_)).InSequence(s).WillOnce(testing::Return(true));
 
     EXPECT_CALL(del1, onMouseDown(testing::_)).Times(0);
 
@@ -197,12 +217,13 @@ TEST(TestInputManager, TestMouseExit) {
     EXPECT_CALL(del3, onMouseDown(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)))
                                                                                                      .InSequence(s)
                                                                                                      .WillOnce(testing::Return(true));
+    EXPECT_CALL(del2, onMouseMove(testing::_)).InSequence(s).WillOnce(testing::Return(true));
 
-    EXPECT_CALL(del1, onMouseMove(testing::_, testing::_)).Times(0);
+    EXPECT_CALL(del1, onMouseDrag(testing::_, testing::_)).Times(0);
 
-    EXPECT_CALL(del2, onMouseMove(testing::_, testing::_)).Times(0);
+    EXPECT_CALL(del2, onMouseDrag(testing::_, testing::_)).Times(0);
 
-    EXPECT_CALL(del3, onMouseMove(testing::_, GLFW_MOUSE_BUTTON_LEFT)).Times(1).InSequence(s);
+    EXPECT_CALL(del3, onMouseDrag(testing::_, GLFW_MOUSE_BUTTON_LEFT)).Times(1).InSequence(s);
 
     EXPECT_CALL(del1, onMouseRelease(testing::_)).Times(0);
 
@@ -210,15 +231,20 @@ TEST(TestInputManager, TestMouseExit) {
 
     EXPECT_CALL(del3, onMouseRelease(testing::_)).Times(1).InSequence(s);
 
+    EXPECT_CALL(del2, onMouseMove(testing::_)).InSequence(s).WillOnce(testing::Return(true));
 
     FTEngine::getInputManager()->addMouseDelegate(&del1);
     FTEngine::getInputManager()->addMouseDelegate(&del2);
     FTEngine::getInputManager()->addMouseDelegate(&del3);
 
-    mock.mouse_pos_callback_(nullptr, 240, 80);
+    auto screensize = FTEngine::getWindowSize();
+
+    mock.mouse_pos_callback_(nullptr, 240, screensize.y - 80);
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
-    mock.mouse_pos_callback_(nullptr, 480, 60);
+    mock.mouse_pos_callback_(nullptr, 480, screensize.y - 60);
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, 0);
+    mock.mouse_pos_callback_(nullptr, 530, screensize.y - 60);
+
 
     FTEngine::cleanup();
 }
@@ -227,9 +253,11 @@ TEST(TestInputManager, TestMultipleMouseButtons) {
     GlfwMock mock;
     FTEngine::setup(true);
 
-    MockMouseDelegate del(5, true);
+    MockMouseDelegate del(5);
 
     testing::Sequence s;
+
+    EXPECT_CALL(del, onMouseMove(testing::_)).InSequence(s).WillOnce(testing::Return(true));
 
     EXPECT_CALL(del, onMouseDown(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)))
                                                                                                     .InSequence(s)
@@ -239,12 +267,15 @@ TEST(TestInputManager, TestMultipleMouseButtons) {
                                                                                                      .InSequence(s)
                                                                                                      .WillOnce(testing::Return(true));
 
-    EXPECT_CALL(del, onMouseMove(testing::_, GLFW_MOUSE_BUTTON_LEFT))
+    EXPECT_CALL(del, onMouseMove(testing::_)).InSequence(s).WillOnce(testing::Return(true));
+
+
+    EXPECT_CALL(del, onMouseDrag(testing::_, GLFW_MOUSE_BUTTON_LEFT))
                                                                      .Times(1)
                                                                      .InSequence(s);
 
 
-    EXPECT_CALL(del, onMouseMove(testing::_, GLFW_MOUSE_BUTTON_RIGHT))
+    EXPECT_CALL(del, onMouseDrag(testing::_, GLFW_MOUSE_BUTTON_RIGHT))
                                                                       .Times(1)
                                                                       .InSequence(s);
 
@@ -256,13 +287,53 @@ TEST(TestInputManager, TestMultipleMouseButtons) {
                                                                                                         .Times(1)
                                                                                                         .InSequence(s);
 
+    EXPECT_CALL(del, onMouseMove(testing::_)).InSequence(s).WillOnce(testing::Return(true));
+
+
     FTEngine::getInputManager()->addMouseDelegate(&del);
 
-    mock.mouse_pos_callback_(nullptr, 240, 80);
+    auto screensize = FTEngine::getWindowSize();
+
+    mock.mouse_pos_callback_(nullptr, 240, screensize.y - 80);
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_RIGHT, GLFW_PRESS, 0);
-    mock.mouse_pos_callback_(nullptr, 480, 60);
+    mock.mouse_pos_callback_(nullptr, 480, screensize.y - 60);
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_RIGHT, GLFW_RELEASE, 0);
+    mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, 0);
+    mock.mouse_pos_callback_(nullptr, 530, screensize.y - 60);
+
+
+    FTEngine::cleanup();
+}
+
+TEST(TestInputManager, TestMouseDelegateExit) {
+    GlfwMock mock;
+    FTEngine::setup(true);
+
+    MockMouseDelegate del(5);
+
+    testing::InSequence s;
+
+    EXPECT_CALL(del, onMouseMove(FTMouseMoveEvent(500, 200, 0, 0))).WillOnce(testing::Return(false));
+
+    EXPECT_CALL(del, onMouseDown(FTMouseButtonPressedEvent(500, 200, GLFW_MOUSE_BUTTON_LEFT, false)))
+        .WillOnce(testing::Return(true));
+
+    EXPECT_CALL(del, onMouseRelease(FTMouseButtonReleasedEvent(-1, -1, GLFW_MOUSE_BUTTON_LEFT, true)));
+
+    FTEngine::getInputManager()->addMouseDelegate(&del);
+
+    auto screensize = FTEngine::getWindowSize();
+
+    mock.mouse_pos_callback_(nullptr, 500, screensize.y - 200);
+    mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
+    mock.mouse_enter_callback_(nullptr, GL_FALSE);
+
+    testing::Mock::VerifyAndClearExpectations(&del);
+
+    EXPECT_CALL(del, onMouseRelease(testing::_)).Times(0);
+
+    mock.mouse_enter_callback_(nullptr, GL_TRUE);
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, 0);
 
     FTEngine::cleanup();
