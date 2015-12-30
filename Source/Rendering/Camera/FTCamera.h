@@ -14,11 +14,7 @@ class FTNode;
 // Contains properties and functionality common to all cameras
 class FTCamera {
 public:
-    FTCamera() : draw_rect_relative_(0, 0, 1, 1), near_clipping_plane_(0.1f), far_clipping_plane_(10000.0f), projection_matrix_dirty_(true), view_matrix_dirty_(true), view_projection_matrix_inv_dirty_(true) {
-        auto screensize = FTEngine::getWindowSize();
-        draw_rect_abs_ = FTRect<int>(0, 0, screensize.x, screensize.y);
-        FTEngine::getEventManager()->registerDelegate<FTWindowEventDispatcher>(this, &FTCamera::screensizeChanged);
-    }
+    FTCamera();
 
     virtual ~FTCamera() {
         FTEngine::getEventManager()->unregisterDelegate<FTWindowEventDispatcher>(this, &FTCamera::screensizeChanged);
@@ -36,10 +32,9 @@ public:
         return view_projection_matrix_.getConstData();
     }
 
-    virtual void preDraw() {
-        glScissor(draw_rect_abs_.x_, draw_rect_abs_.y_, draw_rect_abs_.width_, draw_rect_abs_.height_);
-        glViewport(draw_rect_abs_.x_, draw_rect_abs_.y_, draw_rect_abs_.width_, draw_rect_abs_.height_);
-    }
+    virtual void visit() = 0;
+
+    void preDraw() const;
 
     virtual bool testNodeVisible(const FTNode* node) const = 0;
 
@@ -58,17 +53,18 @@ public:
 
     virtual FTRaycast generateRaycastForMousePos(double x, double y) = 0;
 
-    glm::vec3 unProject(const glm::vec3& mouse_pos) const {
-        auto screensize = FTEngine::getWindowSize();
-        glm::vec4 tmp = glm::vec4(mouse_pos, 1);
-        tmp.x = (tmp.x - draw_rect_abs_.x_) / (float)draw_rect_abs_.width_;
-        tmp.y = (tmp.y - draw_rect_abs_.y_) / (float)draw_rect_abs_.height_;
-        tmp = tmp * 2.0f - 1.0f;
+    virtual glm::vec3 unProject(const glm::vec3& mouse_pos) = 0;
 
-        glm::vec4 obj = view_projection_matrix_inv_.getConstData() * tmp;
-        obj /= obj.w;
+    void setScissorEnabled(bool value) {
+        scissor_enabled_ = value;
+    }
 
-        return glm::vec3(obj);
+    void setDepthTestEnabled(bool value) {
+        depth_test_enabled_ = value;
+    }
+
+    void setCullFaceEnabled(bool value) {
+        cull_face_enabled_ = value;
     }
 
 protected:
@@ -84,6 +80,9 @@ protected:
     bool projection_matrix_dirty_;
     bool view_matrix_dirty_;
     bool view_projection_matrix_inv_dirty_;
+    bool scissor_enabled_;
+    bool depth_test_enabled_;
+    bool cull_face_enabled_;
 
     // The absolute pixel rect of the FTView managing this camera
     void setDrawRectAbs(const FTRect<int>& screen_rect) {

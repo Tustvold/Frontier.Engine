@@ -4,6 +4,10 @@
 #include <Event/Mouse/FTMouseEventDispatcher.h>
 #include <Rendering/FTNode.h>
 #include <Rendering/FTButton2D.h>
+#include <Rendering/FTView.h>
+#include <Rendering/Camera/FTCamera2D.h>
+#include <Rendering/FTScene.h>
+#include <Rendering/FTDirector.h>
 
 class FTButton2DTestDelegates {
 public:
@@ -17,13 +21,18 @@ TEST(TestButton2D, TestContainsPosition) {
     GlfwMock mock;
     FTEngine::setup(true);
     {
-        auto renderer = std::make_shared<FTNode>();
+       
 
+        auto renderer = std::make_shared<FTNode>();
         renderer->setSize(glm::vec2(100, 200));
         renderer->setPosition(glm::vec2(50, 60));
         auto button = std::make_shared<FTButton2D>(std::move(renderer));
 
-        button->visit(glm::mat4(), false);
+        auto view = std::make_shared<FTView>();
+        view->setCamera(std::make_shared<FTCamera2D>());
+        view->addChild(button);
+
+        view->visit(glm::mat4(), false);
 
         EXPECT_TRUE(button->rendererContainsMousePoint(51, 61));
         EXPECT_TRUE(button->rendererContainsMousePoint(149, 61));
@@ -49,7 +58,15 @@ TEST(TestButton2D, TestContainsPositionScale) {
         renderer->setPosition(glm::vec2(50, 60));
         auto button = std::make_shared<FTButton2D>(std::move(renderer));
 
-        button->visit(glm::mat4(), false);
+        auto view = std::make_shared<FTView>();
+        view->setCamera(std::make_shared<FTCamera2D>());
+        view->addChild(button);
+
+        auto scene = std::make_shared<FTScene>();
+        scene->addView(view);
+        FTEngine::getDirector()->setCurrentScene(scene);
+        
+        scene->visit();
 
         EXPECT_TRUE(button->rendererContainsMousePoint(51, 61));
         EXPECT_TRUE(button->rendererContainsMousePoint(149, 61));
@@ -77,7 +94,15 @@ TEST(TestButton2D, TestContainsPositionScaleAnchorPoint) {
         renderer->setAnchorPoint(glm::vec2(0.5f, 0.5f));
         auto button = std::make_shared<FTButton2D>(std::move(renderer));
 
-        button->visit(glm::mat4(), false);
+        auto view = std::make_shared<FTView>();
+        view->setCamera(std::make_shared<FTCamera2D>());
+        view->addChild(button);
+
+        auto scene = std::make_shared<FTScene>();
+        scene->addView(view);
+        FTEngine::getDirector()->setCurrentScene(scene);
+
+        scene->visit();
 
         EXPECT_TRUE(button->rendererContainsMousePoint(51, 61));
         EXPECT_TRUE(button->rendererContainsMousePoint(149, 61));
@@ -108,7 +133,16 @@ TEST(TestButton2D, TestEnterExitDelegates) {
         button->bindMouseExitDelegate(&testDelegates, &FTButton2DTestDelegates::exitDelegate);
         button->bindMousePressedDelegate(&testDelegates, &FTButton2DTestDelegates::pressedDelegate);
         button->bindMouseReleasedDelegate(&testDelegates, &FTButton2DTestDelegates::releasedDelegate);
-        button->visit(glm::mat4(), false);
+
+        auto view = std::make_shared<FTView>();
+        view->setCamera(std::make_shared<FTCamera2D>());
+        view->addChild(button);
+
+        auto scene = std::make_shared<FTScene>();
+        scene->addView(view);
+        FTEngine::getDirector()->setCurrentScene(scene);
+
+        scene->visit();
 
         EXPECT_TRUE(button->rendererContainsMousePoint(51, 61));
         EXPECT_TRUE(button->rendererContainsMousePoint(149, 61));
@@ -175,7 +209,16 @@ TEST(TestButton2D, TestPressDelegates) {
         button->bindMouseExitDelegate(&testDelegates, &FTButton2DTestDelegates::exitDelegate);
         button->bindMousePressedDelegate(&testDelegates, &FTButton2DTestDelegates::pressedDelegate);
         button->bindMouseReleasedDelegate(&testDelegates, &FTButton2DTestDelegates::releasedDelegate);
-        button->visit(glm::mat4(), false);
+
+        auto view = std::make_shared<FTView>();
+        view->setCamera(std::make_shared<FTCamera2D>());
+        view->addChild(button);
+
+        auto scene = std::make_shared<FTScene>();
+        scene->addView(view);
+        FTEngine::getDirector()->setCurrentScene(scene);
+
+        scene->visit();
 
         EXPECT_TRUE(button->rendererContainsMousePoint(51, 61));
         EXPECT_TRUE(button->rendererContainsMousePoint(149, 61));
@@ -257,7 +300,15 @@ TEST(TestButton2D, TestSizeScale) {
         renderer->setAnchorPoint(glm::vec2(0.5f, 0.5f));
         auto button = std::make_shared<FTButton2D>(renderer);
 
-        button->visit(glm::mat4(), false);
+        auto view = std::make_shared<FTView>();
+        view->setCamera(std::make_shared<FTCamera2D>());
+        view->addChild(button);
+
+        auto scene = std::make_shared<FTScene>();
+        scene->addView(view);
+        FTEngine::getDirector()->setCurrentScene(scene);
+
+        scene->visit();
 
         EXPECT_EQ(renderer->getSize(), button->getSize());
         EXPECT_EQ(renderer->getScale(), button->getScale());
@@ -278,7 +329,15 @@ TEST(TestButton2D, TestDisconnectedDelegates) {
         renderer->setAnchorPoint(glm::vec2(0.5f, 0.5f));
         auto button = std::make_shared<FTButton2D>(renderer);
 
-        button->visit(glm::mat4(), false);
+        auto view = std::make_shared<FTView>();
+        view->setCamera(std::make_shared<FTCamera2D>());
+        view->addChild(button);
+
+        auto scene = std::make_shared<FTScene>();
+        scene->addView(view);
+        FTEngine::getDirector()->setCurrentScene(scene);
+
+        scene->visit();
 
         auto screensize = FTEngine::getWindowSize();
         

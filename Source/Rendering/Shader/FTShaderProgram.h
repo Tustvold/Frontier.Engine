@@ -19,12 +19,8 @@ public:
 
     virtual bool compile() = 0;
 
-    virtual void use() {
+    void use() const {
         glUseProgram(program_id_);
-    }
-
-    virtual void cleanup() {
-
     }
 
 protected:

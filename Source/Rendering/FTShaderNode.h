@@ -25,10 +25,6 @@ public:
 
     }
 
-    void post_draw() override {
-        current_shader_program_->cleanup();
-    }
-
 protected:
     std::shared_ptr<ShaderProgram> current_shader_program_;
 };

@@ -44,7 +44,6 @@ private:
     size_t vertex_count_;
 };
 
-// Renders an attached mesh - note it does not bind a shader program nor update any matrices
 template <typename ShaderProgram, typename VertexType>
 class FTMesh : public FTShaderNode<ShaderProgram> {
 public:

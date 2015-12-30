@@ -27,6 +27,17 @@ FTLabel::~FTLabel() {
 
 }
 
+void FTLabel::pre_draw(const glm::mat4& mvp) {
+    FTLabelBase_::pre_draw(mvp);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+}
+
+void FTLabel::post_draw() {
+    FTLabelBase_::post_draw();
+    glDisable(GL_BLEND);
+}
+
 void FTLabel::setString(const wchar_t* text) {
     if (text_ == text)
         return;

@@ -12,9 +12,7 @@ TEST(TestCamera, TestRaycast2D) {
 
         // Call this to update matrices
         auto screensize = FTEngine::getWindowSize();
-        EXPECT_CALL(mock, gl_Scissor(0, 0, screensize.x, screensize.y));
-        EXPECT_CALL(mock, gl_Viewport(0, 0, screensize.x, screensize.y));
-        camera->preDraw();
+        camera->visit();
 
         auto raycast = camera->generateRaycastForMousePos(50, 123);
         auto near_vector = raycast.getOrigin();
@@ -25,6 +23,35 @@ TEST(TestCamera, TestRaycast2D) {
     }
     FTEngine::cleanup();
 }
+
+
+TEST(TestCamera, TestRaycast2DDrawRect) {
+    GlfwMock mock;
+    FTEngine::setup(true); {
+        auto camera = std::make_unique<FTCamera2D>();
+        camera->setDrawRectRelative(FTRect<float>(0.25f, 0.25f, 0.75f, 0.75f));
+
+        // Call this to update matrices
+        auto screensize = FTEngine::getWindowSize();
+
+        camera->visit();
+
+        auto raycast = camera->generateRaycastForMousePos(0.25f* screensize.x, 0.25f*screensize.y);
+        auto near_vector = raycast.getOrigin();
+        auto direction = raycast.getDirection();
+
+        EXPECT_EQ(near_vector, glm::vec3(0, 0, 0));
+        EXPECT_EQ(direction, glm::vec3(0, 0, -1.0f));
+
+        raycast = camera->generateRaycastForMousePos(0.25f* screensize.x + 20, 0.25f*screensize.y + 40);
+        near_vector = raycast.getOrigin();
+        direction = raycast.getDirection();
+
+        EXPECT_EQ(near_vector, glm::vec3(20, 40, 0));
+        EXPECT_EQ(direction, glm::vec3(0, 0, -1.0f));    }
+    FTEngine::cleanup();
+}
+
 
 TEST(TestCamera, TestRaycast3D) {
     GlfwMock mock;
@@ -40,10 +67,7 @@ TEST(TestCamera, TestRaycast3D) {
         // Call this to update matrices
 
         auto screensize = FTEngine::getWindowSize();
-        EXPECT_CALL(mock, gl_Scissor(0,0,screensize.x,screensize.y));
-        EXPECT_CALL(mock, gl_Viewport(0, 0, screensize.x, screensize.y));
-
-        camera->preDraw();
+        camera->visit();
 
         auto raycast = camera->generateRaycastForMousePos(screensize.x / 2.0f, screensize.y / 2.0f);
         auto origin = raycast.getOrigin();

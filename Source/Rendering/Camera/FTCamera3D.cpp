@@ -9,15 +9,15 @@
 
 
 FTCamera3D::FTCamera3D() : position_(0, 0, 0), rotation_euler_radians(0, 0), rotation_dirty_(true), update_view_frustrum_(true), fov_((float)M_PI_2) {
-
+    setCullFaceEnabled(true);
+    setDepthTestEnabled(true);
 };
 
 FTCamera3D::~FTCamera3D() {
 
 }
 
-void FTCamera3D::preDraw() {
-    FTCamera::preDraw();
+void FTCamera3D::visit() {
     if (projection_matrix_dirty_) {
         projection_matrix_ = glm::perspective(fov_, (float)draw_rect_abs_.width_ / (float)draw_rect_abs_.height_, near_clipping_plane_, far_clipping_plane_);
     }
@@ -50,10 +50,6 @@ bool FTCamera3D::testNodeVisible(const FTNode* node) const {
 }
 
 FTRaycast FTCamera3D::generateRaycastForMousePos(double x, double y) {
-    if (view_projection_matrix_inv_dirty_) {
-        view_projection_matrix_inv_ = glm::inverse(view_projection_matrix_.getConstData());
-    }
-
     glm::vec3 near_vector = unProject(glm::vec3(x, y, 0));
     glm::vec3 far_vector = unProject(glm::vec3(x, y, 1));
 

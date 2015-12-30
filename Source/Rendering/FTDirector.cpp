@@ -45,6 +45,7 @@ void FTDirector::update(const FTDrawEvent& event) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_SCISSOR_TEST);
 
+    scene_->visit();
     scene_->draw();
 
     glfwSwapBuffers(event.window_);

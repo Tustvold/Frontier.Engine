@@ -16,10 +16,16 @@ public:
     }
 
     FTRaycast generateRaycastForMousePos(double x, double y) override {
-        return FTRaycast(glm::vec3((float)x, (float)y, 0.0f), glm::vec3(0, 0, -1.0f));
+        auto transformed = unProject(glm::vec3(x, y, 0));
+
+        return FTRaycast(glm::vec3(transformed.x, transformed.y, 0.0f), glm::vec3(0, 0, -1.0f));
     }
 
-    void preDraw() override;
+    glm::vec3 unProject(const glm::vec3& mouse_pos) override {
+        return glm::vec3(mouse_pos.x - draw_rect_abs_.x_, mouse_pos.y - draw_rect_abs_.y_, 0);
+    }
+
+    void visit() override;
 
     bool testNodeVisible(const FTNode* node) const override;
 };

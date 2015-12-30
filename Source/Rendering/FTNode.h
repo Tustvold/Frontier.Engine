@@ -35,19 +35,19 @@ public:
 
     virtual ~FTNode();
 
-    bool onMouseDown(const FTMouseButtonPressedEvent& event) override {
+    virtual bool onMouseDown(const FTMouseButtonPressedEvent& event) override {
         return false;
     }
 
-    void onMouseDrag(const FTMouseMoveEvent&, int mouse_button) override {
+    virtual void onMouseDrag(const FTMouseMoveEvent&, int mouse_button) override {
 
     }
 
-    void onMouseRelease(const FTMouseButtonReleasedEvent& event) override {
+    virtual void onMouseRelease(const FTMouseButtonReleasedEvent& event) override {
 
     }
 
-    bool onMouseMove(const FTMouseMoveEvent& event) override {
+    virtual bool onMouseMove(const FTMouseMoveEvent& event) override {
         return false;
     }
 
@@ -55,7 +55,7 @@ public:
 
     bool getMouseDelegateEnabled() const override {
         // TODO: Determine this based on flags
-        return true;
+        return (flags_ & IsActive) != 0;
     }
 
     // Override to provide custom frustrum culling code

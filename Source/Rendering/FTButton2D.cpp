@@ -1,6 +1,7 @@
 #include "FTButton2D.h"
 #include <FTEngine.h>
 #include <Event/FTEventManager.h>
+#include "FTView.h"
 
 FTButton2D::FTButton2D(const std::shared_ptr<FTNode>& renderer) :
         mouse_entered_(false), 
@@ -23,8 +24,12 @@ FTButton2D::~FTButton2D() {
 }
 
 bool FTButton2D::rendererContainsMousePoint(double x, double y) {
+    FTAssert(view_ != nullptr, "Button not added to an FTView");
+    
+    auto unprojected = view_->getCamera()->unProject(glm::vec3((float)x, (float)y, 0));
+
     auto& mat = renderer_->getModelMatrixInverse();
-    glm::vec4 mouse_pos = glm::vec4((float)x, (float)y, 0, 1);
+    glm::vec4 mouse_pos = glm::vec4((float)unprojected.x, (float)unprojected.y, 0, 1);
     glm::vec4 local_pos = mat * mouse_pos;
     local_pos /= local_pos.w;
 

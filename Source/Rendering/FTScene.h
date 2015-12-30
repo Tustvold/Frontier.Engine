@@ -15,9 +15,14 @@ public:
 
     }
 
-    virtual void draw() {
+    virtual void visit() {
         for (auto it = views_.begin(); it != views_.end(); ++it) {
             (*it)->visit(glm::mat4(), false);
+        }
+    }
+
+    virtual void draw() {
+        for (auto it = views_.begin(); it != views_.end(); ++it) {
             (*it)->performDraw();
         }
     }
@@ -40,6 +45,7 @@ public:
 protected:
 
     virtual void onEnter() {
+        FTAssert(!is_active_, "onEnter called on already entered scene");
         is_active_ = true;
         for (auto it = views_.begin(); it != views_.end(); ++it) {
             (*it)->onEnter();
@@ -47,6 +53,7 @@ protected:
     }
 
     virtual void onExit() {
+        FTAssert(is_active_, "onExit called on already exited scene");
         is_active_ = false;
         for (auto it = views_.begin(); it != views_.end(); ++it) {
             (*it)->onExit();

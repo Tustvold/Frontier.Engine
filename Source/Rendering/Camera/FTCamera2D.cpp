@@ -1,8 +1,7 @@
 #include "FTCamera2D.h"
 #include <Rendering/FTNode.h>
 
-void FTCamera2D::preDraw() {
-    FTCamera::preDraw();
+void FTCamera2D::visit() {
     if (projection_matrix_dirty_) {
         projection_matrix_ = glm::ortho<float>(0, (float)draw_rect_abs_.width_, 0, (float)draw_rect_abs_.height_, near_clipping_plane_, far_clipping_plane_);
     }

@@ -5,11 +5,18 @@
 #include <Rendering/Shader/FTFontShader.h>
 
 class FTLabel : public FTIndexedTexturedMesh<FTFontShader, FTVertexColorTexture<glm::vec2>, uint16_t> {
+private:
+    typedef FTIndexedTexturedMesh<FTFontShader, FTVertexColorTexture<glm::vec2>, uint16_t> FTLabelBase_;
 public:
+    
     FTLabel(const std::string& fontpath, const std::basic_string<wchar_t>& text, int font_size, bool is_mutable = false);
     virtual ~FTLabel();
 
     void setString(const wchar_t* text);
+
+    void pre_draw(const glm::mat4& mvp) override;
+
+    void post_draw() override;
 
 protected:
     std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture<glm::vec2>, uint16_t>> mesh_data_;

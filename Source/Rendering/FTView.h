@@ -16,6 +16,7 @@ public:
     }
 
     void performDraw() {
+        camera_->visit();
         camera_->preDraw();
         FTNode::performDraw(camera_.get());
     }

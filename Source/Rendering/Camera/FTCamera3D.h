@@ -9,8 +9,8 @@ public:
     explicit FTCamera3D();
 
     virtual ~FTCamera3D();
-
-    void preDraw() override;
+    
+    void visit() override;
 
     void setVectors(const glm::vec3& up_vector, const glm::vec3& right_vector) {
         up_vector_ = glm::normalize(up_vector);
@@ -61,6 +61,22 @@ public:
     }
 
     FTRaycast generateRaycastForMousePos(double x, double y) override;
+
+    glm::vec3 unProject(const glm::vec3& mouse_pos) override {
+        if (view_projection_matrix_inv_dirty_) {
+            view_projection_matrix_inv_ = glm::inverse(view_projection_matrix_.getConstData());
+        }
+        auto screensize = FTEngine::getWindowSize();
+        glm::vec4 tmp = glm::vec4(mouse_pos, 1);
+        tmp.x = (tmp.x - draw_rect_abs_.x_) / (float)draw_rect_abs_.width_;
+        tmp.y = (tmp.y - draw_rect_abs_.y_) / (float)draw_rect_abs_.height_;
+        tmp = tmp * 2.0f - 1.0f;
+
+        glm::vec4 obj = view_projection_matrix_inv_.getConstData() * tmp;
+        obj /= obj.w;
+
+        return glm::vec3(obj);
+    }
 
 protected:
 
