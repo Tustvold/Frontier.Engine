@@ -64,7 +64,7 @@ void FTCameraFPS::update(const FTUpdateEvent& event) {
 
 void FTCameraFPS::mouseMoveEvent(const FTMouseMoveEvent& event) {
     rotation_euler_radians.x += (float)event.delta_x_ * rotation_speed_;
-    rotation_euler_radians.y -= (float)event.delta_y_ * rotation_speed_;
+    rotation_euler_radians.y += (float)event.delta_y_ * rotation_speed_;
 
     if (rotation_euler_radians.y > M_PI / 2.0f)
         rotation_euler_radians.y = (float)M_PI / 2.0f;
