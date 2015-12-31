@@ -1,13 +1,12 @@
 #include <Mock/MockLoader.h>
 #include <FTEngine.h>
 #include <Rendering/FTShaderNode.h>
-#include <Mock/MockShader.h>
 #include <Mock/ExpectUtils.h>
 
 TEST(TestNodeAAB, TestAABSimple) {
     MockLoader mock;
 
-    auto node = std::make_shared<FTShaderNode<MockShader>>();
+    auto node = std::make_shared<FTNode>();
     node->setSize(glm::vec3(34, 88, 22));
 
     node->visit(glm::mat4(), false);
@@ -38,7 +37,7 @@ TEST(TestNodeAAB, TestAABSimple) {
 TEST(TestNodeAAB, TestAABAnchorPoint) {
     MockLoader mock;
 
-    auto node = std::make_shared<FTShaderNode<MockShader>>();
+    auto node = std::make_shared<FTNode>();
     node->setAnchorPoint(glm::vec3(0.3f, 0.5f, 0.7f));
     node->setSize(glm::vec3(34, 88, 22));
 

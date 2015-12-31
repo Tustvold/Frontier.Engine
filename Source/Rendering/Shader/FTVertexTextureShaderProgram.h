@@ -8,7 +8,7 @@ public:
 
     virtual bool load() override;
 
-    GLuint getTextureUniformId() {
+    GLuint getTextureUniformId() const {
         return texture_uniform_id_;
     }
 

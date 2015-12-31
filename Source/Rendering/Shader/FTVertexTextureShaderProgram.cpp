@@ -35,7 +35,7 @@ const char* FTVertexTextureShaderProgram::vertex_shader_source_ = {
 	}"
 };
 
-FTVertexTextureShaderProgram::FTVertexTextureShaderProgram() {
+FTVertexTextureShaderProgram::FTVertexTextureShaderProgram() : texture_uniform_id_(-1) {
 }
 
 FTVertexTextureShaderProgram::~FTVertexTextureShaderProgram() {

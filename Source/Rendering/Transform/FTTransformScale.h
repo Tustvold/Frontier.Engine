@@ -4,7 +4,7 @@
 
 class FTTransformScale : public FTTransform {
 public:
-    FTTransformScale() : scale_(0, 0, 0) {
+    FTTransformScale() : scale_(1, 1, 1) {
 
     }
 

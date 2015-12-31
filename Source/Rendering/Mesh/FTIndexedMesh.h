@@ -41,9 +41,17 @@ protected:
     size_t index_count_;
 };
 
-template <typename ShaderProgram, typename VertexType, typename IndexType>
-class FTIndexedMesh : public FTMesh<ShaderProgram, VertexType> {
+template <typename VertexType, typename IndexType>
+class FTIndexedMesh : public FTMesh<VertexType> {
 public:
+
+    explicit FTIndexedMesh(FTVertexShaderProgram* shader = FTShaderNode::getShaderUtil<FTVertexShaderProgram>()) : 
+        FTMesh<VertexType>(shader),
+        num_indices_(0),
+        max_num_inidices_(0),
+        index_buffer_id_(-1) {
+
+    }
 
     virtual ~FTIndexedMesh() {
         glDeleteBuffers(1, &index_buffer_id_);
@@ -52,7 +60,7 @@ public:
     // Creates empty VBOs of the passed size
     // These can then be populated using the setIndexedMeshData functions
     void loadEmptyIndexedMesh(GLuint vertex_count, GLuint index_count, bool cleanup = true) {
-        FTMesh<ShaderProgram, VertexType>::loadEmptyMesh(vertex_count, false);
+        FTMesh<VertexType>::loadEmptyMesh(vertex_count, false);
         max_num_inidices_ = index_count;
         num_indices_ = 0;
         glGenBuffers(1, &index_buffer_id_);
@@ -118,14 +126,14 @@ protected:
 
 private:
     virtual void loadMeshData(FTMeshData<VertexType>* data, bool is_static, bool cleanup) override {
-        FTMesh<ShaderProgram,VertexType>::loadMeshData(data, is_static, cleanup);
+        FTMesh<VertexType>::loadMeshData(data, is_static, cleanup);
     }
 
     virtual void setMeshData(FTMeshData<VertexType>* data) override {
-        FTMesh<ShaderProgram,VertexType>::setMeshData(data);
+        FTMesh<VertexType>::setMeshData(data);
     }
 
     virtual void loadEmptyMesh(GLuint vertex_count, bool cleanup) override {
-        FTMesh<ShaderProgram,VertexType>::loadEmptyMesh(vertex_count, cleanup);
+        FTMesh<VertexType>::loadEmptyMesh(vertex_count, cleanup);
     }
 };

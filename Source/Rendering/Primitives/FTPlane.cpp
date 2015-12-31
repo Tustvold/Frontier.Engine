@@ -1,6 +1,7 @@
 #include "FTPlane.h"
 
-FTPlane::FTPlane(const glm::vec3& color) {
+FTPlane::FTPlane(const glm::vec2& dimensions, const glm::vec3& color, FTVertexColorShaderProgram* shader) :
+    FTPlaneBase_(shader) {
     auto data = std::make_shared<FTIndexedMeshData<FTVertexColor<glm::vec3>, uint16_t>>(4 * 6, 36);
 
     auto vertices = data->getVertices().data();
@@ -13,11 +14,11 @@ FTPlane::FTPlane(const glm::vec3& color) {
     vertex.color_ = color;
     vertex.position_ = glm::vec3(0, 0, 0);
     vertices[vertex_index++] = vertex;
-    vertex.position_ = glm::vec3(1, 0, 0);
+    vertex.position_ = glm::vec3(dimensions.x, 0, 0);
     vertices[vertex_index++] = vertex;
-    vertex.position_ = glm::vec3(0, 1, 0);
+    vertex.position_ = glm::vec3(0, dimensions.y, 0);
     vertices[vertex_index++] = vertex;
-    vertex.position_ = glm::vec3(1, 1, 0);
+    vertex.position_ = glm::vec3(dimensions.x, dimensions.y, 0);
     vertices[vertex_index++] = vertex;
 
     indices[indices_index++] = 0;
@@ -35,7 +36,7 @@ FTPlane::FTPlane(const glm::vec3& color) {
 
     loadIndexedMeshData(data.get(), true);
 
-    setSize(glm::vec3(1, 1, 0));
+    setSize(glm::vec3(dimensions, 0));
 
 }
 

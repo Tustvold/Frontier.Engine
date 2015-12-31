@@ -1,6 +1,7 @@
 #include "FTTexturedPlane.h"
 
-FTTexturedPlane::FTTexturedPlane() {
+FTTexturedPlane::FTTexturedPlane(FTVertexTextureShaderProgram* shader) :
+    FTTexturedPlaneBase_(shader) {
     auto data = std::make_shared<FTIndexedMeshData<FTVertexTexture<glm::vec3>, uint16_t>>(4 * 6, 36);
 
     auto vertices = data->getVertices().data();

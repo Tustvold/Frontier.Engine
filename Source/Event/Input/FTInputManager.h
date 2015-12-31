@@ -1,10 +1,7 @@
 #pragma once
 #include <vector>
-#include <GL/glew.h>
-#include <ThirdParty/Signals/Signal.h>
-#include <Frontier.h>
-#include <glfw3.h>
 #include <unordered_map>
+#include <Frontier.h>
 #include <Event/Engine/FTEngineEvents.h>
 #include <Event/Input/FTMouseDelegate.h>
 

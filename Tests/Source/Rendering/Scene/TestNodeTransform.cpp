@@ -1,7 +1,6 @@
 #include <Mock/MockLoader.h>
 #include <FTEngine.h>
 #include <Rendering/FTShaderNode.h>
-#include <Mock/MockShader.h>
 #include <Mock/ExpectUtils.h>
 
 class MockNodeTransform : public FTNode {

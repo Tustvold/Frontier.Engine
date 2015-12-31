@@ -1,7 +1,8 @@
 ﻿#include "FTCube.h"
 #include <Rendering/Shader/FTShaderCache.h>
 
-FTCube::FTCube(const glm::vec3 face_colors[6]) : FTIndexedMesh() {
+FTCube::FTCube(const glm::vec3 face_colors[6], FTVertexColorShaderProgram* shader)
+    : FTCubeBase_(shader) {
 
     auto data = std::make_shared<FTIndexedMeshData<FTVertexColor<glm::vec3>, uint16_t>>(4 * 6, 36);
 

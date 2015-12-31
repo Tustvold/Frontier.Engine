@@ -6,14 +6,14 @@
 #include <Rendering/FTDirector.h>
 
 // A subclass of FTNode which manages a FTVertexShaderProgram
-template <typename ShaderProgram>
 class FTShaderNode : public FTNode {
 public:
+    template <typename ShaderProgram>
+    static ShaderProgram* getShaderUtil() {
+        return FTEngine::getDirector()->getShaderCache()->getShaderProgram<ShaderProgram>();
+    }
 
-    static_assert(std::is_base_of<FTVertexShaderProgram, ShaderProgram>::value, "FTVertexShaderProgram is not base of ShaderProgram");
-
-    FTShaderNode() :
-        current_shader_program_(FTEngine::getDirector()->getShaderCache()->getShaderProgram<ShaderProgram>()) {
+    explicit FTShaderNode(FTVertexShaderProgram* shader = getShaderUtil<FTVertexShaderProgram>()) : current_shader_program_(shader) {
     }
 
     void pre_draw(const glm::mat4& mvp) override {
@@ -25,6 +25,13 @@ public:
 
     }
 
+    template <typename NewShaderProgram>
+    void setShaderProgram() {
+        current_shader_program_ = FTEngine::getDirector()->getShaderCache()->getShaderProgram<NewShaderProgram>();
+    }
+
+    
+
 protected:
-    std::shared_ptr<ShaderProgram> current_shader_program_;
+    FTVertexShaderProgram* current_shader_program_;
 };

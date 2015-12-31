@@ -3,7 +3,10 @@
 #include <FTEngine.h>
 #include "FTFontCache.h"
 
-FTLabel::FTLabel(const std::string& fontpath, const std::basic_string<wchar_t>& text, int font_size, bool is_mutable) : FTIndexedTexturedMesh(), is_mutable_(is_mutable), font_size_(font_size) {
+FTLabel::FTLabel(const std::string& fontpath, const std::basic_string<wchar_t>& text, int font_size, bool is_mutable, FTFontShader* shader) : 
+    FTIndexedTexturedMesh(shader),
+    is_mutable_(is_mutable),
+    font_size_(font_size) {
 
     font_ = FTEngine::getDirector()->getFontCache()->getFont(fontpath);
 
@@ -21,7 +24,6 @@ FTLabel::FTLabel(const std::string& fontpath, const std::basic_string<wchar_t>& 
 
     text_ = text;
 }
-
 
 FTLabel::~FTLabel() {
 

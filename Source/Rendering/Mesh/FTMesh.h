@@ -44,11 +44,20 @@ private:
     size_t vertex_count_;
 };
 
-template <typename ShaderProgram, typename VertexType>
-class FTMesh : public FTShaderNode<ShaderProgram> {
+template <typename VertexType>
+class FTMesh : public FTShaderNode {
 public:
 
-    FTMesh() : vertex_array_id_(0), vertex_buffer_id_(0), num_vertices_(0), max_num_vertices_(0), primitive_type_(GL_TRIANGLES), render_wireframe_(false), is_loaded_(false), is_static_(true) {
+    explicit FTMesh(FTVertexShaderProgram* program = getShaderUtil<FTVertexShaderProgram>()) : 
+        FTShaderNode(program), 
+        vertex_array_id_(0), 
+        vertex_buffer_id_(0), 
+        num_vertices_(0), 
+        max_num_vertices_(0), 
+        primitive_type_(GL_TRIANGLES), 
+        render_wireframe_(false), 
+        is_loaded_(false), 
+        is_static_(true) {
 
     }
 
@@ -147,7 +156,7 @@ public:
     }
 
     virtual void pre_draw(const glm::mat4& mvp) override {
-        FTShaderNode<ShaderProgram>::pre_draw(mvp);
+        FTShaderNode::pre_draw(mvp);
         if (!is_loaded_) {
             FTLogError("Trying to draw mesh before calling load!");
             return;
@@ -164,7 +173,7 @@ public:
     }
 
     virtual void post_draw() override {
-        FTShaderNode<ShaderProgram>::post_draw();
+        FTShaderNode::post_draw();
         glBindVertexArray(0);
 
         if (render_wireframe_)

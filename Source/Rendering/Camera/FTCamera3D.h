@@ -66,13 +66,9 @@ public:
         if (view_projection_matrix_inv_dirty_) {
             view_projection_matrix_inv_ = glm::inverse(view_projection_matrix_.getConstData());
         }
-        auto screensize = FTEngine::getWindowSize();
-        glm::vec4 tmp = glm::vec4(mouse_pos, 1);
-        tmp.x = (tmp.x - draw_rect_abs_.x_) / (float)draw_rect_abs_.width_;
-        tmp.y = (tmp.y - draw_rect_abs_.y_) / (float)draw_rect_abs_.height_;
-        tmp = tmp * 2.0f - 1.0f;
+        auto clip_space = convertScreenSpaceToNDC(mouse_pos);
 
-        glm::vec4 obj = view_projection_matrix_inv_.getConstData() * tmp;
+        glm::vec4 obj = view_projection_matrix_inv_.getConstData() * glm::vec4(clip_space,1);
         obj /= obj.w;
 
         return glm::vec3(obj);

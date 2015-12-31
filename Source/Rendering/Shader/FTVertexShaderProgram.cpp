@@ -27,7 +27,7 @@ const char* FTVertexShaderProgram::vertex_shader_source_ = {
 	}"
 };
 
-FTVertexShaderProgram::FTVertexShaderProgram() {
+FTVertexShaderProgram::FTVertexShaderProgram() : mvp_uniform_(-1) {
 
 }
 

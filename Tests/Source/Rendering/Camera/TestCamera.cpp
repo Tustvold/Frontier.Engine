@@ -48,7 +48,8 @@ TEST(TestCamera, TestRaycast2DDrawRect) {
         direction = raycast.getDirection();
 
         EXPECT_EQ(near_vector, glm::vec3(20, 40, 0));
-        EXPECT_EQ(direction, glm::vec3(0, 0, -1.0f));    }
+        EXPECT_EQ(direction, glm::vec3(0, 0, -1.0f));    
+    }
     FTEngine::cleanup();
 }
 

@@ -1,7 +1,7 @@
 ﻿#pragma once
+#include <FTEngine.h>
 #include <Frontier.h>
 #include <Util/FTRect.h>
-#include <FTEngine.h>
 #include <Event/FTEventManager.h>
 #include <Event/Window/FTWindowEventDispatcher.h>
 #include <Util/FTAlignedData.h>
@@ -65,6 +65,29 @@ public:
 
     void setCullFaceEnabled(bool value) {
         cull_face_enabled_ = value;
+    }
+
+    glm::vec3 convertClipSpaceToNDC(const glm::vec4& clipspace) const {
+        return glm::vec3(clipspace.x, clipspace.y, clipspace.z) / clipspace.w;
+    }
+
+    glm::vec3 convertNDCToScreenSpace(const glm::vec3& ndc) const {
+        float x = (ndc.x + 1) * draw_rect_abs_.width_ / 2.0f + draw_rect_abs_.x_;
+        float y = (ndc.y + 1) * draw_rect_abs_.height_ / 2.0f + draw_rect_abs_.y_;
+        return glm::vec3(x, y, ndc.z);
+    }
+
+    glm::vec3 convertClipSpaceToScreenSpace(const glm::vec4& clipSpace) const {
+        return convertNDCToScreenSpace(convertClipSpaceToNDC(clipSpace));
+    }
+
+    glm::vec3 convertScreenSpaceToNDC(const glm::vec3& screenSpace) const {
+        auto tmp = screenSpace;
+        tmp.x = (tmp.x - draw_rect_abs_.x_) / (float)draw_rect_abs_.width_;
+        tmp.y = (tmp.y - draw_rect_abs_.y_) / (float)draw_rect_abs_.height_;
+        tmp = tmp * 2.0f - 1.0f;
+
+        return tmp;
     }
 
 protected:

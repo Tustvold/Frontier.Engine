@@ -17,7 +17,7 @@ FTEngine* FTEngine::getSharedInstance() {
     return s_instance;
 }
 
-FTEngine::FTEngine() : window_(nullptr), window_size_(1024, 768), setup_(false), last_tick_time_(0), fps_time_acc_(0), update_timestep_(1/30.0) {
+FTEngine::FTEngine() : window_(nullptr), window_size_(1024, 768), setup_(false), last_tick_time_(0), fps_time_acc_(0), time_left_after_ticks_(0), update_timestep_(1/30.0) {
     event_manager_ = new FTEventManager();
     input_manager_ = new FTInputManager();
     file_manager_ = new FTFileManager();
@@ -59,7 +59,6 @@ bool FTEngine::_setup(bool is_mocked) {
         // Dark blue background
         glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
     }
-
 
 
     file_manager_->setup();

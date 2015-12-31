@@ -35,7 +35,7 @@ private:
 
     void cleanup();
 
-    void update(const FTDrawEvent& event);
+    void draw(const FTDrawEvent& event);
 
 
     FTShaderCache* shader_cache_;

@@ -3,9 +3,9 @@
 
 // A FTShaderNode which renders a provided FTDrawable
 template <typename ShaderProgram>
-class FTDrawableNode : public FTShaderNode<ShaderProgram> {
+class FTDrawableNode : public FTShaderNode {
 public:
-    explicit FTDrawableNode(std::unique_ptr<FTDrawable> drawable) : FTShaderNode(), drawable_(std::move(drawable)) {
+    explicit FTDrawableNode(std::unique_ptr<FTDrawable> drawable, FTVertexShaderProgram* program = getShaderUtil<FTVertexShaderProgram>()) : FTShaderNode(), drawable_(std::move(drawable)) {
 
     }
 
