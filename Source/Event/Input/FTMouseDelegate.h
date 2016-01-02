@@ -1,10 +1,14 @@
 #pragma once
 #include <Event/Mouse/FTMouseEventDispatcher.h>
 
+#define DEFAULT_MOUSE_INPUT_PRIORITY 128
+
+
 // A targeted delegate to facilitate UI 
 class FTMouseDelegate {
+    friend class FTInputManager;
 public:
-    explicit FTMouseDelegate(int priority) : priority_(priority) {
+    explicit FTMouseDelegate() : priority_(DEFAULT_MOUSE_INPUT_PRIORITY), is_added_(false) {
 
     }
 
@@ -21,10 +25,13 @@ public:
 
     virtual bool getMouseDelegateEnabled() const = 0;
 
-    int getPriority() const {
+    void setMouseDelegatePriority(int priority);
+
+    int getMouseDelegatePriority() const {
         return priority_;
     }
 
 private:
     int priority_;
+    bool is_added_;
 };

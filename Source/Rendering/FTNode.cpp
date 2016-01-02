@@ -3,11 +3,10 @@
 #include <Rendering/Camera/FTCamera.h>
 #include <Rendering/FTDirector.h>
 #include "Action/FTActionManager.h"
-
-#define DEFAULT_MOUSE_INPUT_PRIORITY 128
+#include <Rendering/FTView.h>
 #include <Event/Input/FTInputManager.h>
 
-FTNode::FTNode() : FTMouseDelegate(DEFAULT_MOUSE_INPUT_PRIORITY),
+FTNode::FTNode() :
                    flags_(InitialFlags),
                    rotation_transform_(new FTTransformRotation),
                    position_transform_(new FTTransformPosition()),
@@ -119,7 +118,7 @@ void FTNode::visit(const glm::mat4& parent_matrix, bool parent_updated) {
 }
 
 void FTNode::performDraw(FTCamera* camera) {
-    if (flags_ & FrustrumCullEnabled && !isVisible(camera))
+    if (getHidden() || (flags_ & FrustrumCullEnabled && !isVisible(camera)))
         return;
 
     glm::mat4 mvp = camera->getViewProjectionMatrix() * model_matrix_.getConstData();
@@ -135,31 +134,38 @@ void FTNode::performDraw(FTCamera* camera) {
 }
 
 void FTNode::updateAAB() {
-    const glm::mat4& model_matrix = model_matrix_.getConstData();
-    glm::vec4 positions[8] = {
-        glm::vec4(0, 0, 0, 1),
-        glm::vec4(size_.x, 0, 0, 1),
-        glm::vec4(0, size_.y, 0, 1),
-        glm::vec4(0, 0, size_.z, 1),
-        glm::vec4(size_.x, size_.y, 0, 1),
-        glm::vec4(size_.x, 0, size_.z, 1),
-        glm::vec4(0, size_.y, size_.z, 1),
-        glm::vec4(size_.x, size_.y, size_.z, 1)
-    };
-
     auto min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
     auto max = glm::vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 
-    for (int i = 0; i < 8; i++) {
-        auto transformed = model_matrix * positions[i];
-        max.x = FTMAX(transformed.x, max.x);
-        max.y = FTMAX(transformed.y, max.y);
-        max.z = FTMAX(transformed.z, max.z);
+    const glm::mat4& model_matrix = model_matrix_.getConstData();
 
-        min.x = FTMIN(transformed.x, min.x);
-        min.y = FTMIN(transformed.y, min.y);
-        min.z = FTMIN(transformed.z, min.z);
+    if (size_ != glm::vec3(0, 0, 0)) {
+        glm::vec4 positions[8] = {
+            glm::vec4(0, 0, 0, 1),
+            glm::vec4(size_.x, 0, 0, 1),
+            glm::vec4(0, size_.y, 0, 1),
+            glm::vec4(0, 0, size_.z, 1),
+            glm::vec4(size_.x, size_.y, 0, 1),
+            glm::vec4(size_.x, 0, size_.z, 1),
+            glm::vec4(0, size_.y, size_.z, 1),
+            glm::vec4(size_.x, size_.y, size_.z, 1)
+        };
+
+        for (int i = 0; i < 8; i++) {
+            auto transformed = model_matrix * positions[i];
+            max.x = FTMAX(transformed.x, max.x);
+            max.y = FTMAX(transformed.y, max.y);
+            max.z = FTMAX(transformed.z, max.z);
+
+            min.x = FTMIN(transformed.x, min.x);
+            min.y = FTMIN(transformed.y, min.y);
+            min.z = FTMIN(transformed.z, min.z);
+        }
+    } else if (children_.size() == 0) {
+        flags_ &= ~HasAAB;
+        return;
     }
+    flags_ |= HasAAB;
 
     for (auto it = children_.begin(); it != children_.end(); ++it) {
         (*it)->updateAAB();
@@ -183,6 +189,36 @@ void FTNode::runAction(std::unique_ptr<FTAction>&& action) {
     FTEngine::getDirector()->getActionManager()->addAction(this, std::move(action));
 }
 
+void FTNode::removeChild(FTNode* node) {
+    FTAssert(node->parent_ == this, "Node is not a child of this node")
+    auto it = children_.begin();
+    for (; it != children_.end(); ++it) {
+        if (it->get() == node)
+            break;
+    }
+    FTAssert(it != children_.end(), "Node is not a child of this node");
+    if (getIsActive())
+        node->onExit();
+    if (scene_ != nullptr)
+        node->onRemovedFromScene();
+    if (view_ != nullptr)
+        node->onRemovedFromView();
+    node->parent_ = nullptr;
+
+    children_.erase(it);
+}
+
+glm::vec3 FTNode::convertMouseToLocalCoordinates(const glm::vec2& mouse_coords) {
+    FTAssert(view_ != nullptr, "Node not added to an FTView");
+
+    auto unprojected = view_->getCamera()->unProject(glm::vec3(mouse_coords, 0));
+
+    auto& mat = getModelMatrixInverse();
+    glm::vec4 mouse_pos = glm::vec4((float)unprojected.x, (float)unprojected.y, 0, 1);
+    glm::vec4 local_pos = mat * mouse_pos;
+    return glm::vec3(local_pos.x / local_pos.w, local_pos.y / local_pos.w, local_pos.z / local_pos.w);
+}
+
 void FTNode::onAddedToView(FTView* view) {
     FTAssert(view_ == nullptr, "Node already paired with view");
     view_ = view;
@@ -196,6 +232,20 @@ void FTNode::onAddedToScene(FTScene* scene) {
     scene_ = scene;
     for (auto it = children_.begin(); it != children_.end(); ++it)
         (*it)->onAddedToScene(scene);
+}
+
+void FTNode::onRemovedFromView() {
+    FTAssert(view_ != nullptr, "Node already removed from scene");
+    view_ = nullptr;
+    for (auto it = children_.begin(); it != children_.end(); ++it)
+        (*it)->onRemovedFromView();
+}
+
+void FTNode::onRemovedFromScene() {
+    FTAssert(scene_ != nullptr, "Node already removed from scene");
+    scene_ = nullptr;
+    for (auto it = children_.begin(); it != children_.end(); ++it)
+        (*it)->onRemovedFromScene();
 }
 
 void FTNode::onEnter() {

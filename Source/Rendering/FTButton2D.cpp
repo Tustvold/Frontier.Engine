@@ -24,14 +24,7 @@ FTButton2D::~FTButton2D() {
 }
 
 bool FTButton2D::rendererContainsMousePoint(double x, double y) {
-    FTAssert(view_ != nullptr, "Button not added to an FTView");
-    
-    auto unprojected = view_->getCamera()->unProject(glm::vec3((float)x, (float)y, 0));
-
-    auto& mat = renderer_->getModelMatrixInverse();
-    glm::vec4 mouse_pos = glm::vec4((float)unprojected.x, (float)unprojected.y, 0, 1);
-    glm::vec4 local_pos = mat * mouse_pos;
-    local_pos /= local_pos.w;
+    auto local_pos = renderer_->convertMouseToLocalCoordinates(glm::vec2(x, y));
 
     auto& size = renderer_->getSize();
     return local_pos.x >= 0 && local_pos.y >= 0 && local_pos.x <= size.x && local_pos.y <= size.y;

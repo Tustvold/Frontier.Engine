@@ -121,11 +121,17 @@ void FTInputManager::update(const FTUpdateEvent& event) {
 
 void FTInputManager::sortMouseDelegates() {
     std::stable_sort(mouse_delegates_.begin(), mouse_delegates_.end(), [](FTMouseDelegate* a, FTMouseDelegate* b) {
-                         return a->getPriority() > b->getPriority();
+                         return a->getMouseDelegatePriority() > b->getMouseDelegatePriority();
                      });
 }
 
+void FTInputManager::mouseDelegatePriorityChange(FTMouseDelegate* mouse_delegate) {
+    sortMouseDelegates();
+}
+
 void FTInputManager::addMouseDelegate(FTMouseDelegate* delegate) {
+    // TODO Insert into correct position instead of sorting whole array
+    delegate->is_added_ = true;
     mouse_delegates_.push_back(delegate);
     sortMouseDelegates();
 }
@@ -137,5 +143,6 @@ void FTInputManager::removeMouseDelegate(FTMouseDelegate* delegate) {
 
     auto it = std::find(mouse_delegates_.begin(), mouse_delegates_.end(), delegate);
     FTAssert(it != mouse_delegates_.end(), "Couldn't find mouse delegate to remove");
+    (*it)->is_added_ = false;
     mouse_delegates_.erase(it);
 }

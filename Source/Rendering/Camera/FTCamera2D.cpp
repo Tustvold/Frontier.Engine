@@ -15,6 +15,8 @@ void FTCamera2D::visit() {
 }
 
 bool FTCamera2D::testNodeVisible(const FTNode* node) const {
+    if (!node->hasAAB())
+        return true;
     auto& center = node->getAABCenter();
     auto& half_extents = node->getAABHalfExtents();
 

@@ -4,6 +4,8 @@ set(SOURCES ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTTexturedPlane.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleSprite.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleBorderSprite.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTLine.cpp
+
     PARENT_SCOPE)
 
 set(HEADERS ${HEADERS}
@@ -12,5 +14,6 @@ set(HEADERS ${HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTTexturedPlane.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleSprite.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleBorderSprite.h
-
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTLine.h
+    
     PARENT_SCOPE)

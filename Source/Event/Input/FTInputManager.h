@@ -29,6 +29,7 @@ private:
 // Singleton which handles input
 class FTInputManager {
     friend class FTEngine;
+    friend class FTMouseDelegate;
 public:
 
     const std::shared_ptr<FTKeyState>& getKeyState(const std::string& name, int default_mapping = GLFW_KEY_UNKNOWN);
@@ -37,7 +38,6 @@ public:
     void addMouseDelegate(FTMouseDelegate* delegate);
 
     void removeMouseDelegate(FTMouseDelegate* delegate);
-
 private:
 
     FTInputManager();
@@ -55,6 +55,7 @@ private:
 
     void update(const FTUpdateEvent& event);
     void sortMouseDelegates();
+    void mouseDelegatePriorityChange(FTMouseDelegate* mouse_delegate);
 
     std::unordered_map<std::string, std::shared_ptr<FTKeyState>> name_to_key_state_;
     std::vector<std::shared_ptr<FTKeyState>> key_to_state_[GLFW_KEY_LAST + 1];

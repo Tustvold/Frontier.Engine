@@ -14,6 +14,6 @@ public:
     virtual void post_draw() override;
 
 protected:
-    float radius_;
+    const float radius_;
     glm::vec3 color_;
 };

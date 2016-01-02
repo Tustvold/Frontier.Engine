@@ -10,6 +10,9 @@ FTCircleSprite::FTCircleSprite(float radius, const glm::vec3& color, FTCircleSha
     auto vertices = data->getVertices().data();
     auto indices = data->getIndices().data();
 
+    // This helps prevent clipping at the border of the shape
+    float epsilon = 1.0f;
+
     auto radiusx2 = radius + radius;
 
     FTVertex<glm::vec3> vertex;
@@ -17,13 +20,13 @@ FTCircleSprite::FTCircleSprite(float radius, const glm::vec3& color, FTCircleSha
     int indices_index = 0;
 
     
-    vertex.position_ = glm::vec3(0, 0, 0);
+    vertex.position_ = glm::vec3(-epsilon, -epsilon, 0);
     vertices[vertex_index++] = vertex;
-    vertex.position_ = glm::vec3(radiusx2, 0, 0);
+    vertex.position_ = glm::vec3(radiusx2+epsilon, -epsilon, 0);
     vertices[vertex_index++] = vertex;
-    vertex.position_ = glm::vec3(0, radiusx2, 0);
+    vertex.position_ = glm::vec3(-epsilon, radiusx2+epsilon, 0);
     vertices[vertex_index++] = vertex;
-    vertex.position_ = glm::vec3(radiusx2, radiusx2, 0);
+    vertex.position_ = glm::vec3(radiusx2+epsilon, radiusx2+epsilon, 0);
     vertices[vertex_index++] = vertex;
 
     indices[indices_index++] = 0;

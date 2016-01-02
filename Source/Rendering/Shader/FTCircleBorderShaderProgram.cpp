@@ -16,8 +16,9 @@ const char* FTCircleBorderShaderProgram::fragment_shader_source_ = {
 	void main(){\n\
 		\n\
         float dist = length(gl_FragCoord.xy - center);\n\
-        float t =   - smoothstep(radius - 1.0, radius + 1.0, dist)\n\
-                    + smoothstep(radius - border - 1.0, radius - border + 1.0, dist);\n\
+        float delta = fwidth(dist);\n\
+        float t =   - smoothstep(radius - delta, radius, dist)\n\
+                    + smoothstep(radius - border - delta, radius - border, dist);\n\
         color = vec4(fill_color, t);\n\
 		\n\
 	}"

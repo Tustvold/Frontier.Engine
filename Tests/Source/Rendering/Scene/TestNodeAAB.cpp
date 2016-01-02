@@ -81,3 +81,20 @@ TEST(TestNodeAAB, TestAABPropogation) {
     expectVectorEqual(parent->getAABCenter(), glm::vec3(2, 3, 4));
     expectVectorEqual(parent->getAABHalfExtents(), glm::vec3(2, 3, 4));
 }
+
+TEST(TestNodeAAB, TestAABPropogationNodeEmpty) {
+    MockLoader mock;
+
+    auto child = std::make_shared<FTNode>();
+    child->setSize(glm::vec3(4, 6, 8));
+    child->setPosition(glm::vec3(12,67,23));
+
+    auto parent = std::make_shared<FTNode>();
+    parent->addChild(child);
+
+    parent->visit(glm::mat4(), false);
+    expectVectorEqual(child->getAABCenter(), glm::vec3(12 + 2, 67 + 3, 23 + 4));
+    expectVectorEqual(child->getAABHalfExtents(), glm::vec3(2, 3, 4));
+    expectVectorEqual(child->getAABCenter(), glm::vec3(12 + 2, 67 + 3, 23 + 4));
+    expectVectorEqual(parent->getAABHalfExtents(), glm::vec3(2, 3, 4));
+}

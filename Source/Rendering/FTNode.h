@@ -22,6 +22,8 @@ public:
         IsActive = 1 << 3,
         ActionsPaused = 1 << 4,
         MouseInputEnabled = 1 << 5,
+        HasAAB = 1 << 6,
+        IsHidden = 1 << 7,
         
         InitialFlags = FrustrumCullEnabled | TransformDirty | ChildNodeDirty
     };
@@ -198,6 +200,37 @@ public:
         return model_matrix_inv_.getConstData();
     }
 
+    bool hasAAB() const {
+        return (flags_ & HasAAB) != 0;
+    }
+
+    void removeChild(FTNode* node);
+
+    void removeFromParent() {
+        parent_->removeChild(this);
+    }
+
+    FTNode* getParent() const {
+        return parent_;
+    }
+
+    bool getHidden() const {
+        return (flags_ & IsHidden) != 0;
+    }
+
+    void setHidden(bool hidden) {
+        if (hidden)
+            flags_ |= IsHidden;
+        else
+            flags_ &= ~IsHidden;
+    }
+
+    const std::vector<std::shared_ptr<FTNode>>& getChildren() const {
+        return children_;
+    }
+
+    glm::vec3 convertMouseToLocalCoordinates(const glm::vec2& mouse_coords);
+
 protected:
     glm::vec3 size_;
     glm::vec3 anchor_point_;
@@ -228,9 +261,11 @@ protected:
 
     virtual void onAddedToScene(FTScene* scene);
 
+    virtual void onRemovedFromView();
+
+    virtual void onRemovedFromScene();
+
     virtual void onEnter();
 
     virtual void onExit();
-
-
 };

@@ -43,6 +43,8 @@ void FTCamera3D::visit() {
 }
 
 bool FTCamera3D::testNodeVisible(const FTNode* node) const {
+    if (!node->hasAAB())
+        return true;
     glm::vec3 half_extents = node->getAABHalfExtents();
     glm::vec3 center = node->getAABCenter();
 

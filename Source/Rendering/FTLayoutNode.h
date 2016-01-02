@@ -70,5 +70,33 @@ public:
 
     }
 
+
+    void layoutChildrenInGridXY(float padding, int maxX, int maxY) {
+        int i = 0;
+
+        float max_x = 0;
+
+        float ypos = 0;
+
+        FTAssert(maxX == -1 || maxY == -1 || maxX * maxY >= children_.size(), "More children than can fit in grid");
+
+        for (int y = 0; (maxY == -1 || y < maxY) && i < children_.size(); y++) {
+            float xpos = 0;
+            float max_height = 0.0f;
+            for (int x = 0; (maxX == -1 || x < maxX) && i < children_.size(); x++) {
+                auto& child = children_[i++];
+                child->setPosition(glm::vec2(xpos, ypos));
+                auto& size = child->getSize();
+                xpos += size.x + padding;
+                max_height = FTMAX(max_height, size.y);
+            }
+            ypos += max_height + padding;
+            xpos -= padding;
+            max_x = FTMAX(max_x, xpos);
+        }
+        ypos -= padding;
+        setSize(glm::vec2(max_x, ypos));
+    }
+
 protected:
 };
