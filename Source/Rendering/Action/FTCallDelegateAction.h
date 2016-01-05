@@ -10,6 +10,10 @@ public:
         
     }
 
+    explicit FTCallDelegateAction(const Gallant::Delegate0<>& delegate) : delegate_(delegate) {
+        
+    }
+
     virtual ~FTCallDelegateAction() {
         
     }

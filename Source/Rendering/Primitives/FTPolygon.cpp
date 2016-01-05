@@ -39,14 +39,11 @@ void FTPolygon::loadFilled(std::vector<glm::vec2>&& vertices, const glm::vec2& s
     auto data = std::make_shared<FTMeshData<FTVertex<glm::vec2>>>(vertices.size());
     auto& data_vertices = data->getVertices();
 
-    auto max = glm::vec2(-FLT_MAX);
-
     for (auto it = vertices.begin(); it != vertices.end(); ++it) {
         data_vertices.push_back(FTVertex<glm::vec2>(*it));
-        max = glm::max(max, *it);
     }
 
-    data->setSize(glm::vec3(max, 0));
+    data->setSize(glm::vec3(size, 0));
     data->setPrimitiveType(GL_TRIANGLE_FAN);
 
     loadMeshData(data.get(), true);
