@@ -1,6 +1,5 @@
 ﻿#include "FTCircleBorderShaderProgram.h"
 
-
 const char* FTCircleBorderShaderProgram::fragment_shader_source_ = {
     "#version 140\n\
 	\n\
@@ -9,16 +8,14 @@ const char* FTCircleBorderShaderProgram::fragment_shader_source_ = {
 	out vec4 color;\n\
 	\n\
     uniform vec3 fill_color;\n\
-    uniform vec2 center;\n\
-    uniform float radius;\n\
     uniform float border;\n\
 	\n\
 	void main(){\n\
 		\n\
-        float dist = length(gl_FragCoord.xy - center);\n\
+        float dist = length(UV);\n\
         float delta = fwidth(dist);\n\
-        float t =   - smoothstep(radius - delta, radius, dist)\n\
-                    + smoothstep(radius - border - delta, radius - border, dist);\n\
+        float t =   - smoothstep(1.0 - delta, 1.0, dist)\n\
+                    + smoothstep(1.0 - border - delta, 1.0 - border, dist);\n\
         color = vec4(fill_color, t);\n\
 		\n\
 	}"
@@ -29,7 +26,7 @@ const char* FTCircleBorderShaderProgram::vertex_shader_source_ = {
 	#extension GL_ARB_explicit_attrib_location :require \n\
 	\n\
 	layout(location = 0) in vec3 vertexPosition_modelspace;\n\
-	layout(location = 2) in vec2 vertexUV;\n\
+    layout(location = 2) in vec2 vertexUV;\n\
 	\n\
 	out vec2 UV;\n\
 	\n\
@@ -39,8 +36,8 @@ const char* FTCircleBorderShaderProgram::vertex_shader_source_ = {
 	void main(){\n\
 		\n\
 		gl_Position = MVP * vec4(vertexPosition_modelspace, 1);\n\
-		\n\
-		UV = vertexUV;\n\
+        UV = vertexUV;\n\
+        \n\
 	}"
 };
 

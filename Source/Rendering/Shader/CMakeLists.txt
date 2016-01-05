@@ -6,6 +6,7 @@ set (SOURCES ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexTextureShaderProgram.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleShaderProgram.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleBorderShaderProgram.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexShaderProgramColor.cpp
     PARENT_SCOPE)
 
 set (HEADERS ${HEADERS}
@@ -17,5 +18,5 @@ set (HEADERS ${HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexTextureShaderProgram.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleShaderProgram.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleBorderShaderProgram.h
-
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexShaderProgramColor.h
     PARENT_SCOPE)

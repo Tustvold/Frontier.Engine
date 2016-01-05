@@ -1,11 +1,11 @@
 #pragma once
 #include <Frontier.h>
-#include <Rendering/Mesh/FTIndexedTexturedMesh.h>
 #include <Rendering/Shader/FTCircleShaderProgram.h>
+#include "FTPlane.h"
 
-class FTCircleSprite : public FTIndexedMesh<FTVertex<glm::vec3>, uint16_t> {
+class FTCircleSprite : public FTMesh<FTVertexTexture<glm::vec2>> {
 private:
-    typedef FTIndexedMesh<FTVertex<glm::vec3>, uint16_t> FTCircleSpriteBase_;
+    typedef FTMesh<FTVertexTexture<glm::vec2>> FTCircleSpriteBase_;
 public:
     explicit FTCircleSprite(float radius, const glm::vec3& color, FTCircleShaderProgram* shader = FTShaderNode::getShaderUtil<FTCircleShaderProgram>());
     virtual ~FTCircleSprite();
@@ -14,6 +14,5 @@ public:
     virtual void post_draw() override;
 
 protected:
-    const float radius_;
-    glm::vec3 color_;
+    glm::vec3 fill_color_;
 };

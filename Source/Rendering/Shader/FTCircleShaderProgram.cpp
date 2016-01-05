@@ -3,16 +3,15 @@ const char* FTCircleShaderProgram::fragment_shader_source_ = {
     "#version 140\n\
 	\n\
 	out vec4 color;\n\
+   	in vec2 UV;\n\
 	\n\
     uniform vec3 fill_color;\n\
-    uniform vec2 center;\n\
-    uniform float radius;\n\
 	\n\
 	void main(){\n\
 		\n\
-        float dist = length(gl_FragCoord.xy - center);\n\
+        float dist = length(UV);\n\
         float delta = fwidth(dist);\n\
-        color = vec4(fill_color, 1.0 - smoothstep(radius-delta, radius, dist));\n\
+        color = vec4(fill_color, 1.0 - smoothstep(1.0-delta, 1.0, dist));\n\
 		\n\
 	}"
 };
@@ -22,6 +21,7 @@ const char* FTCircleShaderProgram::vertex_shader_source_ = {
 	#extension GL_ARB_explicit_attrib_location :require \n\
 	\n\
 	layout(location = 0) in vec3 vertexPosition_modelspace;\n\
+    layout(location = 2) in vec2 vertexUV;\n\
 	\n\
 	out vec2 UV;\n\
 	\n\
@@ -31,21 +31,7 @@ const char* FTCircleShaderProgram::vertex_shader_source_ = {
 	void main(){\n\
 		\n\
 		gl_Position = MVP * vec4(vertexPosition_modelspace, 1);\n\
+        UV = vertexUV;\n\
+        \n\
 	}"
 };
-
-FTCircleShaderProgram::FTCircleShaderProgram() : fill_color_uniform_id_(-1), center_uniform_id_(-1), radius_uniform_id_(-1) {
-}
-
-FTCircleShaderProgram::~FTCircleShaderProgram() {
-
-}
-
-bool FTCircleShaderProgram::load() {
-    if (!FTVertexShaderProgram::load())
-        return false;
-    fill_color_uniform_id_ = glGetUniformLocation(program_id_, "fill_color");
-    center_uniform_id_ = glGetUniformLocation(program_id_, "center");
-    radius_uniform_id_ = glGetUniformLocation(program_id_, "radius");
-    return fill_color_uniform_id_ != -1 && center_uniform_id_ != -1 && radius_uniform_id_ != -1;
-}

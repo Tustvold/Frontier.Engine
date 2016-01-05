@@ -10,6 +10,7 @@ public:
     MOCK_METHOD1(mouseExitEvent, void(const FTMouseExitEvent&));
     MOCK_METHOD1(mouseButtonPressedEvent, void(const FTMouseButtonPressedEvent&));
     MOCK_METHOD1(mouseButtonReleasedEvent, void(const FTMouseButtonReleasedEvent&));
+    MOCK_METHOD1(mouseScrollEvent, void(const FTMouseScrollEvent&));
 };
 
 TEST(TestMouseEventDispatcher, TestMouseMove) {
@@ -146,6 +147,34 @@ TEST(TestMouseEventDispatcher, TestMouseButtonExit) {
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
     mock.mouse_enter_callback_(nullptr, GL_FALSE);
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, 0);
+
+
+    FTEngine::cleanup();
+}
+
+TEST(TestMouseEventDispatcher, TestMouseScroll) {
+    GlfwMock mock;
+    FTEngine::setup(true);
+    MockMouseEventListener listener;
+
+    auto move_delegate = Gallant::Delegate1<const FTMouseMoveEvent&>(&listener, &MockMouseEventListener::mouseMoveEvent);
+    FTEngine::getEventManager()->getEventDispatcher<FTMouseEventDispatcher>()->registerDelegate(move_delegate);
+
+    FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(&listener, &MockMouseEventListener::mouseScrollEvent);
+        
+    testing::InSequence s;
+
+    EXPECT_CALL(listener, mouseScrollEvent(FTMouseScrollEvent(-1, -1, 20, 30, true)));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(200, 100, 0, 0)));
+    EXPECT_CALL(listener, mouseScrollEvent(FTMouseScrollEvent(200, 100, 50, 22, false)));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(240, 80, 40, -20)));
+
+    auto screensize = FTEngine::getWindowSize();
+
+    mock.mouse_scroll_callback_(nullptr, 20, 30);
+    mock.mouse_pos_callback_(nullptr, 200, screensize.y - 100);
+    mock.mouse_scroll_callback_(nullptr, 50, 22);
+    mock.mouse_pos_callback_(nullptr, 240, screensize.y - 80);
 
 
     FTEngine::cleanup();

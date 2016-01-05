@@ -5,11 +5,13 @@
 static Gallant::Delegate3<GLFWwindow*, double, double> mouse_move_event_delegate;
 static Gallant::Delegate2<GLFWwindow*, int> mouse_enter_event_delegate;
 static Gallant::Delegate4<GLFWwindow*, int, int, int> mouse_button_event_delegate;
+static Gallant::Delegate3<GLFWwindow*, double, double> mouse_scroll_event_delegate;
 
 FTMouseEventDispatcher::FTMouseEventDispatcher() : has_last_mouse_pos_(false), last_mouse_pos_x_(-1), last_mouse_pos_y_(-1) {
     mouse_move_event_delegate.Bind(this, &FTMouseEventDispatcher::mouseMoveEvent);
     mouse_enter_event_delegate.Bind(this, &FTMouseEventDispatcher::mouseEnterEvent);
     mouse_button_event_delegate.Bind(this, &FTMouseEventDispatcher::mouseButtonEvent);
+    mouse_scroll_event_delegate.Bind(this, &FTMouseEventDispatcher::mouseScrollEvent);
     auto window = FTEngine::getWindow();
     glfwSetCursorPosCallback(window, [](GLFWwindow* window_, double x, double y) {
                                  mouse_move_event_delegate(window_, x, y);
@@ -20,6 +22,9 @@ FTMouseEventDispatcher::FTMouseEventDispatcher() : has_last_mouse_pos_(false), l
     glfwSetMouseButtonCallback(window, [](GLFWwindow* window_, int button, int action, int mods) {
                                    mouse_button_event_delegate(window_, button, action, mods);
                                });
+    glfwSetScrollCallback(window, [](GLFWwindow* window_, double scroll_x, double scroll_y) {
+        mouse_scroll_event_delegate(window_, scroll_x, scroll_y);
+    });
 }
 
 FTMouseEventDispatcher::~FTMouseEventDispatcher() {
@@ -53,11 +58,16 @@ void FTMouseEventDispatcher::mouseEnterEvent(GLFWwindow* window, int enter) {
     last_mouse_pos_y_ = -1 ;
 }
 
-void FTMouseEventDispatcher::mouseButtonEvent(GLFWwindow* window, int button, int action, int mods) {
-    // We assume that as we haven't received position data that the mouse is outside the window.
+void FTMouseEventDispatcher::mouseButtonEvent(GLFWwindow* window, int button, int action, int mods) const {
+    // We assume that if we haven't received position data that the mouse is outside the window.
     if (action == GLFW_PRESS) {
         raiseEvent(FTMouseButtonPressedEvent(last_mouse_pos_x_, last_mouse_pos_y_, button, !has_last_mouse_pos_));
     } else if (action == GLFW_RELEASE) {
         raiseEvent(FTMouseButtonReleasedEvent(last_mouse_pos_x_, last_mouse_pos_y_, button, !has_last_mouse_pos_));
     }
+}
+
+void FTMouseEventDispatcher::mouseScrollEvent(GLFWwindow* window, double scroll_x, double scroll_y) const {
+    // We assume that if we haven't received position data that the mouse is outside the window.
+    raiseEvent(FTMouseScrollEvent(last_mouse_pos_x_, last_mouse_pos_y_, scroll_x, scroll_y, !has_last_mouse_pos_));
 }

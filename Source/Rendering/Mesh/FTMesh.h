@@ -9,15 +9,15 @@ template <typename VertexType>
 class FTMeshData {
 public:
 
-    FTMeshData() : vertex_count_(0) {
+    FTMeshData() : vertex_count_(0), primitive_type_(GL_TRIANGLES) {
 
     }
 
-    explicit FTMeshData(size_t vertex_count) : vertex_count_(0) {
+    explicit FTMeshData(size_t vertex_count) : vertex_count_(0), primitive_type_(GL_TRIANGLES) {
         vertices_.reserve(vertex_count);
     }
 
-    explicit FTMeshData(std::vector<VertexType>& vertices) : vertex_count_(0) {
+    explicit FTMeshData(std::vector<VertexType>&& vertices) : vertex_count_(0), primitive_type_(GL_TRIANGLES) {
         vertices_ = std::move(vertices);
     }
 
@@ -39,9 +39,35 @@ public:
         return vertices_.size();
     }
 
+    void setPrimitiveType(GLenum primitive_type) {
+        primitive_type_ = primitive_type;
+    }
+
+    GLenum getPrimitiveType() const {
+        return primitive_type_;
+    }
+
+    void setSize(const glm::vec3& size) {
+        size_ = size;
+    }
+
+    const glm::vec3& getSize() const {
+        return size_;
+    }
+
+    void computeSize() {
+        auto max = VertexType(-FLT_MAX);
+        for (auto it = vertices_.begin(); it != vertices_.end(); ++it) {
+            max = glm::max(max, *it);
+        }
+        setSize(max);
+    }
+
 private:
     std::vector<VertexType> vertices_;
     size_t vertex_count_;
+    GLenum primitive_type_;
+    glm::vec3 size_;
 };
 
 template <typename VertexType>
@@ -71,7 +97,7 @@ public:
 
     // Creates a VBO for the vertices of the specified size
     // The mesh can then be populated using the setMeshData functions
-    virtual void loadEmptyMesh(GLuint vertex_count, bool cleanup = true) {
+    void loadEmptyMesh(GLuint vertex_count, bool cleanup = true) {
         FTAssert(!is_loaded_, "Trying to load mesh data for already loaded mesh");
         is_static_ = false;
         max_num_vertices_ = vertex_count;
@@ -95,12 +121,16 @@ public:
 
     // Loads a mesh described by an FTMesh object
     // Cleanup specifies whether it should unbind the VAO after it has finished creating it
-    virtual void loadMeshData(FTMeshData<VertexType>* data, bool is_static, bool cleanup = true) {
+    void loadMeshData(FTMeshData<VertexType>* data, bool is_static, bool cleanup = true) {
         FTAssert(!is_loaded_, "Trying to load mesh data for already loaded mesh");
         is_static_ = is_static;
 
         num_vertices_ = (GLuint)data->getVertexCount();
         max_num_vertices_ = (GLuint)data->getVertexCount();
+        primitive_type_ = data->getPrimitiveType();
+
+        if (data->getSize() != glm::vec3())
+            setSize(data->getSize());
 
         glGenVertexArrays(1, &vertex_array_id_);
 
@@ -140,8 +170,11 @@ public:
         glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), data, GL_DYNAMIC_DRAW);
     }
 
-    virtual void setMeshData(FTMeshData<VertexType>* data) {
+    void setMeshData(FTMeshData<VertexType>* data) {
         FTAssert(is_loaded_, "Trying to set mesh data for unloaded mesh - consider using LoadMeshData instead");
+
+        primitive_type_ = data->getPrimitiveType();
+        setSize(data->getSize());
 
         // Update mesh data
         if (max_num_vertices_ >= data->getVertexCount()) {

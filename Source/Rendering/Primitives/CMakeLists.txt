@@ -5,7 +5,7 @@ set(SOURCES ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleSprite.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleBorderSprite.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FTLine.cpp
-
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTPolygon.cpp
     PARENT_SCOPE)
 
 set(HEADERS ${HEADERS}
@@ -15,5 +15,5 @@ set(HEADERS ${HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleSprite.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleBorderSprite.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTLine.h
-    
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTPolygon.h
     PARENT_SCOPE)

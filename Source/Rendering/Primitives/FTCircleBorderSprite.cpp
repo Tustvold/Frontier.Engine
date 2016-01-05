@@ -2,7 +2,7 @@
 
 FTCircleBorderSprite::FTCircleBorderSprite(float radius, const glm::vec3& color, float border, FTCircleBorderShaderProgram* shader) :
     FTCircleSprite(radius, color, shader), 
-    border_(border){
+    border_(border / radius){
 }
 
 FTCircleBorderSprite::~FTCircleBorderSprite() {
@@ -13,5 +13,5 @@ void FTCircleBorderSprite::pre_draw(const glm::mat4& mvp) {
     
     auto& scale = getScale();
 
-    glUniform1f(((FTCircleBorderShaderProgram*)current_shader_program_)->getBorderUniformID(), border_ * FTMIN(scale.x, scale.y));
+    glUniform1f(((FTCircleBorderShaderProgram*)current_shader_program_)->getBorderUniformID(), border_);
 }

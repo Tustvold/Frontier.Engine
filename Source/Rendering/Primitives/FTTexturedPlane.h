@@ -1,13 +1,13 @@
 #pragma once
 #include <Frontier.h>
 #include <Rendering/Shader/FTVertexTextureShaderProgram.h>
-#include <Rendering/Mesh/FTIndexedTexturedMesh.h>
+#include <Rendering/Mesh/FTTexturedMesh.h>
 
-class FTTexturedPlane : public FTIndexedTexturedMesh<FTVertexTexture<glm::vec3>, uint16_t> {
+class FTTexturedPlane : public FTTexturedMesh<FTVertexTexture<glm::vec2>, uint16_t> {
 private:
-    typedef FTIndexedTexturedMesh<FTVertexTexture<glm::vec3>, uint16_t> FTTexturedPlaneBase_;
+    typedef FTTexturedMesh<FTVertexTexture<glm::vec2>, uint16_t> FTTexturedPlaneBase_;
 public:
-    explicit FTTexturedPlane(FTVertexTextureShaderProgram* shader = FTShaderNode::getShaderUtil<FTVertexTextureShaderProgram>());
+    explicit FTTexturedPlane(const glm::vec2& dimensions, FTVertexTextureShaderProgram* shader = FTShaderNode::getShaderUtil<FTVertexTextureShaderProgram>());
     virtual ~FTTexturedPlane();
 
 protected:

@@ -4,17 +4,17 @@
 #include <Rendering/Shader/FTVertexTextureShaderProgram.h>
 
 template <typename VertexType, typename IndexType>
-class FTIndexedTexturedMesh : public FTIndexedMesh<VertexType, IndexType> {
+class FTTexturedMesh : public FTMesh<VertexType> {
 private:
-    typedef FTIndexedMesh<VertexType, IndexType> FTIndexedTexturedMeshBase_;
+    typedef FTMesh<VertexType> FTTexturedMeshBase_;
 
 public:
-    explicit FTIndexedTexturedMesh(FTVertexTextureShaderProgram* shader = FTShaderNode::getShaderUtil<FTVertexTextureShaderProgram>()) : 
-        FTIndexedTexturedMeshBase_(shader) {
+    explicit FTTexturedMesh(FTVertexTextureShaderProgram* shader = FTShaderNode::getShaderUtil<FTVertexTextureShaderProgram>()) : 
+        FTTexturedMeshBase_(shader) {
 
     }
 
-    virtual ~FTIndexedTexturedMesh() {
+    virtual ~FTTexturedMesh() {
 
     }
 
@@ -30,7 +30,7 @@ public:
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture_->getTextureId());
         glUniform1i(((FTVertexTextureShaderProgram*)current_shader_program_)->getTextureUniformId(), 0);
-        FTIndexedTexturedMeshBase_::draw();
+        FTTexturedMeshBase_::draw();
     }
 
 protected:

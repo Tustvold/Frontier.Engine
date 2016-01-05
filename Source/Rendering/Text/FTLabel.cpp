@@ -12,7 +12,7 @@ FTLabel::FTLabel(const std::string& fontpath, const std::basic_string<wchar_t>& 
 
     glm::vec2 pen;
     auto data = construct_unique(font_->generateMeshForString(text, font_size, pen));
-    setSize(glm::vec3(pen.x, pen.y, 0));
+    data->setSize(glm::vec3(pen.x, pen.y, 0));
 
     auto texture = font_->getTexture();
 

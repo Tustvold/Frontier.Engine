@@ -1,7 +1,7 @@
 #include "FTLine.h"
 
-FTLine::FTLine(const glm::vec2& p1, const glm::vec2& p2, float thickness, const glm::vec3& color, FTVertexColorShaderProgram* shader)
-    : FTPlane(glm::vec2(glm::length(p2 - p1), thickness), color, shader) {
+FTLine::FTLine(const glm::vec2& p1, const glm::vec2& p2, float thickness, const glm::vec3& color, FTVertexShaderProgramColor* shader):
+    FTPlane(glm::vec2(glm::length(p2 - p1), thickness), color, shader) {
     auto delta = p2 - p1;
     auto length = glm::length(delta);
     auto costheta = delta.x / length;
@@ -18,7 +18,4 @@ FTLine::FTLine(const glm::vec2& p1, const glm::vec2& p2, float thickness, const 
     setAnchorPoint(glm::vec2(0, 0.5f));
     setPosition(p1);
     setRotationQuaternion(quat);
-}
-
-FTLine::~FTLine() {
 }

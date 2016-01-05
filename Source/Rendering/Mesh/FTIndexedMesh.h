@@ -13,7 +13,7 @@ public:
         indices_.reserve(indexCount);
     }
 
-    FTIndexedMeshData(std::vector<VertexType>& vertices, std::vector<IndexType>& indices) : FTMeshData<VertexType>(vertices), index_count_(0) {
+    FTIndexedMeshData(std::vector<VertexType>&& vertices, std::vector<IndexType>&& indices) : FTMeshData<VertexType>(std::move(vertices)), index_count_(0) {
         indices_ = std::move(indices);
     }
 
@@ -75,7 +75,7 @@ public:
     }
 
     void loadIndexedMeshData(FTIndexedMeshData<VertexType, IndexType>* data, bool is_static, bool cleanup = true) {
-        loadMeshData(data, is_static, false);
+        FTMesh<VertexType>::loadMeshData(data, is_static, false);
 
         num_indices_ = (GLuint)data->getIndexCount();
         max_num_inidices_ = num_indices_;
@@ -91,8 +91,8 @@ public:
         }
     }
 
-    virtual void setIndexedMeshData(FTIndexedMeshData<VertexType, IndexType>* data) {
-        setMeshData(data);
+    void setIndexedMeshData(FTIndexedMeshData<VertexType, IndexType>* data) {
+        FTMesh<VertexType>::setMeshData(data);
         // Update mesh data
         if (max_num_inidices_ >= data->getIndexCount()) {
             num_indices_ = (GLuint)data->getIndexCount();
@@ -110,8 +110,9 @@ public:
 
 
     void draw() override {
+        // TODO use appropriate gl index type for template parameter
         glDrawElements(
-            GL_TRIANGLES, // mode
+            primitive_type_, // mode
                         num_indices_, // count
                         GL_UNSIGNED_SHORT, // type
                         (void*)0 // element array buffer offset
@@ -123,17 +124,4 @@ protected:
     GLuint num_indices_;
     GLuint max_num_inidices_;
     GLuint index_buffer_id_;
-
-private:
-    virtual void loadMeshData(FTMeshData<VertexType>* data, bool is_static, bool cleanup) override {
-        FTMesh<VertexType>::loadMeshData(data, is_static, cleanup);
-    }
-
-    virtual void setMeshData(FTMeshData<VertexType>* data) override {
-        FTMesh<VertexType>::setMeshData(data);
-    }
-
-    virtual void loadEmptyMesh(GLuint vertex_count, bool cleanup) override {
-        FTMesh<VertexType>::loadEmptyMesh(vertex_count, cleanup);
-    }
 };
