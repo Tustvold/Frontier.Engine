@@ -73,3 +73,31 @@ TEST(TestDirector, TestEnterExit) {
     auto nextScene = std::make_shared<FTScene>();
     FTEngine::getDirector()->setCurrentScene(nextScene);
 }
+
+TEST(TestDirector, TestPushScene) {
+    MockLoader loader;
+    auto scene = std::make_shared<MockSceneEnterExit>();
+
+    testing::InSequence s;
+
+    EXPECT_CALL(*scene, onEnter()).WillOnce(testing::Invoke(scene.get(), &MockSceneEnterExit::callParentOnEnter));
+
+
+    FTEngine::getDirector()->setCurrentScene(scene);
+
+
+    auto nextScene = std::make_shared<MockSceneEnterExit>();
+
+    EXPECT_CALL(*scene, onExit()).WillOnce(testing::Invoke(scene.get(), &MockSceneEnterExit::callParentOnExit));
+    EXPECT_CALL(*nextScene, onEnter()).WillOnce(testing::Invoke(nextScene.get(), &MockSceneEnterExit::callParentOnEnter));
+
+    FTEngine::getDirector()->pushScene(nextScene);
+
+    EXPECT_CALL(*nextScene, onExit()).WillOnce(testing::Invoke(nextScene.get(), &MockSceneEnterExit::callParentOnExit));
+
+    EXPECT_CALL(*scene, onEnter()).WillOnce(testing::Invoke(scene.get(), &MockSceneEnterExit::callParentOnEnter));
+    FTEngine::getDirector()->popScene();
+
+    EXPECT_CALL(*scene, onExit()).WillOnce(testing::Invoke(scene.get(), &MockSceneEnterExit::callParentOnExit));
+    FTEngine::getDirector()->setCurrentScene(std::make_shared<FTScene>());
+}

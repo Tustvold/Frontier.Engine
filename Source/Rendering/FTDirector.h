@@ -1,6 +1,7 @@
 #pragma once
 #include <Frontier.h>
 #include <Event/Engine/FTEngineEvents.h>
+#include <vector>
 
 class FTScene;
 class FTCamera;
@@ -14,6 +15,10 @@ class FTDirector {
 public:
 
     void setCurrentScene(const std::shared_ptr<FTScene>& scene);
+
+    void pushScene(const std::shared_ptr<FTScene>& scene);
+
+    void popScene();
 
     FTShaderCache* getShaderCache() const {
         return shader_cache_;
@@ -43,6 +48,7 @@ private:
     FTActionManager* action_manager_;
 
     std::shared_ptr<FTScene> scene_;
+    std::vector<std::shared_ptr<FTScene>> paused_scenes_;
 
     double fps_time_acc_;
 };

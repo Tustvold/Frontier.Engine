@@ -1,6 +1,10 @@
 #include "FTFileManager.h"
 #include <sys/stat.h>
+#include <fstream>
 
+void FTFileManager::setup() {
+
+}
 
 FTFileManager::FTFileManager() {
 }
@@ -28,11 +32,25 @@ std::string FTFileManager::getPathToFile(const std::string& path) const {
     return "";
 }
 
-bool FTFileManager::fileExistsAtPath(const std::string& path) const {
-    struct stat buffer;
-    return (stat(path.c_str(), &buffer) != -1);
+std::string FTFileManager::getFileContents(const std::string& filename) const {
+    auto file_path = getPathToFile(filename);
+    FTAssert(file_path != "", "Could not find file with filename %s", filename.c_str());
+
+    //Code taken from http://insanecoding.blogspot.co.uk/2011/11/how-to-read-in-file-in-c.html
+    std::ifstream in(file_path, std::ios::in | std::ios::binary);
+    if (in) {
+        std::string contents;
+        in.seekg(0, std::ios::end);
+        contents.resize(in.tellg());
+        in.seekg(0, std::ios::beg);
+        in.read(&contents[0], contents.size());
+        in.close();
+        return(contents);
+    }
+    FTAssert(false, "IO error whilst reading file");
 }
 
-void FTFileManager::setup() {
-
+bool FTFileManager::fileExistsAtPath(const std::string& path) {
+    struct stat buffer;
+    return (stat(path.c_str(), &buffer) != -1);
 }

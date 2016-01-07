@@ -7,8 +7,13 @@
 #include <Rendering/FTNode.h>
 
 void FTActionManager::addAction(FTNode* target, std::unique_ptr<FTAction>&& action) {
-    action->onStart(target);
-    actions_[target].push_back(std::move(action));
+    if (!updating_) {
+        action->onStart(target);
+        actions_[target].push_back(std::move(action));
+    } else {
+        actions_pending_add_.push_back(std::make_pair(target, std::move(action)));
+    }
+    
 }
 
 void FTActionManager::removeActionsForNode(FTNode* target) {
@@ -24,6 +29,7 @@ FTActionManager::~FTActionManager() {
 }
 
 void FTActionManager::onUpdate(const FTUpdateEvent& event) {
+    updating_ = true;
     // If an action is paused it will only be removed once it has been resumed
     for (auto store_iterator = actions_.begin(); store_iterator != actions_.end(); ++store_iterator) {
         
@@ -44,4 +50,10 @@ void FTActionManager::onUpdate(const FTUpdateEvent& event) {
             return action->getCompleted();
         }), store.end());
     }
+
+    updating_ = false;
+    for (auto it = actions_pending_add_.begin(); it != actions_pending_add_.end(); ++it) {
+        addAction(it->first, std::move(it->second));
+    }
+    actions_pending_add_.clear();
 }

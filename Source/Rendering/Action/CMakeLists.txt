@@ -5,7 +5,8 @@ set (SOURCES ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTActionSequence.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FTRepeatAction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCallFuncAction.cpp
-    PARENT_SCOPE)
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTRotateToAction.cpp 
+   PARENT_SCOPE)
 
 set (HEADERS ${HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTActionManager.h
@@ -16,4 +17,5 @@ set (HEADERS ${HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTRepeatAction.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCallFuncAction.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTCallDelegateAction.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTRotateToAction.h
     PARENT_SCOPE)

@@ -19,17 +19,24 @@ void FTActionSequence::onStart(FTNode* node) {
 }
 
 void FTActionSequence::onUpdate(FTNode* node, const FTUpdateEvent& event) {
-    auto& current_action = actions_[action_index_];
-    
-    if (!current_action->getCompleted())
-        current_action->onUpdate(node, event);
 
-    if (current_action->getCompleted()) {
-        action_index_++;
-        if (action_index_ == actions_.size()) {
-            setCompleted();
-            return;
+    while (true) {
+        auto& current_action = actions_[action_index_];
+
+        if (!current_action->getCompleted())
+            current_action->onUpdate(node, event);
+
+        if (current_action->getCompleted()) {
+            action_index_++;
+            if (action_index_ == actions_.size()) {
+                setCompleted();
+                return;
+            }
+            actions_[action_index_]->onStart(node);
+            continue;
         }
-       actions_[action_index_]->onStart(node);
+        break;
     }
+
+    
 }

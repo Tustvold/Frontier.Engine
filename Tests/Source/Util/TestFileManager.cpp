@@ -31,3 +31,14 @@ TEST(TestFileManager, TestSearchPaths) {
     EXPECT_EQ(file_manager->getPathToFile("checker.DDS"), "Resources/Textures/checker.DDS");
     EXPECT_EQ(file_manager->getPathToFile("non-existent.DDS"), "");
 }
+
+
+TEST(TestFileManager, TestReadFile) {
+    MockLoader mock;
+
+    auto file_manager = FTEngine::getFileManager();
+
+    file_manager->addSearchPath("Resources");
+
+    EXPECT_EQ(file_manager->getFileContents("TestReadFile.txt"), "This is a test file.");
+}

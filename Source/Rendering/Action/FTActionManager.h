@@ -31,5 +31,7 @@ private:
     void onUpdate(const FTUpdateEvent& event);
 
     std::unordered_map<FTNode*, std::vector<std::unique_ptr<FTAction>>> actions_;
+    std::vector <std::pair<FTNode*, std::unique_ptr<FTAction>>> actions_pending_add_;
     bool actions_paused_;
+    bool updating_;
 };

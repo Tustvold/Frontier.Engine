@@ -10,7 +10,9 @@ public:
 
     std::string getPathToFile(const std::string& path) const;
 
-    bool fileExistsAtPath(const std::string& path) const;
+    std::string getFileContents(const std::string& path) const;
+
+    static bool fileExistsAtPath(const std::string& path);
 
 private:
     FTFileManager();

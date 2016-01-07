@@ -12,6 +12,10 @@ void FTIntervalAction::onStart(FTNode* node) {
     FTAction::onStart(node);
     time_since_start_ = 0;
     progress_ = 0;
+    if (time_interval_ == 0.0f) {
+        progress_ = 1.0f;
+        setCompleted();
+    }
 }
 
 void FTIntervalAction::onUpdate(FTNode* node, const FTUpdateEvent& event) {

@@ -7,6 +7,25 @@
 #include "Rendering/Action/FTActionManager.h"
 #include "Text/FTFontCache.h"
 
+void FTDirector::pushScene(const std::shared_ptr<FTScene>& scene) {
+    if (scene_) {
+        scene_->onExit();
+        paused_scenes_.push_back(scene_);
+    }
+    scene_ = scene;
+    scene_->onEnter();
+}
+
+void FTDirector::popScene() {
+    FTAssert(paused_scenes_.size() != 0, "No parent scenes to resume");
+    if (scene_) {
+        scene_->onExit();
+    }
+    scene_ = paused_scenes_.back();
+    paused_scenes_.pop_back();
+    scene_->onEnter();
+}
+
 void FTDirector::setCurrentScene(const std::shared_ptr<FTScene>& scene) {
     if (scene_)
         scene_->onExit();

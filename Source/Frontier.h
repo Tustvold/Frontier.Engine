@@ -62,3 +62,13 @@ static_assert(sizeof(glm::vec4) == sizeof(GLfloat) * 4, "glm::vec4 has been padd
 #define ALIGNED_(x) __attribute__ ((aligned(x)))
 #endif
 #endif
+
+
+#ifdef __GNUC__
+#define DEPRECATED __attribute__((deprecated))
+#elif defined(_MSC_VER)
+#define DEPRECATED __declspec(deprecated)
+#else
+#pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+#define DEPRECATED
+#endif

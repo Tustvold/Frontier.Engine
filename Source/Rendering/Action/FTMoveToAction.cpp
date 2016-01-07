@@ -11,6 +11,9 @@ FTMoveToAction::~FTMoveToAction() {
 
 void FTMoveToAction::onStart(FTNode* node) {
     FTIntervalAction::onStart(node);
+    if (progress_ == 1.0)
+        node->setPosition(to_position_);
+
     from_position_ = node->getPosition();
     delta_position_ = to_position_ - from_position_;
 }
