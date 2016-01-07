@@ -14,11 +14,13 @@ class FTDirector {
     friend class FTEngine;
 public:
 
-    void setCurrentScene(const std::shared_ptr<FTScene>& scene);
+    void setCurrentScene(const std::shared_ptr<FTScene>& scene, bool immediately = false);
 
-    void pushScene(const std::shared_ptr<FTScene>& scene);
+    void setCurrentScene(std::shared_ptr<FTScene>&& scene, bool immediately = false);
 
-    void popScene();
+    void pushScene(const std::shared_ptr<FTScene>& scene, bool immediately = false);
+
+    void popScene(bool immediately = false);
 
     FTShaderCache* getShaderCache() const {
         return shader_cache_;
@@ -42,12 +44,18 @@ private:
 
     void draw(const FTDrawEvent& event);
 
+    void exchangeScenes();
+
+    void preTick(const FTPreTickEvent& event);
 
     FTShaderCache* shader_cache_;
     FTFontCache* font_cache_;
     FTActionManager* action_manager_;
 
     std::shared_ptr<FTScene> scene_;
+    std::shared_ptr<FTScene> next_scene_;
+    bool push_previous_scene_;
+
     std::vector<std::shared_ptr<FTScene>> paused_scenes_;
 
     double fps_time_acc_;

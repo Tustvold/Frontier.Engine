@@ -9,7 +9,8 @@ private:
     typedef FTIndexedTexturedMesh<FTVertexColorTexture<glm::vec2>, uint16_t> FTLabelBase_;
 public:
     
-    FTLabel(const std::string& fontpath, const std::basic_string<wchar_t>& text, int font_size, bool is_mutable = false, FTFontShader* shader = FTShaderNode::getShaderUtil<FTFontShader>());
+    FTLabel(const std::string& fontpath, const std::wstring& text, int font_size, bool is_mutable = false, FTFontShader* shader = FTShaderNode::getShaderUtil<FTFontShader>());
+    FTLabel(const std::string& fontpath, const std::string& text, int font_size, bool is_mutable = false, FTFontShader* shader = FTShaderNode::getShaderUtil<FTFontShader>());
     virtual ~FTLabel();
 
     void setString(const wchar_t* text);
@@ -25,4 +26,7 @@ protected:
 
     bool is_mutable_;
     int font_size_;
+
+private:
+    void load(const std::string& fontpath, const std::basic_string<wchar_t>& text);
 };

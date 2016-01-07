@@ -7,33 +7,40 @@
 #include "Rendering/Action/FTActionManager.h"
 #include "Text/FTFontCache.h"
 
-void FTDirector::pushScene(const std::shared_ptr<FTScene>& scene) {
-    if (scene_) {
-        scene_->onExit();
-        paused_scenes_.push_back(scene_);
-    }
-    scene_ = scene;
-    scene_->onEnter();
+void FTDirector::pushScene(const std::shared_ptr<FTScene>& scene, bool immediately) {
+    FTAssert(next_scene_ == nullptr, "FTDirector already transitioning between scenes");
+    next_scene_ = scene;
+    push_previous_scene_ = true;
+    if (immediately)
+        exchangeScenes();
 }
 
-void FTDirector::popScene() {
+void FTDirector::popScene(bool immediately) {
     FTAssert(paused_scenes_.size() != 0, "No parent scenes to resume");
-    if (scene_) {
-        scene_->onExit();
-    }
-    scene_ = paused_scenes_.back();
+    next_scene_ = std::move(paused_scenes_.back());
     paused_scenes_.pop_back();
-    scene_->onEnter();
+    push_previous_scene_ = false;
+    if (immediately)
+        exchangeScenes();
 }
 
-void FTDirector::setCurrentScene(const std::shared_ptr<FTScene>& scene) {
-    if (scene_)
-        scene_->onExit();
-    scene_ = scene;
-    scene_->onEnter();
+void FTDirector::setCurrentScene(const std::shared_ptr<FTScene>& scene, bool immediately) {
+    FTAssert(next_scene_ == nullptr, "FTDirector already transitioning between scenes");
+    next_scene_ = scene;
+    push_previous_scene_ = false;
+    if (immediately)
+        exchangeScenes();
 }
 
-FTDirector::FTDirector() : shader_cache_(nullptr), font_cache_(nullptr), action_manager_(nullptr), fps_time_acc_(0) {
+void FTDirector::setCurrentScene(std::shared_ptr<FTScene>&& scene, bool immediately) {
+    FTAssert(next_scene_ == nullptr, "FTDirector already transitioning between scenes");
+    next_scene_ = std::move(scene);
+    push_previous_scene_ = false;
+    if (immediately)
+        exchangeScenes();
+}
+
+FTDirector::FTDirector() : shader_cache_(nullptr), font_cache_(nullptr), action_manager_(nullptr), push_previous_scene_(false), fps_time_acc_(0) {
 }
 
 
@@ -50,6 +57,7 @@ void FTDirector::setup() {
     action_manager_ = new FTActionManager();
 
     FTEngine::getEventManager()->registerDelegate<FTEngineEventDispatcher>(this, &FTDirector::draw);
+    FTEngine::getEventManager()->registerDelegate<FTEngineEventDispatcher>(this, &FTDirector::preTick);
 }
 
 void FTDirector::cleanup() {
@@ -57,6 +65,7 @@ void FTDirector::cleanup() {
         scene_->onExit();
     scene_.reset();
     FTEngine::getEventManager()->unregisterDelegate<FTEngineEventDispatcher>(this, &FTDirector::draw);
+    FTEngine::getEventManager()->unregisterDelegate<FTEngineEventDispatcher>(this, &FTDirector::preTick);
 }
 
 void FTDirector::draw(const FTDrawEvent& event) {
@@ -68,4 +77,21 @@ void FTDirector::draw(const FTDrawEvent& event) {
     scene_->draw();
 
     glfwSwapBuffers(event.window_);
+}
+
+void FTDirector::exchangeScenes() {
+    if (next_scene_ == nullptr)
+        return;
+    if (scene_) {
+        scene_->onExit();
+        if (push_previous_scene_) {
+            paused_scenes_.push_back(std::move(scene_));
+        }
+    }
+    scene_ = std::move(next_scene_);
+    scene_->onEnter();
+}
+
+void FTDirector::preTick(const FTPreTickEvent& event) {
+    exchangeScenes();
 }

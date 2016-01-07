@@ -2,7 +2,7 @@
 #include <Event/Engine/FTEngineEvents.h>
 
 FTIntervalAction::FTIntervalAction(double time_interval) : time_since_start_(0), time_interval_(time_interval), progress_(0) {
-
+    FTAssert(time_interval >= 0.0, "Cannot create action with negative time interval");
 }
 
 FTIntervalAction::~FTIntervalAction() {

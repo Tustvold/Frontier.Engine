@@ -20,7 +20,7 @@ void FTActionManager::removeActionsForNode(FTNode* target) {
     actions_.erase(target);
 }
 
-FTActionManager::FTActionManager() : actions_paused_(false) {
+FTActionManager::FTActionManager() : actions_paused_(false), updating_(false) {
     FTEngine::getEventManager()->registerDelegate<FTEngineEventDispatcher>(this, &FTActionManager::onUpdate);
 }
 

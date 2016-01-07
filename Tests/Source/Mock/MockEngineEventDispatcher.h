@@ -13,7 +13,8 @@ public:
 
     }
 
-    void raiseEvent(const FTUpdateEvent& event) {
-        FTEngineEventDispatcher::raiseEvent(event);
+    template <typename T>
+    void raiseEvent(const T& event) {
+        FTEngineEventDispatcher::raiseEvent<T>(event);
     }
 };

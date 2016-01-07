@@ -20,7 +20,7 @@ TEST(TestNodeMouse, TestMousePress) {
         auto listener = std::make_shared<MockNodeMouse>();
         auto view = std::make_shared<FTView>();
         auto scene = std::make_shared<FTScene>();
-        FTEngine::getDirector()->setCurrentScene(scene);
+        FTEngine::getDirector()->setCurrentScene(scene, true);
         scene->addView(view);
         view->addChild(listener);
 

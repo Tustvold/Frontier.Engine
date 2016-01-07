@@ -32,7 +32,7 @@ TEST(TestActionManager, TestAddRemove) {
 
     testing::Mock::VerifyAndClearExpectations(action_ptr);
 
-    FTEngine::getDirector()->setCurrentScene(scene);
+    FTEngine::getDirector()->setCurrentScene(scene, true);
 
     EXPECT_CALL(*action_ptr, onUpdate(node.get(), updateEvent));
 
@@ -40,7 +40,7 @@ TEST(TestActionManager, TestAddRemove) {
 
     testing::Mock::VerifyAndClearExpectations(action_ptr);
 
-    FTEngine::getDirector()->setCurrentScene(empty_scene);
+    FTEngine::getDirector()->setCurrentScene(empty_scene, true);
 
     // We don't expect the action to be run unless the node belongs to the hierarchy of the active scene
     EXPECT_CALL(*action_ptr, onUpdate(node.get(), updateEvent)).Times(0);
@@ -49,7 +49,7 @@ TEST(TestActionManager, TestAddRemove) {
 
     testing::Mock::VerifyAndClearExpectations(action_ptr);
 
-    FTEngine::getDirector()->setCurrentScene(scene);
+    FTEngine::getDirector()->setCurrentScene(scene, true);
 
     EXPECT_CALL(*action_ptr, onUpdate(node.get(), updateEvent));
 

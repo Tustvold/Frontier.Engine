@@ -93,6 +93,7 @@ int FTEngine::_run() {
     time_left_after_ticks_ = 0;
     FTUpdateEvent update_event;
     FTDrawEvent draw_event;
+    FTPreTickEvent pre_tick_event;
     auto engine_event_dispatcher = FTEngine::getEventManager()->getEventDispatcher<FTEngineEventDispatcher>();
 
     do {
@@ -112,6 +113,9 @@ int FTEngine::_run() {
         }
 
         time_left_after_ticks_ += dt;
+
+
+        engine_event_dispatcher->raiseEvent(pre_tick_event);
 
         // We cap the remaining time at 5 timesteps
         // This is to reduce impact on the frame rate.

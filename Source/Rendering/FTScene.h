@@ -7,8 +7,16 @@
 class FTScene {
     friend class FTDirector;
 public:
-    explicit FTScene() : is_active_(false) {
+    FTScene() : is_active_(false) {
 
+    }
+
+    explicit FTScene(const std::shared_ptr<FTView>& view) : is_active_(false) {
+        addView(view);
+    }
+
+    explicit FTScene(std::shared_ptr<FTView>&& view) : is_active_(false) {
+        addView(std::move(view));
     }
 
     virtual ~FTScene() {

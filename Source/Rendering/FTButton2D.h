@@ -10,7 +10,7 @@
 class FTButton2D : public FTNode {
 
 public:
-    
+
     explicit FTButton2D(const std::shared_ptr<FTNode>& renderer);
     explicit FTButton2D(std::shared_ptr<FTNode>&& renderer);
     
@@ -24,23 +24,34 @@ public:
     bool onMouseMove(const FTMouseMoveEvent& event) override;
 
     template <class X, class Y>
-    void bindMouseEnterDelegate(Y* pthis, void(X::* function_to_bind)()) {
+    void bindMouseEnterDelegate(Y* pthis, void(X::* function_to_bind)(FTButton2D*)) {
         mouse_enter_delegate_.Bind(pthis, function_to_bind);
     }
 
     template <class X, class Y>
-    void bindMouseExitDelegate(Y* pthis, void(X::* function_to_bind)()) {
+    void bindMouseExitDelegate(Y* pthis, void(X::* function_to_bind)(FTButton2D*)) {
         mouse_exit_delegate_.Bind(pthis, function_to_bind);
     }
 
     template <class X, class Y>
-    void bindMousePressedDelegate(Y* pthis, void(X::* function_to_bind)()) {
+    void bindMousePressedDelegate(Y* pthis, void(X::* function_to_bind)(FTButton2D*)) {
         mouse_pressed_delegate_.Bind(pthis, function_to_bind);
     }
 
     template <class X, class Y>
-    void bindMouseReleasedDelegate(Y* pthis, void(X::* function_to_bind)()) {
+    void bindMouseReleasedDelegate(Y* pthis, void(X::* function_to_bind)(FTButton2D*)) {
         mouse_released_delegate_.Bind(pthis, function_to_bind);
+    }
+
+    template <class X, class Y>
+    void bindEnabledDelegate(Y* pthis, bool(X::* function_to_bind)(const FTButton2D*)) {
+        is_enabled_delegate_.Bind(pthis, function_to_bind);
+    }
+
+    bool getMouseDelegateEnabled() const override {
+        if (is_enabled_delegate_.empty())
+            return FTNode::getMouseDelegateEnabled();
+        return FTNode::getMouseDelegateEnabled() && is_enabled_delegate_(this);
     }
 
     const glm::vec3& getScale() const override {
@@ -51,11 +62,21 @@ public:
         return renderer_->getSize();
     }
 
+    void setTag(int tag) {
+        tag_ = tag;
+    }
+
+    int getTag() const {
+        return tag_;
+    }
+
 protected:
-    Gallant::Delegate0<> mouse_enter_delegate_;
-    Gallant::Delegate0<> mouse_exit_delegate_;
-    Gallant::Delegate0<> mouse_pressed_delegate_;
-    Gallant::Delegate0<> mouse_released_delegate_;
+    Gallant::Delegate1<FTButton2D*> mouse_enter_delegate_;
+    Gallant::Delegate1<FTButton2D*> mouse_exit_delegate_;
+    Gallant::Delegate1<FTButton2D*> mouse_pressed_delegate_;
+    Gallant::Delegate1<FTButton2D*> mouse_released_delegate_;
+    Gallant::Delegate1<const FTButton2D*, bool> is_enabled_delegate_;
+    int tag_;
 
     bool mouse_entered_;
 

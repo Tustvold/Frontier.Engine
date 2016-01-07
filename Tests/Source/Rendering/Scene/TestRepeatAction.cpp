@@ -18,7 +18,7 @@ TEST(TestRepeatAction, TestSimple) {
     auto view = std::make_shared<FTView>();
     auto scene = std::make_shared<FTScene>();
     scene->addView(view);
-    FTEngine::getDirector()->setCurrentScene(scene);
+    FTEngine::getDirector()->setCurrentScene(scene, true);
     view->addChild(node);
 
     FTUpdateEvent update_event;
@@ -71,7 +71,7 @@ TEST(TestRepeatAction, TestNested) {
     auto view = std::make_shared<FTView>();
     auto scene = std::make_shared<FTScene>();
     scene->addView(view);
-    FTEngine::getDirector()->setCurrentScene(scene);
+    FTEngine::getDirector()->setCurrentScene(scene, true);
     view->addChild(node);
 
     FTUpdateEvent update_event;

@@ -11,10 +11,11 @@
 
 class FTButton2DTestDelegates {
 public:
-    MOCK_METHOD0(enterDelegate, void());
-    MOCK_METHOD0(exitDelegate, void());
-    MOCK_METHOD0(pressedDelegate, void());
-    MOCK_METHOD0(releasedDelegate, void());
+    MOCK_METHOD1(enterDelegate, void(FTButton2D*));
+    MOCK_METHOD1(exitDelegate, void(FTButton2D*));
+    MOCK_METHOD1(pressedDelegate, void(FTButton2D*));
+    MOCK_METHOD1(releasedDelegate, void(FTButton2D*));
+    MOCK_METHOD1(enabledDelegate, bool(const FTButton2D*));
 };
 
 TEST(TestButton2D, TestContainsPosition) {
@@ -64,7 +65,7 @@ TEST(TestButton2D, TestContainsPositionScale) {
 
         auto scene = std::make_shared<FTScene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene);
+        FTEngine::getDirector()->setCurrentScene(scene, true);
         
         scene->visit();
 
@@ -100,7 +101,7 @@ TEST(TestButton2D, TestContainsPositionScaleAnchorPoint) {
 
         auto scene = std::make_shared<FTScene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene);
+        FTEngine::getDirector()->setCurrentScene(scene, true);
 
         scene->visit();
 
@@ -140,7 +141,7 @@ TEST(TestButton2D, TestEnterExitDelegates) {
 
         auto scene = std::make_shared<FTScene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene);
+        FTEngine::getDirector()->setCurrentScene(scene, true);
 
         scene->visit();
 
@@ -153,7 +154,7 @@ TEST(TestButton2D, TestEnterExitDelegates) {
         EXPECT_FALSE(button->rendererContainsMousePoint(151, 70));
         EXPECT_FALSE(button->rendererContainsMousePoint(60, 261));
 
-        EXPECT_CALL(testDelegates, enterDelegate()).Times(0);
+        EXPECT_CALL(testDelegates, enterDelegate(button.get())).Times(0);
 
         auto screensize = FTEngine::getWindowSize();
 
@@ -161,32 +162,32 @@ TEST(TestButton2D, TestEnterExitDelegates) {
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, enterDelegate());
+        EXPECT_CALL(testDelegates, enterDelegate(button.get()));
         mock.mouse_pos_callback_(nullptr, 51, screensize.y - 61);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
         
-        EXPECT_CALL(testDelegates, enterDelegate()).Times(0);
+        EXPECT_CALL(testDelegates, enterDelegate(button.get())).Times(0);
         mock.mouse_pos_callback_(nullptr, 149, screensize.y - 61);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, exitDelegate());
+        EXPECT_CALL(testDelegates, exitDelegate(button.get()));
         mock.mouse_pos_callback_(nullptr, 0, screensize.y - 0);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, exitDelegate()).Times(0);
+        EXPECT_CALL(testDelegates, exitDelegate(button.get())).Times(0);
         mock.mouse_pos_callback_(nullptr, 151, screensize.y - 70);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, enterDelegate());
+        EXPECT_CALL(testDelegates, enterDelegate(button.get()));
         mock.mouse_pos_callback_(nullptr, 51, screensize.y - 61);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, exitDelegate());
+        EXPECT_CALL(testDelegates, exitDelegate(button.get()));
         mock.mouse_enter_callback_(nullptr, GL_FALSE);
     }
 
@@ -216,7 +217,7 @@ TEST(TestButton2D, TestPressDelegates) {
 
         auto scene = std::make_shared<FTScene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene);
+        FTEngine::getDirector()->setCurrentScene(scene, true);
 
         scene->visit();
 
@@ -229,7 +230,7 @@ TEST(TestButton2D, TestPressDelegates) {
         EXPECT_FALSE(button->rendererContainsMousePoint(151, 70));
         EXPECT_FALSE(button->rendererContainsMousePoint(60, 261));
 
-        EXPECT_CALL(testDelegates, enterDelegate()).Times(0);
+        EXPECT_CALL(testDelegates, enterDelegate(button.get())).Times(0);
         
         auto screensize = FTEngine::getWindowSize();
 
@@ -237,51 +238,51 @@ TEST(TestButton2D, TestPressDelegates) {
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, pressedDelegate()).Times(0);
+        EXPECT_CALL(testDelegates, pressedDelegate(button.get())).Times(0);
 
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, 0);
 
-        EXPECT_CALL(testDelegates, enterDelegate());
+        EXPECT_CALL(testDelegates, enterDelegate(button.get()));
         mock.mouse_pos_callback_(nullptr, 51, screensize.y - 61);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, pressedDelegate());
+        EXPECT_CALL(testDelegates, pressedDelegate(button.get()));
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, releasedDelegate());
+        EXPECT_CALL(testDelegates, releasedDelegate(button.get()));
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, 0);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, pressedDelegate());
+        EXPECT_CALL(testDelegates, pressedDelegate(button.get()));
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
         
-        EXPECT_CALL(testDelegates, enterDelegate()).Times(0);
+        EXPECT_CALL(testDelegates, enterDelegate(button.get())).Times(0);
         mock.mouse_pos_callback_(nullptr, 149, screensize.y - 61);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
 
 
-        EXPECT_CALL(testDelegates, exitDelegate());
+        EXPECT_CALL(testDelegates, exitDelegate(button.get()));
         mock.mouse_pos_callback_(nullptr, 0, screensize.y - 0);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, releasedDelegate()).Times(0);
+        EXPECT_CALL(testDelegates, releasedDelegate(button.get())).Times(0);
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, 0);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, exitDelegate()).Times(0);
+        EXPECT_CALL(testDelegates, exitDelegate(button.get())).Times(0);
         mock.mouse_pos_callback_(nullptr, 151, screensize.y - 70);
     }
 
@@ -306,7 +307,7 @@ TEST(TestButton2D, TestSizeScale) {
 
         auto scene = std::make_shared<FTScene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene);
+        FTEngine::getDirector()->setCurrentScene(scene, true);
 
         scene->visit();
 
@@ -335,7 +336,7 @@ TEST(TestButton2D, TestDisconnectedDelegates) {
 
         auto scene = std::make_shared<FTScene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene);
+        FTEngine::getDirector()->setCurrentScene(scene, true);
 
         scene->visit();
 
@@ -346,6 +347,45 @@ TEST(TestButton2D, TestDisconnectedDelegates) {
         mock.mouse_pos_callback_(nullptr, 0, screensize.y - 0);
         mock.mouse_pos_callback_(nullptr, 51, screensize.y - 61);
         mock.mouse_enter_callback_(nullptr, GL_FALSE);
+    }
+
+    FTEngine::cleanup();
+}
+
+
+TEST(TestButton2D, TestEnabledDelegate) {
+    GlfwMock mock;
+    FTEngine::setup(true);
+    {
+        FTButton2DTestDelegates testDelegates;
+        auto renderer = std::make_shared<FTNode>();
+
+        renderer->setSize(glm::vec2(50, 50));
+        renderer->setScale(glm::vec2(2, 4));
+        renderer->setPosition(glm::vec2(100, 160));
+        renderer->setAnchorPoint(glm::vec2(0.5f, 0.5f));
+        auto button = std::make_shared<FTButton2D>(std::move(renderer));
+        button->bindEnabledDelegate(&testDelegates, &FTButton2DTestDelegates::enabledDelegate);
+
+        auto view = std::make_shared<FTView>();
+        view->setCamera(std::make_shared<FTCamera2D>());
+        view->addChild(button);
+
+        testing::InSequence s;
+
+        // This should fail as the node isn't added to the scene
+        EXPECT_FALSE(button->getMouseDelegateEnabled());
+
+
+        auto scene = std::make_shared<FTScene>();
+        scene->addView(view);
+        FTEngine::getDirector()->setCurrentScene(scene, true);
+        
+        EXPECT_CALL(testDelegates, enabledDelegate(button.get())).WillOnce(testing::Return(false));
+        EXPECT_CALL(testDelegates, enabledDelegate(button.get())).WillOnce(testing::Return(true));
+
+        EXPECT_FALSE(button->getMouseDelegateEnabled());
+        EXPECT_TRUE(button->getMouseDelegateEnabled());
     }
 
     FTEngine::cleanup();

@@ -19,7 +19,7 @@ TEST(TestActionSequence, TestSimple) {
     auto view = std::make_shared<FTView>();
     auto scene = std::make_shared<FTScene>();
     scene->addView(view);
-    FTEngine::getDirector()->setCurrentScene(scene);
+    FTEngine::getDirector()->setCurrentScene(scene, true);
     view->addChild(node);
 
 
@@ -38,11 +38,12 @@ TEST(TestActionSequence, TestSimple) {
     EXPECT_CALL(*mock1_ptr, onUpdate(node.get(), testing::_)).Times(3);
     EXPECT_CALL(*mock1_ptr, onUpdate(node.get(), testing::_)).WillOnce(testing::InvokeWithoutArgs(mock1_ptr, &MockAction::setCompleted));
     EXPECT_CALL(*mock2_ptr, onStart(node.get())).WillOnce(testing::Invoke(mock2_ptr, &MockAction::callParentOnStart));
+    EXPECT_CALL(*mock2_ptr, onUpdate(node.get(), testing::_));
 
     engine_event_dispatcher->raiseEvent(update_event); // Update mock1
     engine_event_dispatcher->raiseEvent(update_event); // Update mock1
     engine_event_dispatcher->raiseEvent(update_event); // Update mock1
-    engine_event_dispatcher->raiseEvent(update_event); // Update mock1 - mock1 marked finished - mock2 started
+    engine_event_dispatcher->raiseEvent(update_event); // Update mock1 - mock1 marked finished - mock2 started - mock2 update called immediately
 
     testing::Mock::VerifyAndClearExpectations(mock1_ptr);
     testing::Mock::VerifyAndClearExpectations(mock2_ptr);

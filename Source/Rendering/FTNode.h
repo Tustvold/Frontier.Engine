@@ -56,7 +56,6 @@ public:
     void setMouseInputEnabled(bool enabled);
 
     bool getMouseDelegateEnabled() const override {
-        // TODO: Determine this based on flags
         return (flags_ & IsActive) != 0;
     }
 

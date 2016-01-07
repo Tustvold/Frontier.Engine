@@ -75,7 +75,7 @@ GLuint FTTextureDDS::loadDDS(const std::string& provided_path) {
             format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
             break;
         default:
-            free(buffer);
+            delete[] buffer;
             FTAssert(false, "File read error");
             return 0;
     }

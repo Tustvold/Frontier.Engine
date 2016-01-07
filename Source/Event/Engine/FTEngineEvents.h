@@ -32,3 +32,8 @@ struct FTDrawEvent : public FTEvent {
         return delta_time_ == other.delta_time_ && average_fps_ == other.average_fps_ && window_ == other.window_;
     }
 };
+
+// Used internally for tasks such as switching scenes
+struct FTPreTickEvent : public FTEvent {
+    
+};

@@ -1,6 +1,7 @@
 #pragma once
 #include "Frontier.h"
-
+#include <locale>
+#include <codecvt>
 
 // Supports char and wchar_t
 // Unfortunately Visual C++ doesn't properly support Unicode literals
@@ -20,6 +21,12 @@ public:
         va_end(args);
         return buff;
     }
+
+    static std::string convertString(const std::wstring& from) {
+        typedef std::codecvt_utf8<wchar_t> convert_type;
+        std::wstring_convert<convert_type, wchar_t> converter;
+        return converter.to_bytes(from);
+    }
 };
 
 template <>
@@ -31,5 +38,11 @@ public:
         vsprintf_s(buff, buf_size, format, args);
         va_end(args);
         return buff;
+    }
+
+    static std::wstring convertString(const std::string& from) {
+        typedef std::codecvt_utf8<wchar_t> convert_type;
+        std::wstring_convert<convert_type, wchar_t> converter;
+        return converter.from_bytes(from);
     }
 };
