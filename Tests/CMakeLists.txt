@@ -26,10 +26,12 @@ endforeach()
 
 	
 target_link_libraries(Frontier.Engine.Tests
-    glfwmock
-    freetype
-    freetype-gl
     Frontier.Engine
+    freetype-gl
+    freetype
+    glfwmock
+    glewmock
+    glmock
 )
 	
 
@@ -42,5 +44,3 @@ add_custom_command(TARGET Frontier.Engine.Tests POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                        ${CMAKE_CURRENT_SOURCE_DIR}/Resources ${CMAKE_CURRENT_BINARY_DIR}/Resources)
 
-install(TARGETS Frontier.Engine.Tests
-     RUNTIME DESTINATION bin)

@@ -9,7 +9,7 @@ void FTCamera2D::visit() {
     if (view_matrix_dirty_ || projection_matrix_dirty_) {
         view_matrix_dirty_ = false;
         projection_matrix_dirty_ = false;
-        view_projection_matrix_ = projection_matrix_.getData() * view_matrix_.getData();
+        view_projection_matrix_ = projection_matrix_ * view_matrix_;
         view_projection_matrix_inv_dirty_ = true;
     }
 }

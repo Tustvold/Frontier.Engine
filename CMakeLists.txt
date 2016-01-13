@@ -14,6 +14,12 @@ option( GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
 
 add_definitions(-DGLEW_STATIC)
 
+# Set variables for freetype-gl
+set(GLEW_LIBRARY libglew_static)
+set(GLEW_INCLUDE_PATH  ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glew/include)
+set(FREETYPE_LIBRARY freetype)
+set(FREETYPE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/freetype2/include)
+
 add_subdirectory(Source)
 
 # Dependencies
@@ -56,10 +62,11 @@ SET (FRONTIER_ENGINE_INCLUDES ${FRONTIER_ENGINE_INCLUDES} PARENT_SCOPE)
 
 SET (FRONTIER_ENGINE_LIBS
     Frontier.Engine
-    freetype
-    freetype-gl
-    libglew_static
     glfw
+    freetype-gl
+    freetype
+    libglew_static
+    ${GLFW_LIBRARIES}
     PARENT_SCOPE)
 
 target_include_directories ( Frontier.Engine PUBLIC

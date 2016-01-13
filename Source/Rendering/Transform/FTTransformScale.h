@@ -10,9 +10,9 @@ public:
 
     void setScale(const glm::vec3& scale) {
         scale_ = scale;
-        transform_matrix.getData()[0][0] = scale.x;
-        transform_matrix.getData()[1][1] = scale.y;
-        transform_matrix.getData()[2][2] = scale.z;
+        transform_matrix[0][0] = scale.x;
+        transform_matrix[1][1] = scale.y;
+        transform_matrix[2][2] = scale.z;
         transform_dirty_ = true;
     }
 

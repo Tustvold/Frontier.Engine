@@ -64,11 +64,11 @@ public:
 
     glm::vec3 unProject(const glm::vec3& mouse_pos) override {
         if (view_projection_matrix_inv_dirty_) {
-            view_projection_matrix_inv_ = glm::inverse(view_projection_matrix_.getConstData());
+            view_projection_matrix_inv_ = glm::inverse(view_projection_matrix_);
         }
         auto clip_space = convertScreenSpaceToNDC(mouse_pos);
 
-        glm::vec4 obj = view_projection_matrix_inv_.getConstData() * glm::vec4(clip_space,1);
+        glm::vec4 obj = view_projection_matrix_inv_ * glm::vec4(clip_space,1);
         obj /= obj.w;
 
         return glm::vec3(obj);
@@ -76,7 +76,7 @@ public:
 
 protected:
 
-    FTAlignedData<glm::vec4> frustrum_planes_[6];
+    glm::vec4 frustrum_planes_[6];
     glm::vec3 frustrum_planes_sign_flipped_[6];
 
     // View Matrix parameters

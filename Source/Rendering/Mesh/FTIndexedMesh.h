@@ -112,7 +112,7 @@ public:
     void draw() override {
         // TODO use appropriate gl index type for template parameter
         glDrawElements(
-            primitive_type_, // mode
+            FTMesh<VertexType>::primitive_type_, // mode
                         num_indices_, // count
                         GL_UNSIGNED_SHORT, // type
                         (void*)0 // element array buffer offset

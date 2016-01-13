@@ -4,7 +4,7 @@
 
 struct GLFWwindow;
 
-class FTKeyboardEventDispatcher : public FTEventDispatcher<FTKeyPressedEvent, FTKeyReleasedEvent> {
+class FTKeyboardEventDispatcher : public FTEventDispatcher<FTKeyPressedEvent, FTKeyReleasedEvent, FTKeyRepeatEvent> {
 public:
     FTKeyboardEventDispatcher();
     ~FTKeyboardEventDispatcher();

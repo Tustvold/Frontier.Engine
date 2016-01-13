@@ -1,11 +1,6 @@
 #pragma once
 #include "Frontier.h"
-#include <locale>
-#include <codecvt>
 
-// Supports char and wchar_t
-// Unfortunately Visual C++ doesn't properly support Unicode literals
-// And so we are stuck with the evil wchar_t
 template <typename CharacterType>
 class FTStringUtil {
 
@@ -14,35 +9,80 @@ class FTStringUtil {
 template <>
 class FTStringUtil<wchar_t> {
 public:
-    static wchar_t* formatString(wchar_t* buff, size_t buf_size, wchar_t* format...) {
+    static wchar_t* formatString(wchar_t* buff, size_t buf_size, const wchar_t* format...) {
         va_list args;
         va_start(args, format);
-        vswprintf_s((wchar_t*)buff, buf_size, format, args);
-        va_end(args);
-        return buff;
-    }
-
-    static std::string convertString(const std::wstring& from) {
-        typedef std::codecvt_utf8<wchar_t> convert_type;
-        std::wstring_convert<convert_type, wchar_t> converter;
-        return converter.to_bytes(from);
-    }
-};
-
-template <>
-class FTStringUtil<char> {
-public:
-    static char* formatString(char* buff, size_t buf_size, char* format...) {
-        va_list args;
-        va_start(args, format);
-        vsprintf_s(buff, buf_size, format, args);
+        
+#ifdef WIN32
+        vswprintf_s(buff, buf_size, format, args);
+#else
+        vswprintf(buff, buf_size, format, args);
+#endif
         va_end(args);
         return buff;
     }
 
     static std::wstring convertString(const std::string& from) {
-        typedef std::codecvt_utf8<wchar_t> convert_type;
-        std::wstring_convert<convert_type, wchar_t> converter;
-        return converter.from_bytes(from);
+        std::wstring ret;
+        mbstate_t mbs;
+        wchar_t buffer[32];
+        const char* source = from.c_str();
+        // Initialize mbs
+        memset(&mbs, 0, sizeof(mbs));
+
+        size_t written_bytes;
+        do {
+            
+#ifdef WIN32
+            mbsrtowcs_s(&written_bytes, buffer, 32, &source, 31, &mbs);
+#else
+            written_bytes = mbsrtowcs(buffer, &source, 32, &mbs);
+#endif
+
+            ret.append(buffer, buffer[written_bytes - 1] == 0 ? written_bytes - 1 : written_bytes);
+        } while (written_bytes == 32);
+
+        return ret;
+    }
+
+    
+};
+
+template <>
+class FTStringUtil<char> {
+public:
+    static char* formatString(char* buff, size_t buf_size, const char* format...) {
+        va_list args;
+        va_start(args, format);
+#ifdef WIN32
+        vsprintf_s(buff, buf_size, format, args);
+#else
+        vsprintf(buff, format, args);
+#endif
+        va_end(args);
+        return buff;
+    }
+
+    static std::string convertString(const std::wstring& from) {
+        std::string ret;
+        mbstate_t mbs;
+        char buffer[32];
+
+        const wchar_t* source = from.c_str();
+
+        // Initialize mbs
+        memset(&mbs, 0, sizeof(mbs));
+
+        size_t written_bytes;
+        do {
+#ifdef WIN32
+            wcsrtombs_s(&written_bytes, buffer, 32, &source, 31, &mbs);
+#else
+            written_bytes = wcsrtombs(buffer, &source, 32, &mbs);
+#endif            
+            // Don't append superfluous null terminators
+            ret.append(buffer, buffer[written_bytes-1] == 0 ? written_bytes-1 : written_bytes);
+        } while (written_bytes == 32);
+        return ret;
     }
 };

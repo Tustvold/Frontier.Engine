@@ -90,7 +90,7 @@ bool FTNode::updateMatrices(const glm::mat4& parent_matrix) {
         transform_matrix_ = position_transform_->getTransformMatrix() * rotate_scale_matrix;
     }
 
-    model_matrix_ = parent_matrix * transform_matrix_.getConstData();
+    model_matrix_ = parent_matrix * transform_matrix_;
 
     flags_ &= ~TransformDirty;
     model_matrix_inv_dirty_ = true;
@@ -108,7 +108,7 @@ void FTNode::visit(const glm::mat4& parent_matrix, bool parent_updated) {
         updateMatrices(parent_matrix);
 
     for (auto it = children_.begin(); it != children_.end(); ++it) {
-        (*it)->visit(model_matrix_.getConstData(), parent_updated || (original_dirty & ~ChildNodeDirty) != 0);
+        (*it)->visit(model_matrix_, parent_updated || (original_dirty & ~ChildNodeDirty) != 0);
     }
 
     if (original_dirty & AABDirtyMask || parent_updated)
@@ -121,7 +121,7 @@ void FTNode::performDraw(FTCamera* camera) {
     if (getHidden() || (flags_ & FrustrumCullEnabled && !isVisible(camera)))
         return;
 
-    glm::mat4 mvp = camera->getViewProjectionMatrix() * model_matrix_.getConstData();
+    glm::mat4 mvp = camera->getViewProjectionMatrix() * model_matrix_;
 
     this->pre_draw(mvp);
     this->draw();
@@ -137,7 +137,7 @@ void FTNode::updateAAB() {
     auto min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
     auto max = glm::vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 
-    const glm::mat4& model_matrix = model_matrix_.getConstData();
+    const glm::mat4& model_matrix = model_matrix_;
 
     if (size_ != glm::vec3(0, 0, 0)) {
         glm::vec4 positions[8] = {

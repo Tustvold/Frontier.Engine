@@ -4,7 +4,6 @@
 #include <Util/FTRect.h>
 #include <Event/FTEventManager.h>
 #include <Event/Window/FTWindowEventDispatcher.h>
-#include <Util/FTAlignedData.h>
 #include "FTRaycast.h"
 #include <Util/FTMath.h>
 
@@ -21,15 +20,15 @@ public:
     }
 
     const glm::mat4& getViewMatrix() const {
-        return view_matrix_.getConstData();
+        return view_matrix_;
     }
 
     const glm::mat4& getProjectionMatrix() const {
-        return projection_matrix_.getConstData();
+        return projection_matrix_;
     }
 
     const glm::mat4& getViewProjectionMatrix() const {
-        return view_projection_matrix_.getConstData();
+        return view_projection_matrix_;
     }
 
     virtual void visit() = 0;
@@ -91,10 +90,10 @@ public:
     }
 
 protected:
-    FTAlignedData<glm::mat4> projection_matrix_;
-    FTAlignedData<glm::mat4> view_matrix_;
-    FTAlignedData<glm::mat4> view_projection_matrix_;
-    FTAlignedData<glm::mat4> view_projection_matrix_inv_;
+    glm::mat4 projection_matrix_;
+    glm::mat4 view_matrix_;
+    glm::mat4 view_projection_matrix_;
+    glm::mat4 view_projection_matrix_inv_;
 
     FTRect<float> draw_rect_relative_;
     FTRect<int> draw_rect_abs_;

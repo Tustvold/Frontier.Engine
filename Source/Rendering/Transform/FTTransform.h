@@ -1,6 +1,5 @@
 #pragma once
 #include <glm/glm.hpp>
-#include <Util/FTAlignedData.h>
 
 // Creates and manages a transform
 class FTTransform {
@@ -16,7 +15,7 @@ public:
     // This matrix should only be accessed and altered from the draw thread
     const glm::mat4& getTransformMatrix() {
         updateMatrices();
-        return transform_matrix.getConstData();
+        return transform_matrix;
     }
 
     // Update this transform's matrix return true if it needed updating
@@ -33,6 +32,6 @@ public:
 protected:
 
     // This matrix should only be accessed and altered from the draw thread
-    FTAlignedData<glm::mat4> transform_matrix;
+    glm::mat4 transform_matrix;
     bool transform_dirty_;
 };

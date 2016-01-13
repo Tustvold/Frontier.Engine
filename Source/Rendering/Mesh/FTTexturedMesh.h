@@ -29,7 +29,7 @@ public:
     void draw() override {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture_->getTextureId());
-        glUniform1i(((FTVertexTextureShaderProgram*)current_shader_program_)->getTextureUniformId(), 0);
+        glUniform1i(((FTVertexTextureShaderProgram*)FTTexturedMeshBase_::current_shader_program_)->getTextureUniformId(), 0);
         FTTexturedMeshBase_::draw();
     }
 

@@ -186,17 +186,17 @@ public:
     }
 
     const glm::mat4& getTransformMatrix() const {
-        return transform_matrix_.getConstData();
+        return transform_matrix_;
     }
 
     const glm::mat4& getModelMatrix() const {
-        return model_matrix_.getConstData();
+        return model_matrix_;
     }
 
     const glm::mat4& getModelMatrixInverse() {
         if (model_matrix_inv_dirty_)
-            model_matrix_inv_ = glm::inverse(model_matrix_.getConstData());
-        return model_matrix_inv_.getConstData();
+            model_matrix_inv_ = glm::inverse(model_matrix_);
+        return model_matrix_inv_;
     }
 
     bool hasAAB() const {
@@ -244,9 +244,9 @@ protected:
     std::unique_ptr<FTTransformPosition> position_transform_;
     std::unique_ptr<FTTransformScale> scale_transform_;
 
-    FTAlignedData<glm::mat4> transform_matrix_;
-    FTAlignedData<glm::mat4> model_matrix_;
-    FTAlignedData<glm::mat4> model_matrix_inv_;
+    glm::mat4 transform_matrix_;
+    glm::mat4 model_matrix_;
+    glm::mat4 model_matrix_inv_;
     bool model_matrix_inv_dirty_;
 
     std::vector<std::shared_ptr<FTNode>> children_;

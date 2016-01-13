@@ -21,5 +21,7 @@ void FTKeyboardEventDispatcher::keyPressedEvent(GLFWwindow* window, int key, int
         raiseEvent(FTKeyPressedEvent(key, scancode, mods));
     } else if (action == GLFW_RELEASE) {
         raiseEvent(FTKeyReleasedEvent(key, scancode, mods));
+    } else if (action == GLFW_REPEAT) {
+        raiseEvent(FTKeyRepeatEvent(key, scancode, mods));
     }
 }

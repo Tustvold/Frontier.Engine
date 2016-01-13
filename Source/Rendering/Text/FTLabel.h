@@ -28,5 +28,5 @@ protected:
     int font_size_;
 
 private:
-    void load(const std::string& fontpath, const std::basic_string<wchar_t>& text);
+    void load(const std::string& fontpath, const std::wstring& text);
 };

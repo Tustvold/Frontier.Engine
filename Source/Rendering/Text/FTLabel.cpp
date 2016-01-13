@@ -17,10 +17,10 @@ FTIndexedTexturedMesh(shader),
 is_mutable_(is_mutable),
 font_size_(font_size) {
 
-    load(fontpath, FTStringUtil<char>::convertString(text));
+    load(fontpath, FTStringUtil<wchar_t>::convertString(text));
 }
 
-void FTLabel::load(const std::string& fontpath, const std::basic_string<wchar_t>& text) {
+void FTLabel::load(const std::string& fontpath, const std::wstring& text) {
     font_ = FTEngine::getDirector()->getFontCache()->getFont(fontpath);
 
     glm::vec2 pen;

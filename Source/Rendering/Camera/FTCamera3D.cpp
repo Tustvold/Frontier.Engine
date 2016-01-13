@@ -33,7 +33,7 @@ void FTCamera3D::visit() {
         view_matrix_ = glm::lookAt(position_, look_direction_ + position_, up_vector_);
     }
     if (view_matrix_dirty_ || projection_matrix_dirty_) {
-        view_projection_matrix_ = projection_matrix_.getData() * view_matrix_.getData();
+        view_projection_matrix_ = projection_matrix_ * view_matrix_;
         if (update_view_frustrum_)
             regenerateViewFrustrum();
         view_matrix_dirty_ = false;
@@ -63,7 +63,7 @@ FTRaycast FTCamera3D::generateRaycastForMousePos(double x, double y) {
 bool FTCamera3D::testBoundingBox(glm::vec3& center, glm::vec3& halfextents) const {
     for (int i = 0; i < 6; i++) {
         glm::vec3 res = center + vec3xor(halfextents, frustrum_planes_sign_flipped_[i]);
-        if (glm::dot(res, *(glm::vec3*)&(frustrum_planes_[i].getConstData())) <= -frustrum_planes_[i].getConstData().w)
+        if (glm::dot(res, *(glm::vec3*)&(frustrum_planes_[i])) <= -frustrum_planes_[i].w)
             return false;
     }
     return true;
@@ -93,38 +93,38 @@ static inline float floatAnd(float f) {
 }
 
 void FTCamera3D::regenerateViewFrustrum() {
-    glm::mat4 matrix = projection_matrix_.getData() * view_matrix_.getData();
+    glm::mat4 matrix = projection_matrix_ * view_matrix_;
     glm::vec4 row1 = glm::row(matrix, 0);
     glm::vec4 row2 = glm::row(matrix, 1);
     glm::vec4 row3 = glm::row(matrix, 2);
     glm::vec4 row4 = glm::row(matrix, 3);
 
     // Near Plane
-    glm::vec4& data0 = frustrum_planes_[0].getData();
+    glm::vec4& data0 = frustrum_planes_[0];
     data0 = normalizeVec4(row4 + row3);
     frustrum_planes_sign_flipped_[0] = glm::vec3(floatAnd(data0.x), floatAnd(data0.y), floatAnd(data0.z));
     // Far Plane
-    glm::vec4& data1 = frustrum_planes_[1].getData();
+    glm::vec4& data1 = frustrum_planes_[1];
     data1 = normalizeVec4(row4 - row3);
     frustrum_planes_sign_flipped_[1] = glm::vec3(floatAnd(data1.x), floatAnd(data1.y), floatAnd(data1.z));
 
     // Left Plane
-    glm::vec4& data2 = frustrum_planes_[2].getData();
+    glm::vec4& data2 = frustrum_planes_[2];
     data2 = normalizeVec4(row4 + row1);
     frustrum_planes_sign_flipped_[2] = glm::vec3(floatAnd(data2.x), floatAnd(data2.y), floatAnd(data2.z));
 
     // Right Plane
-    glm::vec4& data3 = frustrum_planes_[3].getData();
+    glm::vec4& data3 = frustrum_planes_[3];
     data3 = normalizeVec4(row4 - row1);
     frustrum_planes_sign_flipped_[3] = glm::vec3(floatAnd(data3.x), floatAnd(data3.y), floatAnd(data3.z));
 
     // Top Plane
-    glm::vec4& data4 = frustrum_planes_[4].getData();
+    glm::vec4& data4 = frustrum_planes_[4];
     data4 = normalizeVec4(row4 + row2);
     frustrum_planes_sign_flipped_[4] = glm::vec3(floatAnd(data4.x), floatAnd(data4.y), floatAnd(data4.z));
 
     // Bottom Plane
-    glm::vec4& data5 = frustrum_planes_[5].getData();
+    glm::vec4& data5 = frustrum_planes_[5];
     data5 = normalizeVec4(row4 - row2);
     frustrum_planes_sign_flipped_[5] = glm::vec3(floatAnd(data5.x), floatAnd(data5.y), floatAnd(data5.z));
 }
