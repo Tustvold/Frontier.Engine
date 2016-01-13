@@ -5,5 +5,5 @@ install:
   - sudo apt-get -y update
   - sudo apt-get -y install cmake gcc
 script:
-  - scripts/travis-run-tests.sh
+  - Scripts/travis-run-tests.sh
 
