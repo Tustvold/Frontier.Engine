@@ -3,7 +3,7 @@
 # Log commands and exit on error
 set -xe
 
-#mkdir Build-Unix
+mkdir Build-Unix
 cd Build-Unix
 cmake .. -G "Unix Makefiles"
 
