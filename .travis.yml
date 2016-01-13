@@ -3,7 +3,7 @@ sudo: required
 dist: trusty
 install:
   - sudo apt-get -y update
-  - sudo apt-get -y install cmake gcc
+  - sudo apt-get -y install cmake gcc x11-xserver-utils
 
 before_script:
  - chmod +x Scripts/travis-run-tests.sh
