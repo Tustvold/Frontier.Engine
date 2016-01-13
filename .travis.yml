@@ -4,6 +4,10 @@ dist: trusty
 install:
   - sudo apt-get -y update
   - sudo apt-get -y install cmake gcc
+
+before_script:
+ - chmod +x Scripts/travis-run-tests.sh
+ 
 script:
   - Scripts/travis-run-tests.sh
 
