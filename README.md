@@ -1,6 +1,9 @@
 Frontier.Engine
 ===============
 
+[![Build status](https://ci.appveyor.com/api/projects/status/evama8ofc04v2d3m?svg=true)](https://ci.appveyor.com/project/Tustvold/frontier-engine)
+[![Build status](https://travis-ci.org/Tustvold/Frontier.Engine.svg)](https://travis-ci.org/Tustvold/Frontier.Engine)
+
 ## Description
 
 A wrapper around OpenGL which provides some basic functionality (Shaders, VAO Management, Truetype Font Rendering, etc).
