@@ -1,3 +1,5 @@
+project(Frontier.Engine)
+
 cmake_minimum_required(VERSION 3.2)
 SET( CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules"
                        "${CMAKE_MODULE_PATH}" )
@@ -11,8 +13,57 @@ option( freetype-gl_BUILD_APIDOC "Build the freetype-gl API documentation" OFF)
 option( GLFW_INSTALL "Generate Installation Target" OFF)
 option( GLFW_BUILD_EXAMPLES "Build the GLFW example programs" OFF)
 option( GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
+option(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)
 
 add_definitions(-DGLEW_STATIC)
+
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+
+# Rebind these to group up all the ThirdParty Projects so they don't clutter up the IDE
+macro (add_library name)
+    set (IS_INTERFACE 0)
+    FOREACH (e ${ARGN})
+        if (e STREQUAL "INTERFACE" OR e STREQUAL "IMPORTED")
+            set (IS_INTERFACE 1)
+        endif (e STREQUAL "INTERFACE" OR e STREQUAL "IMPORTED")
+    ENDFOREACH(e)
+
+
+    if (${IS_INTERFACE})
+        _add_library(${name} ${ARGN})
+    else (${IS_INTERFACE})
+        string(REPLACE ${CMAKE_SOURCE_DIR}/ "" FOLDER "${CMAKE_CURRENT_SOURCE_DIR}")
+        string(REPLACE "/" "//" FOLDER "${FOLDER}")
+
+        _add_library (${name} ${ARGN})
+        set_target_properties(${name} PROPERTIES FOLDER ${FOLDER})
+    endif (${IS_INTERFACE})
+endmacro (add_library)
+
+macro (add_executable name)
+    set (IS_INTERFACE 0)
+    FOREACH (e ${ARGN})
+        if (e STREQUAL "INTERFACE")
+            set (IS_INTERFACE 1)
+        endif (e STREQUAL "INTERFACE")
+    ENDFOREACH(e)
+
+
+
+    if (${IS_INTERFACE})
+        _add_executable(${name} ${ARGN})
+    else (${IS_INTERFACE})
+        string(REPLACE ${CMAKE_SOURCE_DIR}/ "" FOLDER "${CMAKE_CURRENT_SOURCE_DIR}")
+        string(REPLACE "/" "//" FOLDER "${FOLDER}")
+
+        _add_executable (${name} ${ARGN})
+        set_target_properties(${name} PROPERTIES FOLDER ${FOLDER})
+
+    endif (${IS_INTERFACE})
+endmacro (add_executable)
 
 # Set variables for freetype-gl
 set(GLEW_LIBRARY libglew_static)
@@ -32,6 +83,9 @@ add_subdirectory(ThirdParty/glmock)
 
 # We disable this project as it doesn't build correctly on windows
 set_target_properties(makefont PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
+
+# Make GLFW's folder consistent
+set_target_properties(glfw PROPERTIES FOLDER Frontier.Engine//ThirdParty//glfw)
 
 # We can use GLOB here as in order for a CMakeList to be used a pre-existing one
 # must have been modified and therefore the build system will know to rebuild
@@ -56,9 +110,8 @@ SET (FRONTIER_ENGINE_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glew/include
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glfw/include/GLFW
     ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glm
+    CACHE INTERNAL "Include Directories for Frontier.Engine"
 )
-
-SET (FRONTIER_ENGINE_INCLUDES ${FRONTIER_ENGINE_INCLUDES} PARENT_SCOPE)
 
 SET (FRONTIER_ENGINE_LIBS
     Frontier.Engine
@@ -67,16 +120,13 @@ SET (FRONTIER_ENGINE_LIBS
     freetype
     libglew_static
     ${GLFW_LIBRARIES}
-    PARENT_SCOPE)
+    CACHE INTERNAL "Dependencies of Frontier.Engine")
 
 target_include_directories ( Frontier.Engine PUBLIC
     ${FRONTIER_ENGINE_INCLUDES}
 )
-target_compile_features ( Frontier.Engine PRIVATE cxx_static_assert
-    cxx_auto_type )
 
 # Testing
-option(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)
 add_subdirectory(ThirdParty/googletest/googlemock)
 
 add_subdirectory(Tests)
