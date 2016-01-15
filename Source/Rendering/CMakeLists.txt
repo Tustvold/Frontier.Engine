@@ -6,6 +6,7 @@ add_subdirectory(Text)
 add_subdirectory(Textures)
 add_subdirectory(Transform)
 add_subdirectory(Action)
+add_subdirectory(BoundingShape)
 
 set (SOURCES ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTDirector.cpp

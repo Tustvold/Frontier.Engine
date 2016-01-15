@@ -14,11 +14,6 @@ void FTCamera2D::visit() {
     }
 }
 
-bool FTCamera2D::testNodeVisible(const FTNode* node) const {
-    if (!node->hasAAB())
-        return true;
-    auto& center = node->getAABCenter();
-    auto& half_extents = node->getAABHalfExtents();
-
+bool FTCamera2D::testBoundingBox(const glm::vec3& center, const glm::vec3& half_extents) const {
     return center.x - half_extents.x <= draw_rect_abs_.x_ + draw_rect_abs_.width_ && center.x + half_extents.x >= draw_rect_abs_.x_ && center.y - half_extents.y <= draw_rect_abs_.y_ + draw_rect_abs_.height_ && center.y + half_extents.y >= draw_rect_abs_.y_;
 }

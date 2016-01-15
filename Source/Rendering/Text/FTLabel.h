@@ -4,9 +4,9 @@
 #include "FTFont.h"
 #include <Rendering/Shader/FTFontShader.h>
 
-class FTLabel : public FTIndexedTexturedMesh<FTVertexColorTexture<glm::vec2>, uint16_t> {
+class FTLabel : public FTIndexedTexturedMesh<FTVertexTexture<glm::vec2>, uint16_t> {
 private:
-    typedef FTIndexedTexturedMesh<FTVertexColorTexture<glm::vec2>, uint16_t> FTLabelBase_;
+    typedef FTIndexedTexturedMesh<FTVertexTexture<glm::vec2>, uint16_t> FTLabelBase_;
 public:
     
     FTLabel(const std::string& fontpath, const std::wstring& text, int font_size, bool is_mutable = false, FTFontShader* shader = FTShaderNode::getShaderUtil<FTFontShader>());
@@ -20,10 +20,11 @@ public:
     void post_draw() override;
 
 protected:
-    std::shared_ptr<FTIndexedMeshData<FTVertexColorTexture<glm::vec2>, uint16_t>> mesh_data_;
+    std::shared_ptr<FTFontMeshData> mesh_data_;
     std::shared_ptr<FTFont> font_;
     std::basic_string<wchar_t> text_;
 
+    glm::vec3 fill_color_;
     bool is_mutable_;
     int font_size_;
 

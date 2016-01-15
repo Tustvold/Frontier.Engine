@@ -3,6 +3,7 @@
 #include <Rendering/FTShaderNode.h>
 #include <Util/FTMath.h>
 #include <Rendering/Mesh/FTVertex.h>
+#include <Rendering/BoundingShape/FTBoundingCuboid.h>
 
 
 template <typename VertexType>
@@ -47,42 +48,49 @@ public:
         return primitive_type_;
     }
 
-    void setSize(const glm::vec3& size) {
-        size_ = size;
+    void setBoundingShape(const std::shared_ptr<FTBoundingShape>& shape) {
+        bounding_shape_ = shape;
     }
 
-    const glm::vec3& getSize() const {
-        return size_;
+    void setBoundingShape(std::shared_ptr<FTBoundingShape>&& shape) {
+        bounding_shape_ = shape;
     }
 
-    void computeSize() {
+    const std::shared_ptr<FTBoundingShape>& getBoundingShape() const {
+        return bounding_shape_;
+    }
+
+    void computeShape() {
+        auto min = VertexType(FLT_MAX);
         auto max = VertexType(-FLT_MAX);
         for (auto it = vertices_.begin(); it != vertices_.end(); ++it) {
             max = glm::max(max, *it);
+            min = glm::min(min, *it);
         }
-        setSize(max);
+        setBoundingShape(std::make_shared<FTBoundingCuboid>(min, max - min));
     }
 
-private:
+protected:
     std::vector<VertexType> vertices_;
     size_t vertex_count_;
     GLenum primitive_type_;
-    glm::vec3 size_;
+    std::shared_ptr<FTBoundingShape> bounding_shape_;
 };
 
 template <typename VertexType>
 class FTMesh : public FTShaderNode {
 public:
+    typedef FTMeshData<VertexType> MeshData;
 
-    explicit FTMesh(FTVertexShaderProgram* program = getShaderUtil<FTVertexShaderProgram>()) : 
-        FTShaderNode(program), 
-        vertex_array_id_(0), 
-        vertex_buffer_id_(0), 
-        num_vertices_(0), 
-        max_num_vertices_(0), 
-        primitive_type_(GL_TRIANGLES), 
-        render_wireframe_(false), 
-        is_loaded_(false), 
+    explicit FTMesh(FTVertexShaderProgram* program = getShaderUtil<FTVertexShaderProgram>()) :
+        FTShaderNode(program),
+        vertex_array_id_(0),
+        vertex_buffer_id_(0),
+        num_vertices_(0),
+        max_num_vertices_(0),
+        primitive_type_(GL_TRIANGLES),
+        render_wireframe_(false),
+        is_loaded_(false),
         is_static_(true) {
 
     }
@@ -121,7 +129,7 @@ public:
 
     // Loads a mesh described by an FTMesh object
     // Cleanup specifies whether it should unbind the VAO after it has finished creating it
-    void loadMeshData(FTMeshData<VertexType>* data, bool is_static, bool cleanup = true) {
+    void loadMeshData(MeshData* data, bool is_static, bool cleanup = true) {
         FTAssert(!is_loaded_, "Trying to load mesh data for already loaded mesh");
         is_static_ = is_static;
 
@@ -129,8 +137,8 @@ public:
         max_num_vertices_ = (GLuint)data->getVertexCount();
         primitive_type_ = data->getPrimitiveType();
 
-        if (data->getSize() != glm::vec3())
-            setSize(data->getSize());
+        if (data->getBoundingShape() != nullptr)
+            setBoundingShape(data->getBoundingShape());
 
         glGenVertexArrays(1, &vertex_array_id_);
 
@@ -170,11 +178,12 @@ public:
         glBufferData(GL_ARRAY_BUFFER, max_num_vertices_ * sizeof(VertexType), data, GL_DYNAMIC_DRAW);
     }
 
-    void setMeshData(FTMeshData<VertexType>* data) {
+    void setMeshData(MeshData* data) {
         FTAssert(is_loaded_, "Trying to set mesh data for unloaded mesh - consider using LoadMeshData instead");
 
         primitive_type_ = data->getPrimitiveType();
-        setSize(data->getSize());
+        if (data->getBoundingShape() != nullptr)
+            setBoundingShape(data->getBoundingShape());
 
         // Update mesh data
         if (max_num_vertices_ >= data->getVertexCount()) {
@@ -245,3 +254,4 @@ protected:
     bool is_loaded_;
     bool is_static_;
 };
+

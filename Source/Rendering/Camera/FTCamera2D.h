@@ -27,5 +27,5 @@ public:
 
     void visit() override;
 
-    bool testNodeVisible(const FTNode* node) const override;
+    bool testBoundingBox(const glm::vec3& aab_origin, const glm::vec3& aab_half_extents) const override;
 };

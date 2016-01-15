@@ -2,6 +2,7 @@
 #include <FTEngine.h>
 #include <Rendering/FTShaderNode.h>
 #include <Mock/ExpectUtils.h>
+#include <Rendering/BoundingShape/FTBoundingCuboid.h>
 
 class MockNodeTransform : public FTNode {
 public:
@@ -34,12 +35,6 @@ TEST(TestNodeTransform, TestGetSet) {
 
     node->setScale(glm::vec2(3, 8));
     EXPECT_EQ(node->getScale(), glm::vec3(3, 8, 1));
-
-    node->setSize(glm::vec3(1, 5, 21));
-    EXPECT_EQ(node->getSize(), glm::vec3(1, 5, 21));
-
-    node->setSize(glm::vec2(3, 8));
-    EXPECT_EQ(node->getSize(), glm::vec3(3, 8, 0));
 
     auto quat = glm::angleAxis(0.0f, glm::vec3(0, 0, 1));
     node->setRotationQuaternion(quat);
@@ -95,7 +90,7 @@ TEST(TestNodeTransform, TestAnchorPointSimple) {
 
     expectMatrixEqual(node->getPositionTransform()->getTransformMatrix(), glm::mat4());
     node->setPosition(glm::vec3(5, 3, 9));
-    node->setSize(glm::vec3(48, 24, 96));
+    node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(48, 24, 96)));
     node->setAnchorPoint(glm::vec3(0.25f, 0.75f, 0.3f));
     node->visit(glm::mat4(), false);
 
@@ -116,7 +111,7 @@ TEST(TestNodeTransform, TestAnchorPointScale) {
 
     expectMatrixEqual(node->getPositionTransform()->getTransformMatrix(), glm::mat4());
     node->setPosition(glm::vec3(5, 3, 9));
-    node->setSize(glm::vec3(48, 24, 96));
+    node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(48, 24, 96)));
     node->setScale(glm::vec3(56, 3, 9));
     node->setAnchorPoint(glm::vec3(0.25f, 0.75f, 0.3f));
     node->visit(glm::mat4(), false);
@@ -138,7 +133,7 @@ TEST(TestNodeTransform, TestAnchorPointRotate) {
 
     expectMatrixEqual(node->getPositionTransform()->getTransformMatrix(), glm::mat4());
     node->setPosition(glm::vec3(5, 3, 9));
-    node->setSize(glm::vec3(48, 24, 96));
+    node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(48, 24, 96)));
     node->setScale(glm::vec3(56, 3, 9));
     node->setRotationQuaternion(glm::angleAxis((float)M_PI_2, glm::vec3(0, 0, 1)));
     node->setAnchorPoint(glm::vec3(0.25f, 0.75f, 0.3f));

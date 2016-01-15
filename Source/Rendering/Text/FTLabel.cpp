@@ -23,17 +23,12 @@ font_size_(font_size) {
 void FTLabel::load(const std::string& fontpath, const std::wstring& text) {
     font_ = FTEngine::getDirector()->getFontCache()->getFont(fontpath);
 
-    glm::vec2 pen;
-    auto data = construct_unique(font_->generateMeshForString(text, font_size_, pen));
-    data->setSize(glm::vec3(pen.x, pen.y, 0));
+    mesh_data_ = font_->generateMeshForString(text, font_size_);
 
     auto texture = font_->getTexture();
 
     setTexture(texture);
-    loadIndexedMeshData(data.get(), !is_mutable_);
-
-    if (is_mutable_)
-        mesh_data_ = std::move(data);
+    loadIndexedMeshData(mesh_data_.get(), !is_mutable_);
 
     text_ = text;
 }
@@ -47,6 +42,9 @@ void FTLabel::pre_draw(const glm::mat4& mvp) {
     FTLabelBase_::pre_draw(mvp);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
+    auto shader = (FTFontShader*)current_shader_program_;
+    glUniform3f(shader->getFillColorUniformID(), fill_color_.x, fill_color_.y, fill_color_.z);
+
 }
 
 void FTLabel::post_draw() {
@@ -58,16 +56,13 @@ void FTLabel::setString(const wchar_t* text) {
     if (text_ == text)
         return;
 
-    text_ = text;
-
     FTAssert(is_mutable_, "Trying to change immutable FTLabel!");
+
+    text_ = text;
 
     mesh_data_->getIndices().clear();
     mesh_data_->getVertices().clear();
 
-    glm::vec2 pen;
-    font_->populateMeshDataForString(mesh_data_.get(), text, font_size_, pen);
+    font_->populateMeshDataForString(mesh_data_.get(), text, font_size_);
     setIndexedMeshData(mesh_data_.get());
-
-    setSize(glm::vec3(pen.x, pen.y, 0));
 }

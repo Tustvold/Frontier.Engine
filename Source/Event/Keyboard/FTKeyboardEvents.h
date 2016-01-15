@@ -45,3 +45,17 @@ public:
         return key_ == other.key_ && scancode_ == other.scancode_ && mods_ == other.mods_;
     }
 };
+
+struct FTCharInputEvent : public FTEvent {
+public:
+    FTCharInputEvent(wchar_t character, int mods) : character_(character), mods_(mods) {
+        
+    }
+
+    wchar_t character_;
+    int mods_;
+
+    bool operator==(const FTCharInputEvent& other) const {
+        return character_ == other.character_ && mods_ == other.mods_;
+    }
+};

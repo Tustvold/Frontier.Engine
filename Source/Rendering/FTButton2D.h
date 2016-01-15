@@ -16,8 +16,6 @@ public:
     
     virtual ~FTButton2D();
 
-    virtual bool rendererContainsMousePoint(double x, double y);
-
     bool onMouseDown(const FTMouseButtonPressedEvent& event) override;
     void onMouseDrag(const FTMouseMoveEvent&, int mouse_button) override;
     void onMouseRelease(const FTMouseButtonReleasedEvent& event) override;
@@ -56,10 +54,6 @@ public:
 
     const glm::vec3& getScale() const override {
         return renderer_->getScale();
-    }
-
-    const glm::vec3& getSize() const override {
-        return renderer_->getSize();
     }
 
     void setTag(int tag) {

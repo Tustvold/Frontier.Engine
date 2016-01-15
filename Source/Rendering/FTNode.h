@@ -5,6 +5,7 @@
 #include <vector>
 #include "Action/FTAction.h"
 #include <Event/Input/FTMouseDelegate.h>
+#include "BoundingShape/FTBoundingShape.h"
 
 class FTView;
 class FTScene;
@@ -22,34 +23,33 @@ public:
         IsActive = 1 << 3,
         ActionsPaused = 1 << 4,
         MouseInputEnabled = 1 << 5,
-        HasAAB = 1 << 6,
-        IsHidden = 1 << 7,
+        IsHidden = 1 << 6,
         
         InitialFlags = FrustrumCullEnabled | TransformDirty | ChildNodeDirty
     };
 
     enum Masks {
         DirtyMask = TransformDirty | ChildNodeDirty,
-        AABDirtyMask = TransformDirty | ChildNodeDirty,
+        BoundingShapeDirtyMask = TransformDirty | ChildNodeDirty,
     };
 
     FTNode();
 
     virtual ~FTNode();
 
-    virtual bool onMouseDown(const FTMouseButtonPressedEvent& event) override {
+    bool onMouseDown(const FTMouseButtonPressedEvent& event) override {
         return false;
     }
 
-    virtual void onMouseDrag(const FTMouseMoveEvent&, int mouse_button) override {
+    void onMouseDrag(const FTMouseMoveEvent&, int mouse_button) override {
 
     }
 
-    virtual void onMouseRelease(const FTMouseButtonReleasedEvent& event) override {
+    void onMouseRelease(const FTMouseButtonReleasedEvent& event) override {
 
     }
 
-    virtual bool onMouseMove(const FTMouseMoveEvent& event) override {
+    bool onMouseMove(const FTMouseMoveEvent& event) override {
         return false;
     }
 
@@ -67,7 +67,7 @@ public:
     virtual void pre_draw(const glm::mat4& mvp) {
     }
 
-    virtual void draw() override {
+    void draw() override {
     }
 
     virtual void post_draw() {
@@ -95,8 +95,6 @@ public:
     void setPosition(const glm::vec3& position) {
         setDirty(TransformDirty);
         unaltered_position_ = position;
-
-        position_transform_->setPosition(position - anchor_point_ * size_);
     }
 
     void setScale(const glm::vec2& scale) {
@@ -125,19 +123,6 @@ public:
         return scale_transform_->getScale();
     }
 
-    void setSize(const glm::vec2& size) {
-        setSize(glm::vec3(size.x, size.y, 0));
-    }
-
-    void setSize(const glm::vec3& size) {
-        setDirty(TransformDirty);
-        size_ = size;
-    }
-
-    virtual const glm::vec3& getSize() const {
-        return size_;
-    }
-
     void setAnchorPoint(const glm::vec2& anchor_point) {
         setAnchorPoint(glm::vec3(anchor_point.x, anchor_point.y, 0));
     }
@@ -154,17 +139,7 @@ public:
             flags_ &= ~FrustrumCullEnabled;
     }
 
-    virtual bool updateMatrices(const glm::mat4& parent_matrix);
-
-    virtual void updateAAB();
-
-    const glm::vec3& getAABCenter() const {
-        return aab_center_;
-    }
-
-    const glm::vec3& getAABHalfExtents() const {
-        return aab_extents_;
-    }
+    virtual bool updateTransformMatrices(const glm::mat4& parent_matrix);
 
     bool getActionsPaused() const {
         return (flags_ & ActionsPaused) != 0;
@@ -199,10 +174,6 @@ public:
         return model_matrix_inv_;
     }
 
-    bool hasAAB() const {
-        return (flags_ & HasAAB) != 0;
-    }
-
     void removeChild(FTNode* node);
 
     void removeFromParent() {
@@ -228,17 +199,33 @@ public:
         return children_;
     }
 
+    const std::shared_ptr<FTBoundingShape>& getBoundingShape() const {
+        return bounding_shape_;
+    }
+
+    void setBoundingShape(const std::shared_ptr<FTBoundingShape>& shape) {
+        bounding_shape_ = shape;
+        bounding_shape_->onAddedToNode(this);
+    }
+
+    void setBoundingShape(std::shared_ptr<FTBoundingShape>&& shape) {
+        bounding_shape_ = std::move(shape);
+        bounding_shape_->onAddedToNode(this);
+    }
+
     glm::vec3 convertMouseToLocalCoordinates(const glm::vec2& mouse_coords);
 
+    bool containsMousePosition(const glm::vec2& mouse_coords) {
+        return bounding_shape_->containsMousePosition(mouse_coords);
+    }
+
 protected:
-    glm::vec3 size_;
+    std::shared_ptr<FTBoundingShape> bounding_shape_;
     glm::vec3 anchor_point_;
+
     glm::vec3 unaltered_position_;
 
     int flags_;
-
-    glm::vec3 aab_center_;
-    glm::vec3 aab_extents_;
 
     std::unique_ptr<FTTransformRotation> rotation_transform_;
     std::unique_ptr<FTTransformPosition> position_transform_;

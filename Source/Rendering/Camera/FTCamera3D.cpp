@@ -42,13 +42,13 @@ void FTCamera3D::visit() {
     }
 }
 
-bool FTCamera3D::testNodeVisible(const FTNode* node) const {
-    if (!node->hasAAB())
-        return true;
-    glm::vec3 half_extents = node->getAABHalfExtents();
-    glm::vec3 center = node->getAABCenter();
-
-    return testBoundingBox(center, half_extents);
+bool FTCamera3D::testBoundingBox(const glm::vec3& aab_center, const glm::vec3& aab_half_extents) const {
+    for (int i = 0; i < 6; i++) {
+        glm::vec3 res = aab_center + vec3xor(aab_half_extents, frustrum_planes_sign_flipped_[i]);
+        if (glm::dot(res, *(glm::vec3*)&(frustrum_planes_[i])) <= -frustrum_planes_[i].w)
+            return false;
+    }
+    return true;
 }
 
 FTRaycast FTCamera3D::generateRaycastForMousePos(double x, double y) {
@@ -58,15 +58,6 @@ FTRaycast FTCamera3D::generateRaycastForMousePos(double x, double y) {
     glm::vec3 direction = glm::vec3(far_vector.x - near_vector.x, far_vector.y - near_vector.y, far_vector.z - near_vector.z);
     direction = glm::normalize(direction);
     return FTRaycast(position_, direction);
-}
-
-bool FTCamera3D::testBoundingBox(glm::vec3& center, glm::vec3& halfextents) const {
-    for (int i = 0; i < 6; i++) {
-        glm::vec3 res = center + vec3xor(halfextents, frustrum_planes_sign_flipped_[i]);
-        if (glm::dot(res, *(glm::vec3*)&(frustrum_planes_[i])) <= -frustrum_planes_[i].w)
-            return false;
-    }
-    return true;
 }
 
 glm::vec4 normalizeVec4(const glm::vec4& vec) {

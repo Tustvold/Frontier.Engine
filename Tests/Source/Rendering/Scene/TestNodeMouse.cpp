@@ -33,7 +33,7 @@ TEST(TestNodeMouse, TestMousePress) {
         testing::Mock::VerifyAndClearExpectations(listener.get());
 
         listener->setMouseInputEnabled(true);
-        EXPECT_CALL(*listener, onMouseDown(FTMouseButtonPressedEvent(200, 100, GLFW_MOUSE_BUTTON_LEFT, false)));
+        EXPECT_CALL(*listener, onMouseDown(FTMouseButtonPressedEvent(glm::vec2(200, 100), GLFW_MOUSE_BUTTON_LEFT, false)));
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
         testing::Mock::VerifyAndClearExpectations(listener.get());
 
@@ -43,7 +43,7 @@ TEST(TestNodeMouse, TestMousePress) {
         testing::Mock::VerifyAndClearExpectations(listener.get());
 
         listener->setMouseInputEnabled(true);
-        EXPECT_CALL(*listener, onMouseDown(FTMouseButtonPressedEvent(200, 100, GLFW_MOUSE_BUTTON_LEFT, false)));
+        EXPECT_CALL(*listener, onMouseDown(FTMouseButtonPressedEvent(glm::vec2(200, 100), GLFW_MOUSE_BUTTON_LEFT, false)));
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
         testing::Mock::VerifyAndClearExpectations(listener.get());
     }

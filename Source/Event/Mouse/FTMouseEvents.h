@@ -3,20 +3,15 @@
 
 struct FTMouseMoveEvent : public FTEvent {
 public:
-    FTMouseMoveEvent(double x, double y, double delta_x, double delta_y) : x_(x), y_(y), delta_x_(delta_x), delta_y_(delta_y) {
+    FTMouseMoveEvent(const glm::vec2& pos, const glm::vec2& delta) : cursor_pos_(pos), delta_(delta) {
 
     }
 
-    double x_;
-    double y_;
-    double delta_x_;
-    double delta_y_;
+    glm::vec2 cursor_pos_;
+    glm::vec2 delta_;
 
     friend bool operator==(const FTMouseMoveEvent& lhs, const FTMouseMoveEvent& rhs) {
-        return lhs.x_ == rhs.x_
-            && lhs.y_ == rhs.y_
-            && lhs.delta_x_ == rhs.delta_x_
-            && lhs.delta_y_ == rhs.delta_y_;
+        return lhs.cursor_pos_ == rhs.cursor_pos_ && lhs.delta_ == rhs.delta_;
     }
 
     friend bool operator!=(const FTMouseMoveEvent& lhs, const FTMouseMoveEvent& rhs) {
@@ -34,19 +29,17 @@ struct FTMouseExitEvent : public FTEvent {
 
 struct FTMouseButtonPressedEvent : public FTEvent {
 
-    FTMouseButtonPressedEvent(double cursor_x, double cursor_y, int mouse_button, bool outside_window)
-        : cursor_x_(cursor_x), cursor_y_(cursor_y), mouse_button_(mouse_button), outside_window_(outside_window) {
+    FTMouseButtonPressedEvent(const glm::vec2& cursor_pos, int mouse_button, bool outside_window)
+        : cursor_pos_(cursor_pos), mouse_button_(mouse_button), outside_window_(outside_window) {
     }
 
-    double cursor_x_;
-    double cursor_y_;
+    glm::vec2 cursor_pos_;
     int mouse_button_;
     bool outside_window_;
 
 
     friend bool operator==(const FTMouseButtonPressedEvent& lhs, const FTMouseButtonPressedEvent& rhs) {
-        return lhs.cursor_x_ == rhs.cursor_x_
-            && lhs.cursor_y_ == rhs.cursor_y_
+        return lhs.cursor_pos_ == rhs.cursor_pos_
             && lhs.mouse_button_ == rhs.mouse_button_
             && lhs.outside_window_ == rhs.outside_window_;
     }
@@ -57,19 +50,17 @@ struct FTMouseButtonPressedEvent : public FTEvent {
 };
 
 struct FTMouseButtonReleasedEvent : public FTEvent {
-    FTMouseButtonReleasedEvent(double cursor_x, double cursor_y, int mouse_button, bool outside_window)
-        : cursor_x_(cursor_x), cursor_y_(cursor_y), mouse_button_(mouse_button), outside_window_(outside_window) {
+    FTMouseButtonReleasedEvent(const glm::vec2& cursor_pos, int mouse_button, bool outside_window)
+        : cursor_pos_(cursor_pos), mouse_button_(mouse_button), outside_window_(outside_window) {
     }
 
-    double cursor_x_;
-    double cursor_y_;
+    glm::vec2 cursor_pos_;
     int mouse_button_;
     bool outside_window_;
 
 
     friend bool operator==(const FTMouseButtonReleasedEvent& lhs, const FTMouseButtonReleasedEvent& rhs) {
-        return lhs.cursor_x_ == rhs.cursor_x_
-            && lhs.cursor_y_ == rhs.cursor_y_
+        return lhs.cursor_pos_ == rhs.cursor_pos_
             && lhs.mouse_button_ == rhs.mouse_button_
             && lhs.outside_window_ == rhs.outside_window_;
     }
@@ -82,20 +73,16 @@ struct FTMouseButtonReleasedEvent : public FTEvent {
 struct FTMouseScrollEvent : public FTEvent {
 
 
-    FTMouseScrollEvent(double cursor_x, double cursor_y, double scroll_x, double scroll_y, bool outsize_window)
-        : cursor_x_(cursor_x),
-          cursor_y_(cursor_y),
-          scroll_x_(scroll_x),
-          scroll_y_(scroll_y),
+    FTMouseScrollEvent(const glm::vec2& cursor_pos, const glm::vec2& scroll, bool outsize_window)
+        : cursor_pos_(cursor_pos),
+          scroll_(scroll),
           outsize_window_(outsize_window) {
     }
 
 
     friend bool operator==(const FTMouseScrollEvent& lhs, const FTMouseScrollEvent& rhs) {
-        return lhs.cursor_x_ == rhs.cursor_x_
-            && lhs.cursor_y_ == rhs.cursor_y_
-            && lhs.scroll_x_ == rhs.scroll_x_
-            && lhs.scroll_y_ == rhs.scroll_y_
+        return lhs.cursor_pos_ == rhs.cursor_pos_
+            && lhs.scroll_ == rhs.scroll_
             && lhs.outsize_window_ == rhs.outsize_window_;
     }
 
@@ -103,9 +90,8 @@ struct FTMouseScrollEvent : public FTEvent {
         return !(lhs == rhs);
     }
 
-    double cursor_x_;
-    double cursor_y_;
-    double scroll_x_;
-    double scroll_y_;
+    glm::vec2 cursor_pos_;
+    glm::vec2 scroll_;
+
     bool outsize_window_;
 };

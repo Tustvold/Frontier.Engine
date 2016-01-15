@@ -1,4 +1,5 @@
 #pragma once
+#include "Frontier.h"
 #include "FTMouseEvents.h"
 #include <Event/FTEventDispatcher.h>
 
@@ -15,6 +16,5 @@ private:
     void mouseScrollEvent(GLFWwindow* window, double scroll_x, double scroll_y) const;
 
     bool has_last_mouse_pos_;
-    double last_mouse_pos_x_;
-    double last_mouse_pos_y_;
+    glm::vec2 last_mouse_pos_;
 };

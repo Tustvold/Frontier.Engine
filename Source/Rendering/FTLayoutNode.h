@@ -1,6 +1,7 @@
 #pragma once
 #include "FTNode.h"
 #include <Util/FTMath.h>
+#include "BoundingShape/FTBoundingCuboid.h"
 
 class FTLayoutNode : public FTNode {
 public:
@@ -20,7 +21,7 @@ public:
 
         for (auto it = children_.begin(); it != children_.end(); ++it) {
             (*it)->setPosition(glm::vec3(x, 0, 0));
-            const auto& size = (*it)->getSize();
+            const auto& size = (*it)->getBoundingShape()->getLayoutSize();
             x += size.x;
             x += padding;
             max_y = FTMAX(max_y, size.y);
@@ -28,7 +29,7 @@ public:
         }
         x -= padding;
 
-        setSize(glm::vec3(x, max_y, max_z));
+        setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(), glm::vec3(x, max_y, max_z)));
 
     }
 
@@ -39,7 +40,7 @@ public:
 
         for (auto it = children_.begin(); it != children_.end(); ++it) {
             (*it)->setPosition(glm::vec3(0, y, 0));
-            const auto& size = (*it)->getSize();
+            const auto& size = (*it)->getBoundingShape()->getLayoutSize();
             y += size.y;
             y += padding;
             max_x = FTMAX(max_x, size.x);
@@ -47,8 +48,7 @@ public:
         }
         y -= padding;
 
-        setSize(glm::vec3(max_x, y, max_z));
-
+        setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(), glm::vec3(max_x, y, max_z)));
     }
 
     void layoutChildrenWithPaddingZ(float padding) {
@@ -58,7 +58,7 @@ public:
 
         for (auto it = children_.begin(); it != children_.end(); ++it) {
             (*it)->setPosition(glm::vec3(0, 0, z));
-            const auto& size = (*it)->getSize();
+            const auto& size = (*it)->getBoundingShape()->getLayoutSize();
             z += size.z;
             z += padding;
             max_x = FTMAX(max_x, size.x);
@@ -66,8 +66,7 @@ public:
         }
         z -= padding;
 
-        setSize(glm::vec3(max_x, max_y, z));
-
+        setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(), glm::vec3(max_x, max_y, z)));
     }
 
 
@@ -86,7 +85,7 @@ public:
             for (int x = 0; (maxX == -1 || x < maxX) && i < children_.size(); x++) {
                 auto& child = children_[i++];
                 child->setPosition(glm::vec2(xpos, ypos));
-                auto& size = child->getSize();
+                auto& size = child->getBoundingShape()->getLayoutSize();
                 xpos += size.x + padding;
                 max_height = FTMAX(max_height, size.y);
             }
@@ -95,7 +94,8 @@ public:
             max_x = FTMAX(max_x, xpos);
         }
         ypos -= padding;
-        setSize(glm::vec2(max_x, ypos));
+
+        setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(), glm::vec3(max_x, ypos,0)));
     }
 
 protected:

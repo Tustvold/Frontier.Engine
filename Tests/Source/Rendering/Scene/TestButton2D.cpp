@@ -8,6 +8,7 @@
 #include <Rendering/Camera/FTCamera2D.h>
 #include <Rendering/FTScene.h>
 #include <Rendering/FTDirector.h>
+#include <Rendering/BoundingShape/FTBoundingCuboid.h>
 
 class FTButton2DTestDelegates {
 public:
@@ -25,7 +26,8 @@ TEST(TestButton2D, TestContainsPosition) {
        
 
         auto renderer = std::make_shared<FTNode>();
-        renderer->setSize(glm::vec2(100, 200));
+        renderer->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(100, 200, 0)));
+
         renderer->setPosition(glm::vec2(50, 60));
         auto button = std::make_shared<FTButton2D>(std::move(renderer));
 
@@ -35,14 +37,14 @@ TEST(TestButton2D, TestContainsPosition) {
 
         view->visit(glm::mat4(), false);
 
-        EXPECT_TRUE(button->rendererContainsMousePoint(51, 61));
-        EXPECT_TRUE(button->rendererContainsMousePoint(149, 61));
-        EXPECT_TRUE(button->rendererContainsMousePoint(149, 259));
-        EXPECT_TRUE(button->rendererContainsMousePoint(51, 259));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(51, 61)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(149, 61)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(149, 259)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(51, 259)));
 
-        EXPECT_FALSE(button->rendererContainsMousePoint(0, 0));
-        EXPECT_FALSE(button->rendererContainsMousePoint(151, 70));
-        EXPECT_FALSE(button->rendererContainsMousePoint(60, 261));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(0, 0)));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(151, 70)));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(60, 261)));
     }
 
     FTEngine::cleanup();
@@ -53,8 +55,7 @@ TEST(TestButton2D, TestContainsPositionScale) {
     FTEngine::setup(true);
     {
         auto renderer = std::make_shared<FTNode>();
-
-        renderer->setSize(glm::vec2(50, 50));
+        renderer->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         renderer->setScale(glm::vec2(2, 4));
         renderer->setPosition(glm::vec2(50, 60));
         auto button = std::make_shared<FTButton2D>(std::move(renderer));
@@ -69,14 +70,14 @@ TEST(TestButton2D, TestContainsPositionScale) {
         
         scene->visit();
 
-        EXPECT_TRUE(button->rendererContainsMousePoint(51, 61));
-        EXPECT_TRUE(button->rendererContainsMousePoint(149, 61));
-        EXPECT_TRUE(button->rendererContainsMousePoint(149, 259));
-        EXPECT_TRUE(button->rendererContainsMousePoint(51, 259));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(51,61)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(149,61)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(149,259)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(51,259)));
 
-        EXPECT_FALSE(button->rendererContainsMousePoint(0, 0));
-        EXPECT_FALSE(button->rendererContainsMousePoint(151, 70));
-        EXPECT_FALSE(button->rendererContainsMousePoint(60, 261));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(0,0)));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(151,70)));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(60,261)));
     }
 
     FTEngine::cleanup();
@@ -89,7 +90,7 @@ TEST(TestButton2D, TestContainsPositionScaleAnchorPoint) {
     {
         auto renderer = std::make_shared<FTNode>();
 
-        renderer->setSize(glm::vec2(50, 50));
+        renderer->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         renderer->setScale(glm::vec2(2, 4));
         renderer->setPosition(glm::vec2(100, 160));
         renderer->setAnchorPoint(glm::vec2(0.5f, 0.5f));
@@ -105,14 +106,14 @@ TEST(TestButton2D, TestContainsPositionScaleAnchorPoint) {
 
         scene->visit();
 
-        EXPECT_TRUE(button->rendererContainsMousePoint(51, 61));
-        EXPECT_TRUE(button->rendererContainsMousePoint(149, 61));
-        EXPECT_TRUE(button->rendererContainsMousePoint(149, 259));
-        EXPECT_TRUE(button->rendererContainsMousePoint(51, 259));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(51,61)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(149,61)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(149,259)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(51,259)));
 
-        EXPECT_FALSE(button->rendererContainsMousePoint(0, 0));
-        EXPECT_FALSE(button->rendererContainsMousePoint(151, 70));
-        EXPECT_FALSE(button->rendererContainsMousePoint(60, 261));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(0,0)));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(151,70)));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(60,261)));
     }
 
     FTEngine::cleanup();
@@ -125,7 +126,7 @@ TEST(TestButton2D, TestEnterExitDelegates) {
         FTButton2DTestDelegates testDelegates;
         auto renderer = std::make_shared<FTNode>();
 
-        renderer->setSize(glm::vec2(50, 50));
+        renderer->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         renderer->setScale(glm::vec2(2, 4));
         renderer->setPosition(glm::vec2(100, 160));
         renderer->setAnchorPoint(glm::vec2(0.5f, 0.5f));
@@ -145,14 +146,14 @@ TEST(TestButton2D, TestEnterExitDelegates) {
 
         scene->visit();
 
-        EXPECT_TRUE(button->rendererContainsMousePoint(51, 61));
-        EXPECT_TRUE(button->rendererContainsMousePoint(149, 61));
-        EXPECT_TRUE(button->rendererContainsMousePoint(149, 259));
-        EXPECT_TRUE(button->rendererContainsMousePoint(51, 259));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(51,61)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(149,61)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(149,259)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(51,259)));
 
-        EXPECT_FALSE(button->rendererContainsMousePoint(0, 0));
-        EXPECT_FALSE(button->rendererContainsMousePoint(151, 70));
-        EXPECT_FALSE(button->rendererContainsMousePoint(60, 261));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(0,0)));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(151,70)));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(60,261)));
 
         EXPECT_CALL(testDelegates, enterDelegate(button.get())).Times(0);
 
@@ -201,7 +202,7 @@ TEST(TestButton2D, TestPressDelegates) {
         FTButton2DTestDelegates testDelegates;
         auto renderer = std::make_shared<FTNode>();
 
-        renderer->setSize(glm::vec2(50, 50));
+        renderer->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         renderer->setScale(glm::vec2(2, 4));
         renderer->setPosition(glm::vec2(100, 160));
         renderer->setAnchorPoint(glm::vec2(0.5f, 0.5f));
@@ -221,14 +222,14 @@ TEST(TestButton2D, TestPressDelegates) {
 
         scene->visit();
 
-        EXPECT_TRUE(button->rendererContainsMousePoint(51, 61));
-        EXPECT_TRUE(button->rendererContainsMousePoint(149, 61));
-        EXPECT_TRUE(button->rendererContainsMousePoint(149, 259));
-        EXPECT_TRUE(button->rendererContainsMousePoint(51, 259));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(51,61)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(149,61)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(149,259)));
+        EXPECT_TRUE(button->containsMousePosition(glm::vec2(51,259)));
 
-        EXPECT_FALSE(button->rendererContainsMousePoint(0, 0));
-        EXPECT_FALSE(button->rendererContainsMousePoint(151, 70));
-        EXPECT_FALSE(button->rendererContainsMousePoint(60, 261));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(0,0)));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(151,70)));
+        EXPECT_FALSE(button->containsMousePosition(glm::vec2(60,261)));
 
         EXPECT_CALL(testDelegates, enterDelegate(button.get())).Times(0);
         
@@ -295,7 +296,7 @@ TEST(TestButton2D, TestSizeScale) {
     {
         auto renderer = std::make_shared<FTNode>();
 
-        renderer->setSize(glm::vec2(50, 50));
+        renderer->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         renderer->setScale(glm::vec2(2, 4));
         renderer->setPosition(glm::vec2(100, 160));
         renderer->setAnchorPoint(glm::vec2(0.5f, 0.5f));
@@ -311,7 +312,7 @@ TEST(TestButton2D, TestSizeScale) {
 
         scene->visit();
 
-        EXPECT_EQ(renderer->getSize(), button->getSize());
+        EXPECT_EQ(renderer->getBoundingShape()->getLayoutSize(), button->getBoundingShape()->getLayoutSize());
         EXPECT_EQ(renderer->getScale(), button->getScale());
     }
 
@@ -324,7 +325,7 @@ TEST(TestButton2D, TestDisconnectedDelegates) {
     {
         auto renderer = std::make_shared<FTNode>();
 
-        renderer->setSize(glm::vec2(50, 50));
+        renderer->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         renderer->setScale(glm::vec2(2, 4));
         renderer->setPosition(glm::vec2(100, 160));
         renderer->setAnchorPoint(glm::vec2(0.5f, 0.5f));
@@ -360,7 +361,7 @@ TEST(TestButton2D, TestEnabledDelegate) {
         FTButton2DTestDelegates testDelegates;
         auto renderer = std::make_shared<FTNode>();
 
-        renderer->setSize(glm::vec2(50, 50));
+        renderer->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         renderer->setScale(glm::vec2(2, 4));
         renderer->setPosition(glm::vec2(100, 160));
         renderer->setAnchorPoint(glm::vec2(0.5f, 0.5f));

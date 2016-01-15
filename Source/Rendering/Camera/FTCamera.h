@@ -35,7 +35,7 @@ public:
 
     void preDraw() const;
 
-    virtual bool testNodeVisible(const FTNode* node) const = 0;
+    virtual bool testBoundingBox(const glm::vec3& aab_origin, const glm::vec3& aab_half_extents) const = 0;
 
     // Set the draw rect of this camera relative to the size of the screen
     void setDrawRectRelative(const FTRect<float>& view_rect) {

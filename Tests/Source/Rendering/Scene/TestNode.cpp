@@ -5,6 +5,7 @@
 #include <Rendering/Camera/FTCamera2D.h>
 #include <Rendering/FTView.h>
 #include <Rendering/FTScene.h>
+#include <Rendering/BoundingShape/FTBoundingCuboid.h>
 
 class MockNodeDraw : public FTNode {
 
@@ -19,7 +20,7 @@ public:
 
 
     MockNodeDraw() {
-        setSize(glm::vec3(1, 1, 1));
+        setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(1, 1, 1)));
     }
 
     void callParentAddedToView(FTView* view) {
@@ -83,7 +84,7 @@ TEST(TestNode, TestCulling) {
     camera->setDrawRectRelative(FTRect<float>(0, 0, 100.0f / screensize.x, 100.0f / screensize.y));
     glm::mat4 parent_matrix;
     MockNodeChildren node;
-    node.setSize(glm::vec2(50, 80));
+    node.setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 80, 0)));
 
     EXPECT_CALL(node, draw());
 
@@ -143,7 +144,7 @@ TEST(TestNode, TestCullingHierarchy) {
     MockNodeChildren parent;
     auto child = std::make_shared<MockNodeChildren>();
     parent.addChild(std::static_pointer_cast<FTNode>(child));
-    child->setSize(glm::vec2(50, 80));
+    child->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 80, 0)));
 
     EXPECT_CALL(parent, draw()).Times(testing::AnyNumber());
     EXPECT_CALL(*child.get(), draw());

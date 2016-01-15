@@ -13,7 +13,7 @@ class FTWindowSizeNode : public FTNode {
 public:
 
     FTWindowSizeNode() {
-        this->setSize(FTEngine::getWindowSize());
+        this->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(FTEngine::getWindowSize(),0)));
         FTEngine::getEventManager()->registerDelegate<FTWindowEventDispatcher>(this, &FTWindowSizeNode::screensizeChanged);
     }
 
@@ -24,6 +24,7 @@ public:
 private:
 
     void screensizeChanged(const FTWindowResizeEvent& event) {
-        this->setSize(glm::vec2(event.width_, event.height_));
+        this->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(event.width_, event.height_, 0)));
+
     }
 };

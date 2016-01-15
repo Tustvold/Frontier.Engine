@@ -23,8 +23,8 @@ TEST(TestMouseEventDispatcher, TestMouseMove) {
 
     testing::InSequence s;
 
-    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(200,100,0,0)));
-    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(240, 80, 40, -20)));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(glm::vec2(200,100),glm::vec2(0,0))));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(glm::vec2(240,80), glm::vec2(40, -20))));
 
     auto screensize = FTEngine::getWindowSize();
 
@@ -70,10 +70,10 @@ TEST(TestMouseEventDispatcher, TestEnterExitPosPurge) {
     testing::InSequence s;
 
 
-    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(200, 100, 0, 0)));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(glm::vec2(200,100), glm::vec2(0, 0))));
     EXPECT_CALL(listener, mouseEnterEvent(testing::_));
     EXPECT_CALL(listener, mouseExitEvent(testing::_));
-    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(240, 80, 0, 0)));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(glm::vec2(240,80), glm::vec2(0, 0))));
 
     auto screensize = FTEngine::getWindowSize();
 
@@ -103,10 +103,10 @@ TEST(TestMouseEventDispatcher, TestMouseButtonSimple) {
 
     testing::InSequence s;
 
-    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(200, 100, 0, 0)));
-    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(240, 80, 40, -20)));
-    EXPECT_CALL(listener, mouseButtonPressedEvent(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)));
-    EXPECT_CALL(listener, mouseButtonReleasedEvent(FTMouseButtonReleasedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(glm::vec2(200,100), glm::vec2(0, 0))));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(glm::vec2(240,80), glm::vec2(40, -20))));
+    EXPECT_CALL(listener, mouseButtonPressedEvent(FTMouseButtonPressedEvent(glm::vec2(240, 80), GLFW_MOUSE_BUTTON_LEFT, false)));
+    EXPECT_CALL(listener, mouseButtonReleasedEvent(FTMouseButtonReleasedEvent(glm::vec2(240, 80), GLFW_MOUSE_BUTTON_LEFT, false)));
 
     auto screensize = FTEngine::getWindowSize();
 
@@ -135,10 +135,10 @@ TEST(TestMouseEventDispatcher, TestMouseButtonExit) {
 
     testing::InSequence s;
 
-    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(200, 100, 0, 0)));
-    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(240, 80, 40, -20)));
-    EXPECT_CALL(listener, mouseButtonPressedEvent(FTMouseButtonPressedEvent(240, 80, GLFW_MOUSE_BUTTON_LEFT, false)));
-    EXPECT_CALL(listener, mouseButtonReleasedEvent(FTMouseButtonReleasedEvent(-1, -1, GLFW_MOUSE_BUTTON_LEFT, true)));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(glm::vec2(200,100), glm::vec2(0, 0))));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(glm::vec2(240,80), glm::vec2(40, -20))));
+    EXPECT_CALL(listener, mouseButtonPressedEvent(FTMouseButtonPressedEvent(glm::vec2(240, 80), GLFW_MOUSE_BUTTON_LEFT, false)));
+    EXPECT_CALL(listener, mouseButtonReleasedEvent(FTMouseButtonReleasedEvent(glm::vec2(-1, -1), GLFW_MOUSE_BUTTON_LEFT, true)));
 
     auto screensize = FTEngine::getWindowSize();
 
@@ -161,13 +161,13 @@ TEST(TestMouseEventDispatcher, TestMouseScroll) {
     FTEngine::getEventManager()->getEventDispatcher<FTMouseEventDispatcher>()->registerDelegate(move_delegate);
 
     FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(&listener, &MockMouseEventListener::mouseScrollEvent);
-        
+
     testing::InSequence s;
 
-    EXPECT_CALL(listener, mouseScrollEvent(FTMouseScrollEvent(-1, -1, 20, 30, true)));
-    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(200, 100, 0, 0)));
-    EXPECT_CALL(listener, mouseScrollEvent(FTMouseScrollEvent(200, 100, 50, 22, false)));
-    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(240, 80, 40, -20)));
+    EXPECT_CALL(listener, mouseScrollEvent(FTMouseScrollEvent(glm::vec2(-1), glm::vec2(20,30), true)));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(glm::vec2(200,100), glm::vec2(0, 0))));
+    EXPECT_CALL(listener, mouseScrollEvent(FTMouseScrollEvent(glm::vec2(200,100), glm::vec2(50,22), false)));
+    EXPECT_CALL(listener, mouseMoveEvent(FTMouseMoveEvent(glm::vec2(240,80), glm::vec2(40, -20))));
 
     auto screensize = FTEngine::getWindowSize();
 
@@ -179,3 +179,4 @@ TEST(TestMouseEventDispatcher, TestMouseScroll) {
 
     FTEngine::cleanup();
 }
+

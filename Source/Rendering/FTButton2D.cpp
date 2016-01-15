@@ -2,6 +2,7 @@
 #include <FTEngine.h>
 #include <Event/FTEventManager.h>
 #include "FTView.h"
+#include "BoundingShape/FTBoundingShapeWrapper.h"
 
 FTButton2D::FTButton2D(const std::shared_ptr<FTNode>& renderer) :
         tag_(0), 
@@ -9,7 +10,7 @@ FTButton2D::FTButton2D(const std::shared_ptr<FTNode>& renderer) :
         renderer_(renderer) {
     addChild(renderer);
     setMouseInputEnabled(true);
-    setSize(renderer_->getSize());
+    setBoundingShape(std::make_shared<FTBoundingShapeWrapper>(renderer_->getBoundingShape()));
     FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(this, &FTButton2D::mouseExitEvent);
 }
 
@@ -19,7 +20,7 @@ FTButton2D::FTButton2D(std::shared_ptr<FTNode>&& renderer) :
         renderer_(std::move(renderer)) {
     addChild(renderer_);
     setMouseInputEnabled(true);
-    setSize(renderer_->getSize());
+    setBoundingShape(std::make_shared<FTBoundingShapeWrapper>(renderer_->getBoundingShape()));
     FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(this, &FTButton2D::mouseExitEvent);
 }
 
@@ -27,15 +28,8 @@ FTButton2D::~FTButton2D() {
     FTEngine::getEventManager()->unregisterDelegate<FTMouseEventDispatcher>(this, &FTButton2D::mouseExitEvent);
 }
 
-bool FTButton2D::rendererContainsMousePoint(double x, double y) {
-    auto local_pos = renderer_->convertMouseToLocalCoordinates(glm::vec2(x, y));
-
-    auto& size = renderer_->getSize();
-    return local_pos.x >= 0 && local_pos.y >= 0 && local_pos.x <= size.x && local_pos.y <= size.y;
-}
-
 bool FTButton2D::onMouseDown(const FTMouseButtonPressedEvent& event) {
-    if (event.mouse_button_ != GLFW_MOUSE_BUTTON_LEFT || !rendererContainsMousePoint(event.cursor_x_, event.cursor_y_))
+    if (event.mouse_button_ != GLFW_MOUSE_BUTTON_LEFT || !containsMousePosition(event.cursor_pos_))
         return false;
 
     if (!mouse_pressed_delegate_.empty())
@@ -48,14 +42,14 @@ void FTButton2D::onMouseDrag(const FTMouseMoveEvent&, int mouse_button) {
 }
 
 void FTButton2D::onMouseRelease(const FTMouseButtonReleasedEvent& event) {
-    if (event.mouse_button_ != GLFW_MOUSE_BUTTON_LEFT || !rendererContainsMousePoint(event.cursor_x_, event.cursor_y_))
+    if (event.mouse_button_ != GLFW_MOUSE_BUTTON_LEFT || !containsMousePosition(event.cursor_pos_))
         return;
     if (!mouse_released_delegate_.empty())
         mouse_released_delegate_(this);
 }
 
 bool FTButton2D::onMouseMove(const FTMouseMoveEvent& event) {
-    auto contains = rendererContainsMousePoint(event.x_, event.y_);
+    auto contains = renderer_->containsMousePosition(event.cursor_pos_);
     if (contains == mouse_entered_)
         return contains;
     if (contains) {

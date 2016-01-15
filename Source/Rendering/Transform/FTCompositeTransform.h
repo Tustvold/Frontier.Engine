@@ -20,8 +20,8 @@ class FTCompositeTransform : public FTTransform {
     }
 
     bool updateMatrices() override {
-        bool update = transform1_->updateMatrices();
-        update |= transform2_->updateMatrices();
+        bool update = transform1_->updateTransformMatrices();
+        update |= transform2_->updateTransformMatrices();
         if (update) {
             transform_matrix = transform1_->getTransformMatrix() * transform2_->getTransformMatrix();
             return true;

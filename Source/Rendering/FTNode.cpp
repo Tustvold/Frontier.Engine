@@ -7,6 +7,7 @@
 #include <Event/Input/FTInputManager.h>
 
 FTNode::FTNode() :
+                   bounding_shape_(new FTBoundingShape()),
                    flags_(InitialFlags),
                    rotation_transform_(new FTTransformRotation),
                    position_transform_(new FTTransformPosition()),
@@ -15,7 +16,7 @@ FTNode::FTNode() :
                    parent_(nullptr),
                    view_(nullptr),
                    scene_(nullptr) {
-
+    bounding_shape_->onAddedToNode(this);
 }
 
 FTNode::~FTNode() {
@@ -37,7 +38,7 @@ void FTNode::setMouseInputEnabled(bool enabled) {
 }
 
 bool FTNode::isVisible(FTCamera* camera) {
-    return camera->testNodeVisible(this);
+    return bounding_shape_->visibleInCamera(camera);
 }
 
 
@@ -74,13 +75,13 @@ void FTNode::addChild(std::shared_ptr<FTNode>&& child) {
         child_ptr->onEnter();
 }
 
-bool FTNode::updateMatrices(const glm::mat4& parent_matrix) {
+bool FTNode::updateTransformMatrices(const glm::mat4& parent_matrix) {
     if (flags_ & TransformDirty) {
         scale_transform_->updateMatrices();
         rotation_transform_->updateMatrices();
 
         auto rotate_scale_matrix = rotation_transform_->getTransformMatrix() * scale_transform_->getTransformMatrix();
-        glm::vec4 offset = glm::vec4(-anchor_point_.x * size_.x, -anchor_point_.y * size_.y, -anchor_point_.z * size_.z, 1);
+        glm::vec4 offset = glm::vec4(- bounding_shape_->computeLocalOffset(anchor_point_), 1);
 
         auto rotated_scale_offset = rotate_scale_matrix * offset;
 
@@ -105,84 +106,34 @@ void FTNode::visit(const glm::mat4& parent_matrix, bool parent_updated) {
 
 
     if (original_dirty & TransformDirty || parent_updated)
-        updateMatrices(parent_matrix);
+        updateTransformMatrices(parent_matrix);
 
     for (auto it = children_.begin(); it != children_.end(); ++it) {
         (*it)->visit(model_matrix_, parent_updated || (original_dirty & ~ChildNodeDirty) != 0);
     }
 
-    if (original_dirty & AABDirtyMask || parent_updated)
-        updateAAB();
+    if (original_dirty & BoundingShapeDirtyMask || parent_updated || bounding_shape_->getDirty())
+        bounding_shape_->visit();
 
     flags_ &= ~ChildNodeDirty;
 }
 
 void FTNode::performDraw(FTCamera* camera) {
-    if (getHidden() || (flags_ & FrustrumCullEnabled && !isVisible(camera)))
+    if (getHidden())
         return;
 
-    glm::mat4 mvp = camera->getViewProjectionMatrix() * model_matrix_;
 
-    this->pre_draw(mvp);
-    this->draw();
-    this->post_draw();
+    if ((flags_ & FrustrumCullEnabled) == 0 || isVisible(camera)) {
+        glm::mat4 mvp = camera->getViewProjectionMatrix() * model_matrix_;
 
+        this->pre_draw(mvp);
+        this->draw();
+        this->post_draw();
+    }    
 
     for (auto it = children_.begin(); it != children_.end(); ++it) {
         (*it)->performDraw(camera);
     }
-}
-
-void FTNode::updateAAB() {
-    auto min = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);
-    auto max = glm::vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
-
-    const glm::mat4& model_matrix = model_matrix_;
-
-    if (size_ != glm::vec3(0, 0, 0)) {
-        glm::vec4 positions[8] = {
-            glm::vec4(0, 0, 0, 1),
-            glm::vec4(size_.x, 0, 0, 1),
-            glm::vec4(0, size_.y, 0, 1),
-            glm::vec4(0, 0, size_.z, 1),
-            glm::vec4(size_.x, size_.y, 0, 1),
-            glm::vec4(size_.x, 0, size_.z, 1),
-            glm::vec4(0, size_.y, size_.z, 1),
-            glm::vec4(size_.x, size_.y, size_.z, 1)
-        };
-
-        for (int i = 0; i < 8; i++) {
-            auto transformed = model_matrix * positions[i];
-            max.x = FTMAX(transformed.x, max.x);
-            max.y = FTMAX(transformed.y, max.y);
-            max.z = FTMAX(transformed.z, max.z);
-
-            min.x = FTMIN(transformed.x, min.x);
-            min.y = FTMIN(transformed.y, min.y);
-            min.z = FTMIN(transformed.z, min.z);
-        }
-    } else if (children_.size() == 0) {
-        flags_ &= ~HasAAB;
-        return;
-    }
-    flags_ |= HasAAB;
-
-    for (auto it = children_.begin(); it != children_.end(); ++it) {
-        (*it)->updateAAB();
-        auto center = (*it)->getAABCenter();
-        auto halfExtents = (*it)->getAABHalfExtents();
-
-        max.x = FTMAX(center.x + halfExtents.x, max.x);
-        max.y = FTMAX(center.y + halfExtents.y, max.y);
-        max.z = FTMAX(center.z + halfExtents.z, max.z);
-
-        min.x = FTMIN(center.x - halfExtents.x, min.x);
-        min.y = FTMIN(center.y - halfExtents.y, min.y);
-        min.z = FTMIN(center.z - halfExtents.z, min.z);
-    }
-
-    aab_extents_ = (max - min) / 2.0f;
-    aab_center_ = (max + min) / 2.0f;
 }
 
 void FTNode::runAction(std::unique_ptr<FTAction>&& action) {

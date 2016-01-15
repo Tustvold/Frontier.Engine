@@ -44,6 +44,7 @@ protected:
 template <typename VertexType, typename IndexType>
 class FTIndexedMesh : public FTMesh<VertexType> {
 public:
+    typedef FTIndexedMeshData<VertexType, IndexType> IndexedMeshData;
 
     explicit FTIndexedMesh(FTVertexShaderProgram* shader = FTShaderNode::getShaderUtil<FTVertexShaderProgram>()) : 
         FTMesh<VertexType>(shader),
@@ -74,7 +75,7 @@ public:
         }
     }
 
-    void loadIndexedMeshData(FTIndexedMeshData<VertexType, IndexType>* data, bool is_static, bool cleanup = true) {
+    void loadIndexedMeshData(IndexedMeshData* data, bool is_static, bool cleanup = true) {
         FTMesh<VertexType>::loadMeshData(data, is_static, false);
 
         num_indices_ = (GLuint)data->getIndexCount();
@@ -91,7 +92,7 @@ public:
         }
     }
 
-    void setIndexedMeshData(FTIndexedMeshData<VertexType, IndexType>* data) {
+    void setIndexedMeshData(IndexedMeshData* data) {
         FTMesh<VertexType>::setMeshData(data);
         // Update mesh data
         if (max_num_inidices_ >= data->getIndexCount()) {

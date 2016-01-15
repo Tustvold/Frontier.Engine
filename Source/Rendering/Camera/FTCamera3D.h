@@ -48,9 +48,7 @@ public:
         update_view_frustrum_ = should_update_view_frustrum;
     }
 
-    bool testBoundingBox(glm::vec3& center, glm::vec3& halfextents) const;
-
-    bool testNodeVisible(const FTNode* node) const override;
+    bool testBoundingBox(const glm::vec3& aab_origin, const glm::vec3& aab_half_extents) const override;
 
     const glm::vec3& getUpVector() {
         return up_vector_;

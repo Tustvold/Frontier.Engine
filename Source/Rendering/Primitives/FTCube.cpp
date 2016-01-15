@@ -1,5 +1,6 @@
 ﻿#include "FTCube.h"
 #include <Rendering/Shader/FTShaderCache.h>
+#include <Rendering/BoundingShape/FTBoundingCuboid.h>
 
 FTCube::FTCube(const glm::vec3 face_colors[6], FTVertexColorShaderProgram* shader)
     : FTCubeBase_(shader) {
@@ -138,7 +139,7 @@ FTCube::FTCube(const glm::vec3 face_colors[6], FTVertexColorShaderProgram* shade
 
     loadIndexedMeshData(data.get(), true);
 
-    setSize(glm::vec3(1, 1, 1));
+    setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(1, 1, 1)));
 }
 
 FTCube::~FTCube() {

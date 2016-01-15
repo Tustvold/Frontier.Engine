@@ -33,25 +33,24 @@ ftgl::texture_font_t* FTFont::cacheFontSize(int size) {
     return font;
 }
 
-FTIndexedMeshData<FTVertexColorTexture<glm::vec2>, uint16_t>* FTFont::generateMeshForString(const std::basic_string<wchar_t>& text, int size, glm::vec2& pen) {
+std::unique_ptr<FTFontMeshData> FTFont::generateMeshForString(const std::basic_string<wchar_t>& text, int size) {
     size_t length = text.length();
-    auto data = new FTIndexedMeshData<FTVertexColorTexture<glm::vec2>, uint16_t>(4 * length, 6 * length);
-    populateMeshDataForString(data, text, size, pen);
-    return data;
+    auto data = new FTFontMeshData(4 * length, 6 * length);
+    populateMeshDataForString(data, text, size);
+    return std::unique_ptr<FTFontMeshData>(data);
 }
 
-void FTFont::populateMeshDataForString(FTIndexedMeshData<FTVertexColorTexture<glm::vec2>, uint16_t>* data, const std::basic_string<wchar_t>& text, int size, glm::vec2& pen) {
+void FTFont::populateMeshDataForString(FTFontMeshData* data, const std::basic_string<wchar_t>& text, int size) {
     ftgl::texture_font_t* font = cacheFontSize(size);
     size_t length = text.length();
     auto& vertices = data->getVertices();
     auto& indices = data->getIndices();
 
-    //glm::vec2 pen = glm::vec2();
+    glm::vec2 pen;
     int curIndex = 0;
     size_t i;
 
-    FTVertexColorTexture<glm::vec2> vertex;
-    vertex.color_ = glm::vec3(0.5f, 0.5f, 0.5f);
+    FTVertexTexture<glm::vec2> vertex;
 
     float maxHeight = 0.0f;
     //float r = color->red, g = color->green, b = color->blue, a = color->alpha;
@@ -69,13 +68,15 @@ void FTFont::populateMeshDataForString(FTIndexedMeshData<FTVertexColorTexture<gl
             int y0 = (int)(pen.y + glyph->offset_y);
             int x1 = (int)(x0 + glyph->width);
             int y1 = (int)(y0 - glyph->height);
-            maxHeight = FTMAX(maxHeight, glyph->height);
+            maxHeight = FTMAX(maxHeight, FTMAX(y0,y1));
 
             float s0 = glyph->s0;
             float t0 = glyph->t0;
             float s1 = glyph->s1;
             float t1 = glyph->t1;
 
+            // NB Do not modify the vertex ordering without also adjusting
+            // the FTFontMeshData::getGlyphBounds
             vertex.position_ = glm::vec2(x0, y0);
             vertex.uv_ = glm::vec2(s0, t0);
             vertices.push_back(vertex);
@@ -84,24 +85,26 @@ void FTFont::populateMeshDataForString(FTIndexedMeshData<FTVertexColorTexture<gl
             vertex.uv_ = glm::vec2(s1, t0);
             vertices.push_back(vertex);
 
-            vertex.position_ = glm::vec2(x0, y1);
-            vertex.uv_ = glm::vec2(s0, t1);
-            vertices.push_back(vertex);
-
             vertex.position_ = glm::vec2(x1, y1);
             vertex.uv_ = glm::vec2(s1, t1);
             vertices.push_back(vertex);
 
+            vertex.position_ = glm::vec2(x0, y1);
+            vertex.uv_ = glm::vec2(s0, t1);
+            vertices.push_back(vertex);
+
+            
+
             pen.x += glyph->advance_x;
 
             indices.push_back(curIndex);
-            indices.push_back(curIndex + 2);
-            indices.push_back(curIndex + 1);
-            indices.push_back(curIndex + 2);
             indices.push_back(curIndex + 3);
+            indices.push_back(curIndex + 1);
+            indices.push_back(curIndex + 3);
+            indices.push_back(curIndex + 2);
             indices.push_back(curIndex + 1);
             curIndex += 4;
         }
     }
-    pen.y = maxHeight;
+    data->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(pen.x, maxHeight, 0)));
 }
