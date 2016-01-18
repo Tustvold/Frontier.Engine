@@ -14,10 +14,10 @@ public:
        
    }
 
-   void onAddedToNode(FTNode* node) {
+   virtual void onAddedToNode(FTNode* node) {
        FTAssert(node_ == nullptr, "Bounding Shape already added to node");
        node_ = node;
-    }
+   }
 
    // Update internal state
    virtual void visit() {
@@ -28,7 +28,7 @@ public:
 
     // Return true if this bounding shape contains the provided position in local coordinates
    virtual bool containsLocalPosition(const glm::vec3& position) {
-       return false;
+       return true;
    }
 
    virtual bool visibleInCamera(FTCamera* camera) {

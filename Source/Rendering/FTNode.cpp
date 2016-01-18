@@ -1,40 +1,26 @@
 #include <Rendering/FTNode.h>
-#include <Util/FTMath.h>
 #include <Rendering/Camera/FTCamera.h>
 #include <Rendering/FTDirector.h>
 #include "Action/FTActionManager.h"
 #include <Rendering/FTView.h>
-#include <Event/Input/FTInputManager.h>
 
 FTNode::FTNode() :
-                   bounding_shape_(new FTBoundingShape()),
-                   flags_(InitialFlags),
-                   rotation_transform_(new FTTransformRotation),
-                   position_transform_(new FTTransformPosition()),
-                   scale_transform_(new FTTransformScale()),
-                   model_matrix_inv_dirty_(true),
-                   parent_(nullptr),
-                   view_(nullptr),
-                   scene_(nullptr) {
+    bounding_shape_(new FTBoundingShape()),
+    button_(nullptr),
+    flags_(InitialFlags),
+    tag_(0),
+    rotation_transform_(new FTTransformRotation),
+    position_transform_(new FTTransformPosition()),
+    scale_transform_(new FTTransformScale()),
+    model_matrix_inv_dirty_(true),
+    parent_(nullptr),
+    view_(nullptr),
+    scene_(nullptr) {
     bounding_shape_->onAddedToNode(this);
 }
 
 FTNode::~FTNode() {
-    if (flags_ & MouseInputEnabled)
-        FTEngine::getInputManager()->removeMouseDelegate(this);
 
-}
-
-void FTNode::setMouseInputEnabled(bool enabled) {
-    if (enabled == ((flags_ & MouseInputEnabled) != 0))
-        return;
-    if (enabled) {
-        FTEngine::getInputManager()->addMouseDelegate(this);
-        flags_ |= MouseInputEnabled;
-    } else {
-        FTEngine::getInputManager()->removeMouseDelegate(this);
-        flags_ &= ~MouseInputEnabled;
-    }
 }
 
 bool FTNode::isVisible(FTCamera* camera) {
@@ -129,7 +115,7 @@ void FTNode::performDraw(FTCamera* camera) {
         this->pre_draw(mvp);
         this->draw();
         this->post_draw();
-    }    
+    }
 
     for (auto it = children_.begin(); it != children_.end(); ++it) {
         (*it)->performDraw(camera);
@@ -138,6 +124,10 @@ void FTNode::performDraw(FTCamera* camera) {
 
 void FTNode::runAction(std::unique_ptr<FTAction>&& action) {
     FTEngine::getDirector()->getActionManager()->addAction(this, std::move(action));
+}
+
+void FTNode::resetAllActions() {
+    FTEngine::getDirector()->getActionManager()->resetActionsForNode(this);
 }
 
 void FTNode::removeChild(FTNode* node) {
@@ -157,17 +147,6 @@ void FTNode::removeChild(FTNode* node) {
     node->parent_ = nullptr;
 
     children_.erase(it);
-}
-
-glm::vec3 FTNode::convertMouseToLocalCoordinates(const glm::vec2& mouse_coords) {
-    FTAssert(view_ != nullptr, "Node not added to an FTView");
-
-    auto unprojected = view_->getCamera()->unProject(glm::vec3(mouse_coords, 0));
-
-    auto& mat = getModelMatrixInverse();
-    glm::vec4 mouse_pos = glm::vec4((float)unprojected.x, (float)unprojected.y, 0, 1);
-    glm::vec4 local_pos = mat * mouse_pos;
-    return glm::vec3(local_pos.x / local_pos.w, local_pos.y / local_pos.w, local_pos.z / local_pos.w);
 }
 
 void FTNode::onAddedToView(FTView* view) {
@@ -210,3 +189,24 @@ void FTNode::onExit() {
     for (auto it = children_.begin(); it != children_.end(); ++it)
         (*it)->onExit();
 }
+
+void FTNode::setButtonEnabled(bool enabled) {
+    if (enabled) {
+        if (button_ == nullptr)
+            button_ = std::make_unique<FTButton>(this);
+    } else {
+        button_.reset();
+    }
+}
+
+glm::vec3 FTNode::convertMouseToLocalCoordinates(const glm::vec2& mouse_coords) {
+    FTAssert(view_ != nullptr, "Node not added to an FTView");
+
+    auto unprojected = view_->getCamera()->unProject(glm::vec3(mouse_coords, 0));
+
+    auto& mat = getModelMatrixInverse();
+    glm::vec4 mouse_pos = glm::vec4((float)unprojected.x, (float)unprojected.y, 0, 1);
+    glm::vec4 local_pos = mat * mouse_pos;
+    return glm::vec3(local_pos.x / local_pos.w, local_pos.y / local_pos.w, local_pos.z / local_pos.w);
+}
+

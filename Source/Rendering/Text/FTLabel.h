@@ -13,7 +13,7 @@ public:
     FTLabel(const std::string& fontpath, const std::string& text, int font_size, bool is_mutable = false, FTFontShader* shader = FTShaderNode::getShaderUtil<FTFontShader>());
     virtual ~FTLabel();
 
-    void setString(const wchar_t* text);
+    void setString(const std::wstring& text);
 
     void pre_draw(const glm::mat4& mvp) override;
 
@@ -22,7 +22,7 @@ public:
 protected:
     std::shared_ptr<FTFontMeshData> mesh_data_;
     std::shared_ptr<FTFont> font_;
-    std::basic_string<wchar_t> text_;
+    std::wstring text_;
 
     glm::vec3 fill_color_;
     bool is_mutable_;

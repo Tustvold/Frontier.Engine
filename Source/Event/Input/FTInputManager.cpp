@@ -72,9 +72,10 @@ void FTInputManager::mouseButtonPressedEvent(const FTMouseButtonPressedEvent& ev
 
     FTMouseDelegate* delegate = nullptr;
     for (auto it = mouse_delegates_.begin(); it != mouse_delegates_.end(); ++it) {
-        delegate = *it;
-        if (delegate->getMouseDelegateEnabled() && delegate->onMouseDown(event))
+        if ((*it)->getMouseDelegateEnabled() && (*it)->onMouseDown(event)) {
+            delegate = *it;
             break;
+        }
     }
     active_mouse_delegates_[event.mouse_button_] = delegate;
 }
@@ -88,13 +89,6 @@ void FTInputManager::mouseButtonReleasedEvent(const FTMouseButtonReleasedEvent& 
 }
 
 void FTInputManager::mouseMovedEvent(const FTMouseMoveEvent& event) {
-    for (auto it = mouse_delegates_.begin(); it != mouse_delegates_.end(); ++it) {
-        auto delegate = *it;
-        if (delegate->getMouseDelegateEnabled() && delegate->onMouseMove(event))
-            break;
-    }
-
-
     for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST + 1; i++) {
         if (active_mouse_delegates_[i] != nullptr) {
             active_mouse_delegates_[i]->onMouseDrag(event, i);
@@ -131,12 +125,15 @@ void FTInputManager::mouseDelegatePriorityChange(FTMouseDelegate* mouse_delegate
 
 void FTInputManager::addMouseDelegate(FTMouseDelegate* delegate) {
     // TODO Insert into correct position instead of sorting whole array
+    FTAssert(!delegate->is_added_, "Delegate already added");
     delegate->is_added_ = true;
     mouse_delegates_.push_back(delegate);
     sortMouseDelegates();
 }
 
 void FTInputManager::removeMouseDelegate(FTMouseDelegate* delegate) {
+    FTAssert(delegate->is_added_, "Delegate not added");
+
     for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST + 1; i++)
         if (active_mouse_delegates_[i] == delegate)
             active_mouse_delegates_[i] = nullptr;

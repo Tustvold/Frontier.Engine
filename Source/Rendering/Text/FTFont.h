@@ -26,11 +26,27 @@ public:
     FTFontMeshData(std::vector<FTVertexTexture<glm::vec2>>&& vertices, std::vector<uint16_t>&& indices) : FTFontMeshDataBase_(std::move(vertices), std::move(indices)) {
     }
 
-    std::pair<glm::vec2, glm::vec2> getGlyphBounds(int index) {
+    std::pair<float, float> getGlyphBounds(size_t index) {
         FTAssert(index >= 0, "Invalid Glyph Index")
-        FTAssert(index * 4 + 2 < vertices_.size(), "Invalid Glyph Index");
-        return std::make_pair(vertices_[index * 4].position_, vertices_[index*4 + 2].position_);
+        FTAssert(index + 1 < glyph_starts_.size(), "Invalid Glyph Index");
+        return std::make_pair(glyph_starts_[index], glyph_starts_[index+1]);
     }
+
+    void clear() {
+        vertices_.clear();
+        indices_.clear();
+        glyph_starts_.clear();
+        index_count_ = 0;
+        vertex_count_ = 0;
+    }
+
+    std::vector<float>& getGlyphStarts() {
+        return glyph_starts_;
+    }
+
+protected:
+
+    std::vector<float> glyph_starts_;
 };
 
 class FTFont {

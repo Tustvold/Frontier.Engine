@@ -1,18 +1,17 @@
 ﻿#pragma once
 #include <Rendering/FTDrawable.h>
 #include <Rendering/Transform/FTTransformUtil.h>
-#include <stack>
 #include <vector>
 #include "Action/FTAction.h"
-#include <Event/Input/FTMouseDelegate.h>
 #include "BoundingShape/FTBoundingShape.h"
+#include "FTButton.h"
 
 class FTView;
 class FTScene;
 class FTCamera;
 
 // The base class of all elements in the scene hierarchy
-class FTNode : public FTDrawable, public FTMouseDelegate {
+class FTNode : public FTDrawable {
 public:
 
 
@@ -22,7 +21,6 @@ public:
         FrustrumCullEnabled = 1 << 2,
         IsActive = 1 << 3,
         ActionsPaused = 1 << 4,
-        MouseInputEnabled = 1 << 5,
         IsHidden = 1 << 6,
         
         InitialFlags = FrustrumCullEnabled | TransformDirty | ChildNodeDirty
@@ -30,34 +28,14 @@ public:
 
     enum Masks {
         DirtyMask = TransformDirty | ChildNodeDirty,
-        BoundingShapeDirtyMask = TransformDirty | ChildNodeDirty,
+        BoundingShapeDirtyMask = TransformDirty,
     };
 
     FTNode();
 
     virtual ~FTNode();
 
-    bool onMouseDown(const FTMouseButtonPressedEvent& event) override {
-        return false;
-    }
-
-    void onMouseDrag(const FTMouseMoveEvent&, int mouse_button) override {
-
-    }
-
-    void onMouseRelease(const FTMouseButtonReleasedEvent& event) override {
-
-    }
-
-    bool onMouseMove(const FTMouseMoveEvent& event) override {
-        return false;
-    }
-
-    void setMouseInputEnabled(bool enabled);
-
-    bool getMouseDelegateEnabled() const override {
-        return (flags_ & IsActive) != 0;
-    }
+    
 
     // Override to provide custom frustrum culling code
     virtual bool isVisible(FTCamera* camera);
@@ -152,6 +130,8 @@ public:
 
     void runAction(std::unique_ptr<FTAction>&& action);
 
+    void resetAllActions();
+
     void pauseAllActions() {
         flags_ |= ActionsPaused;
     }
@@ -213,19 +193,35 @@ public:
         bounding_shape_->onAddedToNode(this);
     }
 
+    const std::unique_ptr<FTButton>& getButton() {
+        setButtonEnabled(true);
+        return button_;
+    }
+
+    void setButtonEnabled(bool enabled);
+
     glm::vec3 convertMouseToLocalCoordinates(const glm::vec2& mouse_coords);
 
-    bool containsMousePosition(const glm::vec2& mouse_coords) {
+    bool containsMousePosition(const glm::vec2& mouse_coords) const {
         return bounding_shape_->containsMousePosition(mouse_coords);
+    }
+
+    int getTag() const {
+        return tag_;
+    }
+
+    void setTag(int tag) {
+        tag_ = tag;
     }
 
 protected:
     std::shared_ptr<FTBoundingShape> bounding_shape_;
+    std::unique_ptr<FTButton> button_;
     glm::vec3 anchor_point_;
-
     glm::vec3 unaltered_position_;
 
     int flags_;
+    int tag_;
 
     std::unique_ptr<FTTransformRotation> rotation_transform_;
     std::unique_ptr<FTTransformPosition> position_transform_;

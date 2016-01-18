@@ -11,7 +11,7 @@ add_subdirectory(BoundingShape)
 set (SOURCES ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTDirector.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FTNode.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTButton2D.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTButton.cpp
     PARENT_SCOPE)
 
 set (HEADERS ${HEADERS}
@@ -24,5 +24,5 @@ set (HEADERS ${HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTLayoutNode.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTShaderNode.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTWindowSizeNode.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTButton2D.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTButton.h
     PARENT_SCOPE)

@@ -52,7 +52,7 @@ void FTLabel::post_draw() {
     glDisable(GL_BLEND);
 }
 
-void FTLabel::setString(const wchar_t* text) {
+void FTLabel::setString(const std::wstring& text) {
     if (text_ == text)
         return;
 
@@ -60,8 +60,7 @@ void FTLabel::setString(const wchar_t* text) {
 
     text_ = text;
 
-    mesh_data_->getIndices().clear();
-    mesh_data_->getVertices().clear();
+    mesh_data_->clear();
 
     font_->populateMeshDataForString(mesh_data_.get(), text, font_size_);
     setIndexedMeshData(mesh_data_.get());

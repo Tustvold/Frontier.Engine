@@ -45,6 +45,7 @@ void FTFont::populateMeshDataForString(FTFontMeshData* data, const std::basic_st
     size_t length = text.length();
     auto& vertices = data->getVertices();
     auto& indices = data->getIndices();
+    auto& glyph_starts = data->getGlyphStarts();
 
     glm::vec2 pen;
     int curIndex = 0;
@@ -62,7 +63,7 @@ void FTFont::populateMeshDataForString(FTFontMeshData* data, const std::basic_st
                 kerning = texture_glyph_get_kerning(glyph, text[i - 1]);
             }
             pen.x += kerning;
-
+            glyph_starts.push_back(pen.x);
 
             int x0 = (int)(pen.x + glyph->offset_x);
             int y0 = (int)(pen.y + glyph->offset_y);
@@ -106,5 +107,6 @@ void FTFont::populateMeshDataForString(FTFontMeshData* data, const std::basic_st
             curIndex += 4;
         }
     }
+    glyph_starts.push_back(pen.x);
     data->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(pen.x, maxHeight, 0)));
 }

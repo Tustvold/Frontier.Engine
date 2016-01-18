@@ -20,8 +20,6 @@ public:
     virtual void onMouseDrag(const FTMouseMoveEvent&, int mouse_button) = 0;
     virtual void onMouseRelease(const FTMouseButtonReleasedEvent& event) = 0;
 
-    // Return true to swallow the event
-    virtual bool onMouseMove(const FTMouseMoveEvent& event) = 0;
 
     virtual bool getMouseDelegateEnabled() const = 0;
 
@@ -29,6 +27,10 @@ public:
 
     int getMouseDelegatePriority() const {
         return priority_;
+    }
+
+    bool getMouseDelegateAdded() const {
+        return is_added_;
     }
 
 private:

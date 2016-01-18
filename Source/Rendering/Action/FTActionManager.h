@@ -15,6 +15,8 @@ public:
 
     void removeActionsForNode(FTNode* target);
 
+    void resetActionsForNode(FTNode* target);
+
     void pauseActionManager() {
         actions_paused_ = true;
     }

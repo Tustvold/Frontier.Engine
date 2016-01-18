@@ -8,7 +8,6 @@ set (SOURCES ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/TestActionManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/TestRepeatAction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/TestActionSequence.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/TestNodeMouse.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/TestButton2D.cpp
 PARENT_SCOPE)
 

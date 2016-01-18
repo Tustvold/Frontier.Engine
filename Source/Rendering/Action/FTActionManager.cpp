@@ -17,7 +17,16 @@ void FTActionManager::addAction(FTNode* target, std::unique_ptr<FTAction>&& acti
 }
 
 void FTActionManager::removeActionsForNode(FTNode* target) {
+    FTAssert(!updating_, "Cannot remove actions whilst updating");
     actions_.erase(target);
+}
+
+void FTActionManager::resetActionsForNode(FTNode* target) {
+    FTAssert(!updating_, "Cannot reset actions whilst updating");
+    auto& actions = actions_[target];
+    for (auto it = actions.begin(); it != actions.end(); it++) {
+        (*it)->onStart(target);
+    }
 }
 
 FTActionManager::FTActionManager() : actions_paused_(false), updating_(false) {
