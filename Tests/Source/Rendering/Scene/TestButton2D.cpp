@@ -16,7 +16,7 @@ public:
     MOCK_METHOD1(exitDelegate, void(FTButton*));
     MOCK_METHOD1(selectDelegate, void(FTButton*));
     MOCK_METHOD1(deselectDelegate, void(FTButton*));
-    MOCK_METHOD2(pressedDelegate, bool(FTButton*, const FTMouseButtonPressedEvent&));
+    MOCK_METHOD2(pressedDelegate, void(FTButton*, const FTMouseButtonPressedEvent&));
     MOCK_METHOD2(releasedDelegate, void(FTButton*, const FTMouseButtonReleasedEvent&));
     MOCK_METHOD1(enabledDelegate, bool(const FTButton*));
 };
@@ -252,7 +252,7 @@ TEST(TestButton2D, TestPressDelegates) {
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, pressedDelegate(button.get(), testing::_)).WillOnce(testing::Return(true));
+        EXPECT_CALL(testDelegates, pressedDelegate(button.get(), testing::_));
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
@@ -262,7 +262,7 @@ TEST(TestButton2D, TestPressDelegates) {
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, pressedDelegate(button.get(), testing::_)).WillOnce(testing::Return(true));
+        EXPECT_CALL(testDelegates, pressedDelegate(button.get(), testing::_));
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
 
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
@@ -406,7 +406,7 @@ TEST(TestButton2D, TestSelectDelegatesSimple) {
         mock.mouse_pos_callback_(nullptr, 51, screensize.y - 61);
 
         
-        EXPECT_CALL(testDelegates, pressedDelegate(button.get(), testing::_)).WillOnce(testing::Return(true));
+        EXPECT_CALL(testDelegates, pressedDelegate(button.get(), testing::_));
         EXPECT_CALL(testDelegates, selectDelegate(button.get()));
 
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
@@ -416,7 +416,7 @@ TEST(TestButton2D, TestSelectDelegatesSimple) {
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_RELEASE, 0);
         testing::Mock::VerifyAndClearExpectations(&testDelegates);
 
-        EXPECT_CALL(testDelegates, pressedDelegate(button.get(), testing::_)).WillOnce(testing::Return(true));
+        EXPECT_CALL(testDelegates, pressedDelegate(button.get(), testing::_));
         EXPECT_CALL(testDelegates, selectDelegate(button.get())).Times(0);
 
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
@@ -469,7 +469,7 @@ TEST(TestButton2D, TestDeselectDelegates) {
         mock.mouse_pos_callback_(nullptr, 51, screensize.y - 61);
 
 
-        EXPECT_CALL(testDelegates, pressedDelegate(button.get(), testing::_)).WillOnce(testing::Return(true));
+        EXPECT_CALL(testDelegates, pressedDelegate(button.get(), testing::_));
         EXPECT_CALL(testDelegates, selectDelegate(button.get()));
 
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
@@ -543,7 +543,7 @@ TEST(TestButton2D, TestSelectMultiple) {
         mock.mouse_pos_callback_(nullptr, 51, screensize.y - 61);
 
 
-        EXPECT_CALL(testDelegates, pressedDelegate(button.get(), testing::_)).WillOnce(testing::Return(true));
+        EXPECT_CALL(testDelegates, pressedDelegate(button.get(), testing::_));
         EXPECT_CALL(testDelegates, selectDelegate(button.get()));
 
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
@@ -555,7 +555,7 @@ TEST(TestButton2D, TestSelectMultiple) {
 
         EXPECT_CALL(testDelegates, deselectDelegate(button.get()));
 
-        EXPECT_CALL(other_testDelegates, pressedDelegate(other_button.get(), testing::_)).WillOnce(testing::Return(true));
+        EXPECT_CALL(other_testDelegates, pressedDelegate(other_button.get(), testing::_));
         EXPECT_CALL(other_testDelegates, selectDelegate(other_button.get()));
 
         mock.mouse_pos_callback_(nullptr, 0, screensize.y - 0);

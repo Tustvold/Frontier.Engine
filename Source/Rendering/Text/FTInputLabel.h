@@ -25,6 +25,13 @@ public:
         return input_text_;
     }
 
+    void setText(const std::wstring& text) {
+        input_text_ = text;
+        updateLabel();
+        cursor_pos_ = FTMIN(cursor_pos_, input_text_.size());
+        updateCursorRendererPos();
+    }
+
 protected:
     bool is_active_;
     size_t cursor_pos_;
@@ -45,6 +52,6 @@ protected:
     void setInactive();
     void updateCursorRendererPos() const;
 
-    bool onPressed(FTButton* button, const FTMouseButtonPressedEvent& event);
+    void onPressed(FTButton* button, const FTMouseButtonPressedEvent& event);
     void onDeselect(FTButton* button);
 };

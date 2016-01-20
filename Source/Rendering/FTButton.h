@@ -32,43 +32,43 @@ public:
     template <class X, class Y>
     void bindMouseEnterDelegate(Y* pthis, void(X::* function_to_bind)(FTButton*)) {
         enableEnterExitDelegates();
-        mouse_enter_delegate_.Bind(pthis, function_to_bind);
+        mouse_enter_delegate_.Connect(pthis, function_to_bind);
     }
 
     template <class X, class Y>
     void bindMouseExitDelegate(Y* pthis, void(X::* function_to_bind)(FTButton*)) {
         enableEnterExitDelegates();
-        mouse_exit_delegate_.Bind(pthis, function_to_bind);
+        mouse_exit_delegate_.Connect(pthis, function_to_bind);
     }
 
     template <class X, class Y>
-    void bindMousePressedDelegate(Y* pthis, bool(X::* function_to_bind)(FTButton*, const FTMouseButtonPressedEvent&)) {
+    void bindMousePressedDelegate(Y* pthis, void(X::* function_to_bind)(FTButton*, const FTMouseButtonPressedEvent&)) {
         enableClickDelegates();
-        mouse_pressed_delegate_.Bind(pthis, function_to_bind);
+        mouse_pressed_delegate_.Connect(pthis, function_to_bind);
     }
 
     template <class X, class Y>
     void bindMouseDragDelegate(Y* pthis, void(X::* function_to_bind)(FTButton*, const FTMouseMoveEvent&)) {
         enableClickDelegates();
-        mouse_dragged_delegate_.Bind(pthis, function_to_bind);
+        mouse_dragged_delegate_.Connect(pthis, function_to_bind);
     }
 
     template <class X, class Y>
     void bindMouseReleasedDelegate(Y* pthis, void(X::* function_to_bind)(FTButton*, const FTMouseButtonReleasedEvent&)) {
         enableClickDelegates();
-        mouse_released_delegate_.Bind(pthis, function_to_bind);
+        mouse_released_delegate_.Connect(pthis, function_to_bind);
     }
 
     template <class X, class Y>
     void bindOnSelectDelegate(Y* pthis, void(X::* function_to_bind)(FTButton*)) {
         enableSelectDelegates();
-        on_select_delegate_.Bind(pthis, function_to_bind);
+        on_select_delegate_.Connect(pthis, function_to_bind);
     }
 
     template <class X, class Y>
     void bindOnDeselectDelegate(Y* pthis, void(X::* function_to_bind)(FTButton*)) {
         enableSelectDelegates();
-        on_deselect_delegate_.Bind(pthis, function_to_bind);
+        on_deselect_delegate_.Connect(pthis, function_to_bind);
     }
 
     template <class X, class Y>
@@ -105,14 +105,15 @@ public:
     void setDeselected();
 
 protected:
-    Gallant::Delegate1<FTButton*> mouse_enter_delegate_;
-    Gallant::Delegate1<FTButton*> mouse_exit_delegate_;
-    Gallant::Delegate2<FTButton*, const FTMouseButtonPressedEvent&, bool> mouse_pressed_delegate_;
-    Gallant::Delegate2<FTButton*, const FTMouseMoveEvent&> mouse_dragged_delegate_;
-    Gallant::Delegate2<FTButton*, const FTMouseButtonReleasedEvent&> mouse_released_delegate_;
+    Gallant::Signal1<FTButton*> mouse_enter_delegate_;
+    Gallant::Signal1<FTButton*> mouse_exit_delegate_;
+    Gallant::Signal2<FTButton*, const FTMouseButtonPressedEvent&> mouse_pressed_delegate_;
+    Gallant::Signal2<FTButton*, const FTMouseMoveEvent&> mouse_dragged_delegate_;
+    Gallant::Signal2<FTButton*, const FTMouseButtonReleasedEvent&> mouse_released_delegate_;
+    Gallant::Signal1<FTButton*> on_select_delegate_;
+    Gallant::Signal1<FTButton*> on_deselect_delegate_;
+
     Gallant::Delegate1<const FTButton*, bool> mouse_input_enabled_delegate_;
-    Gallant::Delegate1<FTButton*> on_select_delegate_;
-    Gallant::Delegate1<FTButton*> on_deselect_delegate_;
     bool mouse_entered_;
     int flags_;
 

@@ -135,7 +135,7 @@ void FTInputLabel::updateCursorRendererPos() const {
     cursor_renderer_->setPosition(glm::vec2(glyph_bounds.second, -0.1f * label_->getFontSize()));
 }
 
-bool FTInputLabel::onPressed(FTButton* button, const FTMouseButtonPressedEvent& event) {
+void FTInputLabel::onPressed(FTButton* button, const FTMouseButtonPressedEvent& event) {
     setActive();
     auto pos = convertMouseToLocalCoordinates(event.cursor_pos_);
     for (int i = 0; i < input_text_.size(); i++) {
@@ -145,7 +145,7 @@ bool FTInputLabel::onPressed(FTButton* button, const FTMouseButtonPressedEvent& 
         if (delta1 < 0) {
             cursor_pos_ = i;
             updateCursorRendererPos();
-            return true;
+            return;
         }
         if (delta2 >= 0) {
             if (delta1 > delta2) {
@@ -154,12 +154,11 @@ bool FTInputLabel::onPressed(FTButton* button, const FTMouseButtonPressedEvent& 
                 cursor_pos_ = i;
             }
             updateCursorRendererPos();
-            return true;
+            return;
         }
     }
     cursor_pos_ = input_text_.size();
     updateCursorRendererPos();
-    return true;
 }
 
 void FTInputLabel::onDeselect(FTButton* button) {

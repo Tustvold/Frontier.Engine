@@ -16,7 +16,7 @@ void FTButton::setSelected() {
 
     s_selected_button = this;
 
-    if (s_selected_button->getSelectDelegatesEnabled() && !s_selected_button->on_select_delegate_.empty()) {
+    if (s_selected_button->getSelectDelegatesEnabled()) {
         s_selected_button->on_select_delegate_(s_selected_button);
     }
 }
@@ -24,7 +24,7 @@ void FTButton::setSelected() {
 void FTButton::setDeselected() {
     if (s_selected_button != this)
         return;
-    if (getSelectDelegatesEnabled() && !on_deselect_delegate_.empty())
+    if (getSelectDelegatesEnabled())
         on_deselect_delegate_(this);
     s_selected_button = nullptr;
 }
@@ -56,27 +56,20 @@ bool FTButton::onMouseDown(const FTMouseButtonPressedEvent& event) {
 
     bool ret = true;
 
-    if (!mouse_pressed_delegate_.empty())
-        ret = mouse_pressed_delegate_(this, event);
+    mouse_pressed_delegate_(this, event);
 
-    if (ret) {
-        setSelected();
-        return true;
-    }
-    setDeselected();
-    return false;
+    setSelected();
+    return true;
 }
 
 void FTButton::onMouseDrag(const FTMouseMoveEvent& event, int mouse_button) {
-    if (!mouse_dragged_delegate_.empty())
-        mouse_dragged_delegate_(this, event);
+    mouse_dragged_delegate_(this, event);
 }
 
 void FTButton::onMouseRelease(const FTMouseButtonReleasedEvent& event) {
     if (!node_->containsMousePosition(event.cursor_pos_))
         return;
-    if (!mouse_released_delegate_.empty())
-        mouse_released_delegate_(this, event);
+    mouse_released_delegate_(this, event);
 }
 
 void FTButton::onMouseMove(const FTMouseMoveEvent& event) {
@@ -86,11 +79,9 @@ void FTButton::onMouseMove(const FTMouseMoveEvent& event) {
     if (contains == mouse_entered_)
         return;
     if (contains) {
-        if (!mouse_enter_delegate_.empty())
-            mouse_enter_delegate_(this);
+        mouse_enter_delegate_(this);
     } else {
-        if (!mouse_exit_delegate_.empty())
-            mouse_exit_delegate_(this);
+        mouse_exit_delegate_(this);
     }
     mouse_entered_ = contains;
 }
@@ -129,8 +120,7 @@ void FTButton::mouseExitEvent(const FTMouseExitEvent& event) {
     if (!getMouseDelegateEnabled())
         return;
     if (mouse_entered_) {
-        if (!mouse_exit_delegate_.empty())
-            mouse_exit_delegate_(this);
+        mouse_exit_delegate_(this);
         mouse_entered_ = false;
     }
 }

@@ -1,6 +1,33 @@
 #pragma once
 #include "FTMesh.h"
 
+namespace details {
+    template <typename IndexType>
+    struct FTIndexTypeDescriptor {
+
+    };
+
+    template <> struct FTIndexTypeDescriptor<uint8_t> {
+        static GLuint getGLIndexType() {
+            return GL_UNSIGNED_BYTE;
+        }
+    };
+
+    template <> struct FTIndexTypeDescriptor<uint16_t> {
+        static GLuint getGLIndexType() {
+            return GL_UNSIGNED_SHORT;
+        }
+    };
+
+    template <> struct FTIndexTypeDescriptor<uint32_t> {
+        static GLuint getGLIndexType() {
+            return GL_UNSIGNED_INT;
+        }
+    };
+};
+
+
+
 template <typename VertexType, typename IndexType>
 class FTIndexedMeshData : public FTMeshData<VertexType> {
 public:
@@ -115,7 +142,7 @@ public:
         glDrawElements(
             FTMesh<VertexType>::primitive_type_, // mode
                         num_indices_, // count
-                        GL_UNSIGNED_SHORT, // type
+                        details::FTIndexTypeDescriptor<IndexType>::getGLIndexType(), // type
                         (void*)0 // element array buffer offset
         );
     }
