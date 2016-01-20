@@ -4,6 +4,8 @@
 
 #ifdef WIN32
 #include <direct.h>
+#else
+#include <unistd.h>
 #endif
 
 void FTFileManager::setup() {
