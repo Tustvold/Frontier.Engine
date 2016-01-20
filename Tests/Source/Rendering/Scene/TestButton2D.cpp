@@ -28,7 +28,7 @@ TEST(TestButton2D, TestContainsPosition) {
        
 
         auto node = std::make_shared<FTNode>();
-        node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(100, 200, 0)));
+        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(100, 200, 0)));
 
         node->setPosition(glm::vec2(50, 60));
 
@@ -56,7 +56,7 @@ TEST(TestButton2D, TestContainsPositionScale) {
     FTEngine::setup(true);
     {
         auto node = std::make_shared<FTNode>();
-        node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(50, 60));
 
@@ -90,7 +90,7 @@ TEST(TestButton2D, TestContainsPositionScaleAnchorPoint) {
     {
         auto node = std::make_shared<FTNode>();
 
-        node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
@@ -125,7 +125,7 @@ TEST(TestButton2D, TestEnterExitDelegates) {
         FTButton2DTestDelegates testDelegates;
         auto node = std::make_shared<FTNode>();
 
-        node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
@@ -202,7 +202,7 @@ TEST(TestButton2D, TestPressDelegates) {
         FTButton2DTestDelegates testDelegates;
         auto node = std::make_shared<FTNode>();
 
-        node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
@@ -297,7 +297,7 @@ TEST(TestButton2D, TestDisconnectedDelegates) {
     {
         auto node = std::make_shared<FTNode>();
 
-        node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
@@ -333,7 +333,7 @@ TEST(TestButton2D, TestEnabledDelegate) {
         FTButton2DTestDelegates testDelegates;
         auto node = std::make_shared<FTNode>();
 
-        node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
@@ -371,7 +371,7 @@ TEST(TestButton2D, TestSelectDelegatesSimple) {
         FTButton2DTestDelegates testDelegates;
         auto node = std::make_shared<FTNode>();
 
-        node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
@@ -434,7 +434,7 @@ TEST(TestButton2D, TestDeselectDelegates) {
 
         auto node = std::make_shared<FTNode>();
 
-        node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
@@ -496,12 +496,12 @@ TEST(TestButton2D, TestSelectMultiple) {
         FTButton2DTestDelegates other_testDelegates;
 
         auto other_node = std::make_shared<FTNode>();
-        other_node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        other_node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
 
         auto node = std::make_shared<FTNode>();
         
 
-        node->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));

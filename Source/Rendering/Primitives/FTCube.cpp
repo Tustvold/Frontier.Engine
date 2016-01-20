@@ -139,7 +139,7 @@ FTCube::FTCube(const glm::vec3 face_colors[6], FTVertexColorShaderProgram* shade
 
     loadIndexedMeshData(data.get(), true);
 
-    setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(1, 1, 1)));
+    setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(1, 1, 1)));
 }
 
 FTCube::~FTCube() {

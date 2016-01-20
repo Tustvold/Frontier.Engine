@@ -34,6 +34,14 @@ void FTBoundingShape::computeWorldAABFromLocalAAB(const glm::vec3& origin, const
     world_aab_origin = (max + min) / 2.0f;
 }
 
+FTBoundingShape::FTBoundingShape() : anchor_point_transform_(new FTTransformPosition()), node_(nullptr), dirty_(false) {
+
+}
+
 bool FTBoundingShape::containsMousePosition(const glm::vec2& mouse_pos) {
     return containsLocalPosition(node_->convertMouseToLocalCoordinates(mouse_pos));
+}
+
+void FTBoundingShape::updateMatrices() {
+    anchor_point_transform_->setPosition(-computeLocalOffset(node_->getAnchorPoint()));
 }

@@ -1,16 +1,15 @@
 #pragma once
 #include <Frontier.h>
+#include <Rendering/Transform/FTTransformPosition.h>
 
 class FTCamera;
 class FTNode;
     
 class FTBoundingShape {
 public:
-    FTBoundingShape() : node_(nullptr), dirty_(false) {
+    FTBoundingShape();
 
-    }
-
-   virtual ~FTBoundingShape() {
+    virtual ~FTBoundingShape() {
        
    }
 
@@ -44,14 +43,20 @@ public:
        return glm::vec3();
    }
 
+   virtual void updateMatrices();
+
    bool getDirty() const {
        return dirty_;
    }
 
-   void computeWorldAABFromLocalAAB(const glm::vec3& local_origin ,const glm::vec3& local_size, glm::vec3& world_aab_center, glm::vec3& world_aab_half_extents) const;
-
+   const glm::mat4& getAnchorPointTransformMatrix() const {
+       return anchor_point_transform_->getTransformMatrix();
+   }
 
 protected:
+    std::unique_ptr<FTTransformPosition> anchor_point_transform_;
     FTNode* node_;
     bool dirty_;
+
+    void computeWorldAABFromLocalAAB(const glm::vec3& local_origin, const glm::vec3& local_size, glm::vec3& world_aab_center, glm::vec3& world_aab_half_extents) const;
 };

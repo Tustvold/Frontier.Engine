@@ -100,6 +100,10 @@ public:
 
     void enableEnterExitDelegates();
 
+    void setSelected();
+
+    void setDeselected();
+
 protected:
     Gallant::Delegate1<FTButton*> mouse_enter_delegate_;
     Gallant::Delegate1<FTButton*> mouse_exit_delegate_;
@@ -115,6 +119,5 @@ protected:
     FTNode* node_;
 
     void mouseExitEvent(const FTMouseExitEvent& event);
-    void setSelected();
-    void setDeselected();
+    
 };

@@ -48,16 +48,16 @@ public:
         return primitive_type_;
     }
 
-    void setBoundingShape(const std::shared_ptr<FTBoundingShape>& shape) {
-        bounding_shape_ = shape;
+    void setBoundingShape(std::unique_ptr<FTBoundingShape>&& shape) {
+        bounding_shape_ = std::move(shape);
     }
 
-    void setBoundingShape(std::shared_ptr<FTBoundingShape>&& shape) {
-        bounding_shape_ = shape;
-    }
-
-    const std::shared_ptr<FTBoundingShape>& getBoundingShape() const {
+    const std::unique_ptr<FTBoundingShape>& getBoundingShape() const {
         return bounding_shape_;
+    }
+
+    std::unique_ptr<FTBoundingShape>&& moveBoundingShape() {
+        return std::move(bounding_shape_);
     }
 
     void computeShape() {
@@ -67,14 +67,14 @@ public:
             max = glm::max(max, *it);
             min = glm::min(min, *it);
         }
-        setBoundingShape(std::make_shared<FTBoundingCuboid>(min, max - min));
+        setBoundingShape(std::make_unique<FTBoundingCuboid>(min, max - min));
     }
 
 protected:
     std::vector<VertexType> vertices_;
     size_t vertex_count_;
     GLenum primitive_type_;
-    std::shared_ptr<FTBoundingShape> bounding_shape_;
+    std::unique_ptr<FTBoundingShape> bounding_shape_;
 };
 
 template <typename VertexType>
@@ -138,7 +138,7 @@ public:
         primitive_type_ = data->getPrimitiveType();
 
         if (data->getBoundingShape() != nullptr)
-            setBoundingShape(data->getBoundingShape());
+            setBoundingShape(data->moveBoundingShape());
 
         glGenVertexArrays(1, &vertex_array_id_);
 
@@ -183,7 +183,7 @@ public:
 
         primitive_type_ = data->getPrimitiveType();
         if (data->getBoundingShape() != nullptr)
-            setBoundingShape(data->getBoundingShape());
+            setBoundingShape(data->moveBoundingShape());
 
         // Update mesh data
         if (max_num_vertices_ >= data->getVertexCount()) {

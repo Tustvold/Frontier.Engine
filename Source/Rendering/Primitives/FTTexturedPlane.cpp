@@ -22,7 +22,7 @@ FTTexturedPlane::FTTexturedPlane(const glm::vec2& dimensions, FTVertexTextureSha
     vertices.push_back(vertex);
 
     data->setPrimitiveType(GL_TRIANGLE_FAN);
-    data->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(dimensions, 0)));
+    data->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(dimensions, 0)));
 
     loadMeshData(data.get(), true);
 }

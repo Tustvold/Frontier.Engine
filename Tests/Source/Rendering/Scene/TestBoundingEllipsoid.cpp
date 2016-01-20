@@ -8,8 +8,8 @@ TEST(TestBoundingEllipsoid, TestAAB) {
     MockLoader mock;
 
     auto node = std::make_shared<FTNode>();
-    auto bounding_shape = std::make_shared<FTBoundingEllipsoid>(glm::vec3(17, 44, 11));
-    node->setBoundingShape(bounding_shape);
+    auto bounding_shape = new FTBoundingEllipsoid(glm::vec3(17, 44, 11));
+    node->setBoundingShape(std::unique_ptr<FTBoundingShape>(bounding_shape));
 
     node->visit(glm::mat4(), false);
     EXPECT_EQ(bounding_shape->getAABCenter(), glm::vec3(17, 44, 11));

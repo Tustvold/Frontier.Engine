@@ -19,6 +19,18 @@ public:
 
     void post_draw() override;
 
+    void setFillColor(const glm::vec3& color) {
+        fill_color_ = color;
+    }
+
+    int getFontSize() const {
+        return font_size_;
+    }
+
+    const std::shared_ptr<FTFontMeshData>& getMeshData() const {
+        return mesh_data_;
+    }
+
 protected:
     std::shared_ptr<FTFontMeshData> mesh_data_;
     std::shared_ptr<FTFont> font_;

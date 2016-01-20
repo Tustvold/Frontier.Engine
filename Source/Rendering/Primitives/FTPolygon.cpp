@@ -38,7 +38,7 @@ std::unique_ptr<FTPolygon::MeshData> FTPolygon::generateRegularPolygonData(float
     }
     data->setVertexCount(n);
 
-    data->setBoundingShape(std::make_shared<FTBoundingEllipsoid>(glm::vec3(radius, radius, 0)));
+    data->setBoundingShape(std::make_unique<FTBoundingEllipsoid>(glm::vec3(radius, radius, 0)));
     data->setPrimitiveType(GL_TRIANGLE_FAN);
     return data;
 }
@@ -56,7 +56,7 @@ std::unique_ptr<FTPolygon::MeshData> FTPolygon::generateFilledPolygonData(std::v
         data_vertices.push_back(FTVertex<glm::vec2>(*it));
     }
 
-    data->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(size, 0)));
+    data->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(size, 0)));
     data->setPrimitiveType(GL_TRIANGLE_FAN);
     return data;
 }
@@ -90,7 +90,7 @@ std::unique_ptr<FTPolygon::MeshData> FTPolygon::generateBorderPolygonData(const 
     data_vertices.push_back(data_vertices[1]);
 
     data->setPrimitiveType(GL_TRIANGLE_STRIP);
-    data->setBoundingShape(from_data->getBoundingShape());
+    data->setBoundingShape(from_data->moveBoundingShape());
 
     return data;
 }

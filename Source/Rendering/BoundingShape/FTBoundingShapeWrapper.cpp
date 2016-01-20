@@ -1,24 +1,25 @@
 #include "FTBoundingShapeWrapper.h"
+#include <Rendering/FTNode.h>
 
-FTBoundingShapeWrapper::FTBoundingShapeWrapper(const std::shared_ptr<FTBoundingShape>& wrapped) : wrapped_(wrapped) {
+FTBoundingShapeWrapper::FTBoundingShapeWrapper(const std::shared_ptr<FTNode>& wrapped) : wrapped_(wrapped) {
 }
 
 glm::vec3 FTBoundingShapeWrapper::computeLocalOffset(const glm::vec3& anchor_point) {
-    return wrapped_->computeLocalOffset(anchor_point);
+    return wrapped_->getBoundingShape()->computeLocalOffset(anchor_point);
 }
 
 bool FTBoundingShapeWrapper::visibleInCamera(FTCamera* camera) {
-    return wrapped_->visibleInCamera(camera);
+    return wrapped_->getBoundingShape()->visibleInCamera(camera);
 }
 
 glm::vec3 FTBoundingShapeWrapper::getLayoutSize() const {
-    return wrapped_->getLayoutSize();
+    return wrapped_->getBoundingShape()->getLayoutSize();
 }
 
 bool FTBoundingShapeWrapper::containsLocalPosition(const glm::vec3& position) {
-    return wrapped_->containsLocalPosition(position);
+    return wrapped_->getBoundingShape()->containsLocalPosition(position);
 }
 
 bool FTBoundingShapeWrapper::containsMousePosition(const glm::vec2& mouse_pos) {
-    return wrapped_->containsMousePosition(mouse_pos);
+    return wrapped_->getBoundingShape()->containsMousePosition(mouse_pos);
 }

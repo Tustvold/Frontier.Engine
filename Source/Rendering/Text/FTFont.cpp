@@ -108,5 +108,5 @@ void FTFont::populateMeshDataForString(FTFontMeshData* data, const std::basic_st
         }
     }
     glyph_starts.push_back(pen.x);
-    data->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(pen.x, maxHeight, 0)));
+    data->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(pen.x, maxHeight, 0)));
 }

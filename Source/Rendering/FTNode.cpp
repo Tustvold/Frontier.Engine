@@ -34,7 +34,6 @@ void FTNode::addChild(const std::shared_ptr<FTNode>& child) {
     FTAssert(child->view_ == nullptr, "Node already has view set");
     child->parent_ = this;
     children_.push_back(child);
-    this->setDirty(ChildNodeDirty);
     if (view_)
         child->onAddedToView(view_);
     if (scene_)
@@ -51,7 +50,6 @@ void FTNode::addChild(std::shared_ptr<FTNode>&& child) {
 
     auto child_ptr = child.get();
     children_.push_back(std::move(child));
-    this->setDirty(ChildNodeDirty);
     child_ptr->parent_ = this;
     if (view_)
         child_ptr->onAddedToView(view_);
@@ -63,21 +61,17 @@ void FTNode::addChild(std::shared_ptr<FTNode>&& child) {
 
 bool FTNode::updateTransformMatrices(const glm::mat4& parent_matrix) {
     if (flags_ & TransformDirty) {
-        scale_transform_->updateMatrices();
         rotation_transform_->updateMatrices();
-
-        auto rotate_scale_matrix = rotation_transform_->getTransformMatrix() * scale_transform_->getTransformMatrix();
-        glm::vec4 offset = glm::vec4(- bounding_shape_->computeLocalOffset(anchor_point_), 1);
-
-        auto rotated_scale_offset = rotate_scale_matrix * offset;
-
-        position_transform_->setPosition(glm::vec3(unaltered_position_.x + rotated_scale_offset.x, unaltered_position_.y + rotated_scale_offset.y, unaltered_position_.z + rotated_scale_offset.z));
-        position_transform_->updateMatrices();
-
-        transform_matrix_ = position_transform_->getTransformMatrix() * rotate_scale_matrix;
+        //position_transform_->updateMatrices();
+        //scale_transform_->updateMatrices();
+        transform_matrix_ = position_transform_->getTransformMatrix() * rotation_transform_->getTransformMatrix() * scale_transform_->getTransformMatrix();;
     }
 
-    model_matrix_ = parent_matrix * transform_matrix_;
+    if (bounding_shape_->getDirty() || flags_ & AnchorPointDirty) {
+        bounding_shape_->updateMatrices();
+    }
+
+    model_matrix_ = parent_matrix * transform_matrix_ * bounding_shape_->getAnchorPointTransformMatrix();
 
     flags_ &= ~TransformDirty;
     model_matrix_inv_dirty_ = true;
@@ -87,21 +81,16 @@ bool FTNode::updateTransformMatrices(const glm::mat4& parent_matrix) {
 
 void FTNode::visit(const glm::mat4& parent_matrix, bool parent_updated) {
     auto original_dirty = flags_ & DirtyMask;
-    if (!parent_updated && original_dirty == 0)
-        return;
 
-
-    if (original_dirty & TransformDirty || parent_updated)
+    if (original_dirty & TransformDirty || parent_updated || bounding_shape_->getDirty())
         updateTransformMatrices(parent_matrix);
 
     for (auto it = children_.begin(); it != children_.end(); ++it) {
-        (*it)->visit(model_matrix_, parent_updated || (original_dirty & ~ChildNodeDirty) != 0);
+        (*it)->visit(model_matrix_, parent_updated || original_dirty != 0);
     }
 
     if (original_dirty & BoundingShapeDirtyMask || parent_updated || bounding_shape_->getDirty())
         bounding_shape_->visit();
-
-    flags_ &= ~ChildNodeDirty;
 }
 
 void FTNode::performDraw(FTCamera* camera) {

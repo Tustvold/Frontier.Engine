@@ -2,6 +2,10 @@
 #include <sys/stat.h>
 #include <fstream>
 
+#ifdef WIN32
+#include <direct.h>
+#endif
+
 void FTFileManager::setup() {
 
 }
@@ -50,7 +54,43 @@ std::string FTFileManager::getFileContents(const std::string& filename) const {
     FTAssert(false, "IO error whilst reading file");
 }
 
+void FTFileManager::writeToFile(const std::string& file_path, const std::string& data) {
+    std::ofstream out(file_path, std::ios::out | std::ios::binary);
+    if (out) {
+        out.write(&data[0], data.size());
+        out.close();
+        return;
+    }
+    FTAssert(false, "IO error whilst writing file");
+}
+
+void FTFileManager::createDirectory(const std::string& path) {
+#if defined(_WIN32)
+    _mkdir(path.c_str());
+#else 
+    mkdir(path.c_str(), 0777); // notice that 777 is different than 0777
+#endif
+}
+
+void FTFileManager::deleteEmptyDirectory(const std::string& path) {
+#if defined(_WIN32)
+    _rmdir(path.c_str());
+#else 
+    rmdir(path.c_str());
+#endif
+}
+
 bool FTFileManager::fileExistsAtPath(const std::string& path) {
     struct stat buffer;
-    return (stat(path.c_str(), &buffer) != -1);
+    if (stat(path.c_str(), &buffer) == -1)
+        return false;
+    return (buffer.st_mode & S_IFREG) != 0;
 }
+
+bool FTFileManager::directoryExistsAtPath(const std::string& path) {
+    struct stat buffer;
+    if (stat(path.c_str(), &buffer) == -1)
+        return false;
+    return (buffer.st_mode & S_IFDIR) != 0;
+}
+

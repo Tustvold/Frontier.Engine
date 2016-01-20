@@ -14,6 +14,14 @@ public:
 
     static bool fileExistsAtPath(const std::string& path);
 
+    static bool directoryExistsAtPath(const std::string& path);
+
+    static void writeToFile(const std::string& path, const std::string& data);
+
+    static void createDirectory(const std::string& path);
+
+    static void deleteEmptyDirectory(const std::string& path);
+
 private:
     FTFileManager();
     ~FTFileManager();

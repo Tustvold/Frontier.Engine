@@ -5,7 +5,7 @@ class FTTransformPosition : public FTTransform {
 public:
 
     FTTransformPosition() : position_(0, 0, 0) {
-
+        transform_dirty_ = false;
     }
 
     void setPosition(const glm::vec3& position) {

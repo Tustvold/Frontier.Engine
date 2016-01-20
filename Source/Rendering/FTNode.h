@@ -17,17 +17,17 @@ public:
 
     enum Flags {
         TransformDirty = 1,
-        ChildNodeDirty = 1 << 1,
+        AnchorPointDirty = 1 << 1,
         FrustrumCullEnabled = 1 << 2,
         IsActive = 1 << 3,
         ActionsPaused = 1 << 4,
         IsHidden = 1 << 6,
         
-        InitialFlags = FrustrumCullEnabled | TransformDirty | ChildNodeDirty
+        InitialFlags = FrustrumCullEnabled | TransformDirty
     };
 
     enum Masks {
-        DirtyMask = TransformDirty | ChildNodeDirty,
+        DirtyMask = TransformDirty | AnchorPointDirty,
         BoundingShapeDirtyMask = TransformDirty,
     };
 
@@ -56,8 +56,6 @@ public:
         if ((flags_ & dirty) == dirty)
             return;
         flags_ |= dirty;
-        if (parent_)
-            parent_->setDirty(ChildNodeDirty);
     }
 
     virtual void visit(const glm::mat4& parent_matrix, bool parent_updated);
@@ -72,7 +70,7 @@ public:
 
     void setPosition(const glm::vec3& position) {
         setDirty(TransformDirty);
-        unaltered_position_ = position;
+        position_transform_->setPosition(position);
     }
 
     void setScale(const glm::vec2& scale) {
@@ -90,7 +88,7 @@ public:
     }
 
     const glm::vec3& getPosition() const {
-        return unaltered_position_;
+        return position_transform_->getPosition();
     }
 
     const glm::quat& getRotationQuaternion() const {
@@ -106,8 +104,12 @@ public:
     }
 
     void setAnchorPoint(const glm::vec3& anchor_point) {
-        setDirty(TransformDirty);
         anchor_point_ = anchor_point;
+        setDirty(AnchorPointDirty);
+    }
+
+    const glm::vec3& getAnchorPoint() const {
+        return anchor_point_;
     }
 
     void setFrustrumCull(bool should_cull) {
@@ -179,16 +181,11 @@ public:
         return children_;
     }
 
-    const std::shared_ptr<FTBoundingShape>& getBoundingShape() const {
+    const std::unique_ptr<FTBoundingShape>& getBoundingShape() const {
         return bounding_shape_;
     }
 
-    void setBoundingShape(const std::shared_ptr<FTBoundingShape>& shape) {
-        bounding_shape_ = shape;
-        bounding_shape_->onAddedToNode(this);
-    }
-
-    void setBoundingShape(std::shared_ptr<FTBoundingShape>&& shape) {
+    void setBoundingShape(std::unique_ptr<FTBoundingShape>&& shape) {
         bounding_shape_ = std::move(shape);
         bounding_shape_->onAddedToNode(this);
     }
@@ -215,10 +212,9 @@ public:
     }
 
 protected:
-    std::shared_ptr<FTBoundingShape> bounding_shape_;
+    std::unique_ptr<FTBoundingShape> bounding_shape_;
     std::unique_ptr<FTButton> button_;
     glm::vec3 anchor_point_;
-    glm::vec3 unaltered_position_;
 
     int flags_;
     int tag_;

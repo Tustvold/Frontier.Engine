@@ -31,7 +31,7 @@ FTCircleSprite::FTCircleSprite(float radius, const glm::vec3& color, FTCircleSha
 
     data->setVertexCount(vertex_index);
     data->setPrimitiveType(GL_TRIANGLE_FAN);
-    data->setBoundingShape(std::make_shared<FTBoundingCuboid>(glm::vec3(radiusx2, radiusx2, 0)));
+    data->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(radiusx2, radiusx2, 0)));
 
     loadMeshData(data.get(), true);
 }

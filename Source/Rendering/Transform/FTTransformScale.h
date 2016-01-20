@@ -5,7 +5,7 @@
 class FTTransformScale : public FTTransform {
 public:
     FTTransformScale() : scale_(1, 1, 1) {
-
+        transform_dirty_ = false;
     }
 
     void setScale(const glm::vec3& scale) {

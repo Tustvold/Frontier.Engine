@@ -6,22 +6,27 @@
 #include <Rendering/Action/FTRepeatAction.h>
 #include <Event/FTEventManager.h>
 #include <Event/Keyboard/FTKeyboardEventDispatcher.h>
+#include <Rendering/BoundingShape/FTBoundingShapeWrapper.h>
 
 FTInputLabel::FTInputLabel(const std::wstring& placeholder, const std::wstring& text, const std::string& font, int fontsize)
-    : FTLabel(font,text,fontsize, true), cursor_pos_(0), placeholder_(placeholder), input_text_(text) {
+    : cursor_pos_(0), placeholder_(placeholder), input_text_(text)  {
+
+    label_ = std::make_shared<FTLabel>(font, text, fontsize, true);
+    addChild(label_);
+
     updateLabel();
-    cursor_renderer_ = std::make_shared<FTPlane>(glm::vec2(0.07f, 1.0f)*(float)fontsize, glm::vec3());
+    
+    this->setBoundingShape(std::make_unique<FTBoundingShapeWrapper>(label_));
+
+    cursor_renderer_ = std::make_shared<FTPlane>(glm::vec2(0.07f, 1.0f) * (float)fontsize, glm::vec3());
     addChild(cursor_renderer_);
 
-    
-        
-    auto setHidden = std::make_unique<FTCallFuncAction>([](FTNode* node)
-    {
+
+    auto setHidden = std::make_unique<FTCallFuncAction>([](FTNode* node) {
         node->setHidden(true);
     });
 
-    auto setVisible = std::make_unique<FTCallFuncAction>([](FTNode* node)
-    {
+    auto setVisible = std::make_unique<FTCallFuncAction>([](FTNode* node) {
         node->setHidden(false);
     });
 
@@ -30,7 +35,7 @@ FTInputLabel::FTInputLabel(const std::wstring& placeholder, const std::wstring& 
     sequence->addAction(std::make_unique<FTDelayAction>(0.5f));
     sequence->addAction(std::move(setHidden));
     sequence->addAction(std::make_unique<FTDelayAction>(0.5f));
-    
+
     cursor_renderer_->runAction(std::make_unique<FTRepeatAction>(std::move(sequence), -1));
 
     setInactive();
@@ -70,8 +75,7 @@ void FTInputLabel::applyKey(int key) {
             cursor_renderer_->resetAllActions();
             updateCursorRendererPos();
         }
-    }
-    else if (key == GLFW_KEY_RIGHT) {
+    } else if (key == GLFW_KEY_RIGHT) {
         if (cursor_pos_ < input_text_.size()) {
             cursor_pos_++;
             cursor_renderer_->resetAllActions();
@@ -119,30 +123,30 @@ void FTInputLabel::setInactive() {
 
 void FTInputLabel::updateCursorRendererPos() const {
     if (cursor_pos_ == 0) {
-        cursor_renderer_->setPosition(glm::vec2(0, -0.1f * font_size_));
+        cursor_renderer_->setPosition(glm::vec2(0, -0.1f * label_->getFontSize()));
         return;
     }
     if (cursor_pos_ != input_text_.size()) {
-        auto glyph_bounds = mesh_data_->getGlyphBounds(cursor_pos_);
-        cursor_renderer_->setPosition(glm::vec2(glyph_bounds.first, -0.1f * font_size_));
+        auto glyph_bounds = label_->getMeshData()->getGlyphBounds(cursor_pos_);
+        cursor_renderer_->setPosition(glm::vec2(glyph_bounds.first, -0.1f * label_->getFontSize()));
         return;
     }
-    auto glyph_bounds = mesh_data_->getGlyphBounds(cursor_pos_-1);
-    cursor_renderer_->setPosition(glm::vec2(glyph_bounds.second, -0.1f * font_size_));
+    auto glyph_bounds = label_->getMeshData()->getGlyphBounds(cursor_pos_ - 1);
+    cursor_renderer_->setPosition(glm::vec2(glyph_bounds.second, -0.1f * label_->getFontSize()));
 }
 
 bool FTInputLabel::onPressed(FTButton* button, const FTMouseButtonPressedEvent& event) {
     setActive();
     auto pos = convertMouseToLocalCoordinates(event.cursor_pos_);
     for (int i = 0; i < input_text_.size(); i++) {
-        auto glyph = mesh_data_->getGlyphBounds(i);
+        auto glyph = label_->getMeshData()->getGlyphBounds(i);
         auto delta1 = pos.x - glyph.first;
         auto delta2 = glyph.second - pos.x;
         if (delta1 < 0) {
             cursor_pos_ = i;
             updateCursorRendererPos();
             return true;
-        } 
+        }
         if (delta2 >= 0) {
             if (delta1 > delta2) {
                 cursor_pos_ = i + 1;
@@ -163,8 +167,13 @@ void FTInputLabel::onDeselect(FTButton* button) {
 }
 
 void FTInputLabel::updateLabel() {
-    if (input_text_.size() == 0 && !is_active_)
-        setString(placeholder_);
-    else
-        setString(input_text_);
+    if (input_text_.size() == 0 && !is_active_) {
+        label_->setString(placeholder_);
+        label_->setFillColor(placeholder_fill_color_);
+    }
+    else {
+        label_->setString(input_text_);
+        label_->setFillColor(fill_color_);
+    }
 }
+

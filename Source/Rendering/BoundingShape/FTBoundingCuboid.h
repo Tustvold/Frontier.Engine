@@ -20,10 +20,12 @@ public:
 
     void setSize(const glm::vec3& size) {
         size_ = size;
+        dirty_ = true;
     }
 
     void setOrigin(const glm::vec3& origin) {
         origin_ = origin;
+        dirty_ = true;
     }
 
     const glm::vec3& getAABCenter() const {

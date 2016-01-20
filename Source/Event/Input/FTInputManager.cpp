@@ -91,7 +91,8 @@ void FTInputManager::mouseButtonReleasedEvent(const FTMouseButtonReleasedEvent& 
 void FTInputManager::mouseMovedEvent(const FTMouseMoveEvent& event) {
     for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST + 1; i++) {
         if (active_mouse_delegates_[i] != nullptr) {
-            active_mouse_delegates_[i]->onMouseDrag(event, i);
+            if (active_mouse_delegates_[i]->getMouseDelegateEnabled())
+                active_mouse_delegates_[i]->onMouseDrag(event, i);
         }
     }
 }
@@ -99,7 +100,8 @@ void FTInputManager::mouseMovedEvent(const FTMouseMoveEvent& event) {
 void FTInputManager::mouseExitEvent(const FTMouseExitEvent& event) {
     for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST + 1; i++) {
         if (active_mouse_delegates_[i] != nullptr) {
-            active_mouse_delegates_[i]->onMouseRelease(FTMouseButtonReleasedEvent(glm::vec2(-1, -1), i, true));
+            if (active_mouse_delegates_[i]->getMouseDelegateEnabled())
+                active_mouse_delegates_[i]->onMouseRelease(FTMouseButtonReleasedEvent(glm::vec2(-1, -1), i, true));
             active_mouse_delegates_[i] = nullptr;
         }
     }
