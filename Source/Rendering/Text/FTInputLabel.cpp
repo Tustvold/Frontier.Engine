@@ -7,6 +7,7 @@
 #include <Event/FTEventManager.h>
 #include <Event/Keyboard/FTKeyboardEventDispatcher.h>
 #include <Rendering/BoundingShape/FTBoundingShapeWrapper.h>
+#include <Event/Input/FTInputManager.h>
 
 FTInputLabel::FTInputLabel(const std::wstring& placeholder, const std::wstring& text, const std::string& font, int fontsize)
     : cursor_pos_(0), placeholder_(placeholder), input_text_(text)  {
@@ -38,14 +39,18 @@ FTInputLabel::FTInputLabel(const std::wstring& placeholder, const std::wstring& 
 
     cursor_renderer_->runAction(std::make_unique<FTRepeatAction>(std::move(sequence), -1));
 
-    setInactive();
+    setInputLabelInactive();
     updateCursorRendererPos();
 
     this->getButton()->bindMousePressedDelegate(this, &FTInputLabel::onPressed);
     this->getButton()->bindOnDeselectDelegate(this, &FTInputLabel::onDeselect);
+    this->getButton()->bindOnSelectDelegate(this, &FTInputLabel::onSelect);
     FTEngine::getEventManager()->registerDelegate<FTKeyboardEventDispatcher>(this, &FTInputLabel::keyPressedEvent);
     FTEngine::getEventManager()->registerDelegate<FTKeyboardEventDispatcher>(this, &FTInputLabel::keyRepeatEvent);
     FTEngine::getEventManager()->registerDelegate<FTKeyboardEventDispatcher>(this, &FTInputLabel::charInput);
+
+    this->setKeyboardDelegatePriority(DEFAULT_KEYBOARD_INPUT_PRIORITY + 5);
+    FTEngine::getInputManager()->addKeyboardDelegate(this);
 
 }
 
@@ -53,6 +58,7 @@ FTInputLabel::~FTInputLabel() {
     FTEngine::getEventManager()->unregisterDelegate<FTKeyboardEventDispatcher>(this, &FTInputLabel::keyPressedEvent);
     FTEngine::getEventManager()->unregisterDelegate<FTKeyboardEventDispatcher>(this, &FTInputLabel::keyRepeatEvent);
     FTEngine::getEventManager()->unregisterDelegate<FTKeyboardEventDispatcher>(this, &FTInputLabel::charInput);
+    FTEngine::getInputManager()->removeKeyboardDelegate(this);
 }
 
 void FTInputLabel::charInput(const FTCharInputEvent& event) {
@@ -107,14 +113,14 @@ void FTInputLabel::keyRepeatEvent(const FTKeyRepeatEvent& event) {
     applyKey(event.key_);
 }
 
-void FTInputLabel::setActive() {
+void FTInputLabel::setInputLabelActive() {
     is_active_ = true;
     cursor_renderer_->setHidden(false);
     cursor_renderer_->resumeAllActions();
     updateLabel();
 }
 
-void FTInputLabel::setInactive() {
+void FTInputLabel::setInputLabelInactive() {
     is_active_ = false;
     cursor_renderer_->pauseAllActions();
     cursor_renderer_->setHidden(true);
@@ -136,7 +142,6 @@ void FTInputLabel::updateCursorRendererPos() const {
 }
 
 void FTInputLabel::onPressed(FTButton* button, const FTMouseButtonPressedEvent& event) {
-    setActive();
     auto pos = convertMouseToLocalCoordinates(event.cursor_pos_);
     for (int i = 0; i < input_text_.size(); i++) {
         auto glyph = label_->getMeshData()->getGlyphBounds(i);
@@ -161,8 +166,12 @@ void FTInputLabel::onPressed(FTButton* button, const FTMouseButtonPressedEvent& 
     updateCursorRendererPos();
 }
 
+void FTInputLabel::onSelect(FTButton* button) {
+    setInputLabelActive();
+}
+
 void FTInputLabel::onDeselect(FTButton* button) {
-    setInactive();
+    setInputLabelInactive();
 }
 
 void FTInputLabel::updateLabel() {

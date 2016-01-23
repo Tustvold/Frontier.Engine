@@ -62,19 +62,107 @@ TEST(TestInputManager, TestKeyStateReleased) {
     FTEngine::cleanup();
 }
 
-TEST(TestInputManager, TestMapKey) {
+TEST(TestInputManager, TestKeyStateMultiMap) {
     GlfwMock mock;
     FTEngine::init();
     auto engine_event_dispatcher = std::make_shared<MockEngineEventDispatcher>();
     FTEngine::getEventManager()->registerDispatcher(std::static_pointer_cast<FTEngineEventDispatcher>(engine_event_dispatcher));
     FTEngine::setup(true);
 
-    auto state = FTEngine::getInputManager()->getKeyState("Forward");
-    FTEngine::getInputManager()->addMapping("Forward", GLFW_KEY_0);
+    auto state = FTEngine::getInputManager()->getKeyState("Forward", GLFW_KEY_0);
+    state->addMapping(GLFW_KEY_1, 0);
 
     EXPECT_FALSE(state->isPressed());
 
     mock.key_callback_(nullptr, GLFW_KEY_0, 23, GLFW_PRESS, 0);
+
+    EXPECT_TRUE(state->isPressed());
+
+    mock.key_callback_(nullptr, GLFW_KEY_0, 23, GLFW_RELEASE, 0);
+
+    // We don't expect the state to get updated until the next world tick
+    EXPECT_TRUE(state->isPressed());
+
+    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
+
+    EXPECT_FALSE(state->isPressed());
+
+    mock.key_callback_(nullptr, GLFW_KEY_1, 23, GLFW_PRESS, 0);
+
+    EXPECT_TRUE(state->isPressed());
+
+    mock.key_callback_(nullptr, GLFW_KEY_1, 23, GLFW_RELEASE, 0);
+
+    // We don't expect the state to get updated until the next world tick
+    EXPECT_TRUE(state->isPressed());
+
+    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
+
+    EXPECT_FALSE(state->isPressed());
+
+    FTEngine::cleanup();
+}
+
+
+TEST(TestInputManager, TestKeyStateMultiMap2) {
+    GlfwMock mock;
+    FTEngine::init();
+    auto engine_event_dispatcher = std::make_shared<MockEngineEventDispatcher>();
+    FTEngine::getEventManager()->registerDispatcher(std::static_pointer_cast<FTEngineEventDispatcher>(engine_event_dispatcher));
+    FTEngine::setup(true);
+
+    auto state = FTEngine::getInputManager()->getKeyState("Forward", GLFW_KEY_0);
+    state->addMapping(GLFW_KEY_1, 0);
+
+    EXPECT_FALSE(state->isPressed());
+
+    mock.key_callback_(nullptr, GLFW_KEY_1, 23, GLFW_PRESS, 0);
+    EXPECT_TRUE(state->isPressed());
+
+    mock.key_callback_(nullptr, GLFW_KEY_0, 23, GLFW_PRESS, 0);
+    EXPECT_TRUE(state->isPressed());
+
+    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
+
+    EXPECT_TRUE(state->isPressed());
+    
+    mock.key_callback_(nullptr, GLFW_KEY_0, 23, GLFW_RELEASE, 0);
+
+    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
+
+    EXPECT_TRUE(state->isPressed());
+    mock.key_callback_(nullptr, GLFW_KEY_1, 23, GLFW_RELEASE, 0);
+
+    EXPECT_TRUE(state->isPressed());
+
+    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
+
+    EXPECT_FALSE(state->isPressed());
+
+    FTEngine::cleanup();
+}
+
+TEST(TestInputManager, TestKeyStateMods) {
+    GlfwMock mock;
+    FTEngine::init();
+    auto engine_event_dispatcher = std::make_shared<MockEngineEventDispatcher>();
+    FTEngine::getEventManager()->registerDispatcher(std::static_pointer_cast<FTEngineEventDispatcher>(engine_event_dispatcher));
+    FTEngine::setup(true);
+
+    auto state = FTEngine::getInputManager()->getKeyState("Forward", GLFW_KEY_0, GLFW_MOD_ALT | GLFW_MOD_CONTROL);
+
+    EXPECT_FALSE(state->isPressed());
+
+    mock.key_callback_(nullptr, GLFW_KEY_0, 0, GLFW_PRESS, 0);
+
+    EXPECT_FALSE(state->isPressed());
+    mock.key_callback_(nullptr, GLFW_KEY_0, 0, GLFW_RELEASE, 0);
+
+    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
+
+    EXPECT_FALSE(state->isPressed());
+
+    mock.key_callback_(nullptr, GLFW_KEY_0, 23, GLFW_PRESS, GLFW_MOD_ALT | GLFW_MOD_CONTROL | GLFW_MOD_SHIFT);
 
     EXPECT_TRUE(state->isPressed());
 

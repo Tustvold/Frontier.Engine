@@ -12,8 +12,8 @@ FTInputManager::FTInputManager() {
 
 void FTInputManager::setup() {
     FTEngine::getEventManager()->registerDelegate<FTKeyboardEventDispatcher>(this, &FTInputManager::keyPressedEvent);
+    FTEngine::getEventManager()->registerDelegate<FTKeyboardEventDispatcher>(this, &FTInputManager::keyRepeatEvent);
     FTEngine::getEventManager()->registerDelegate<FTKeyboardEventDispatcher>(this, &FTInputManager::keyReleasedEvent);
-    FTEngine::getEventManager()->registerDelegate<FTEngineEventDispatcher>(this, &FTInputManager::update);
     FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(this, &FTInputManager::mouseButtonPressedEvent);
     FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(this, &FTInputManager::mouseButtonReleasedEvent);
     FTEngine::getEventManager()->registerDelegate<FTMouseEventDispatcher>(this, &FTInputManager::mouseMovedEvent);
@@ -26,44 +26,52 @@ FTInputManager::~FTInputManager() {
 }
 
 
-const std::shared_ptr<FTKeyState>& FTInputManager::getKeyState(const std::string& name, int default_mapping) {
+const std::shared_ptr<FTKeyMapping>& FTInputManager::getKeyState(const std::string& name, int default_key, int default_mods) {
     auto it = name_to_key_state_.find(name);
     if (it == name_to_key_state_.end()) {
-        name_to_key_state_[name] = std::make_shared<FTKeyState>();
+        auto map = std::make_shared<FTKeyMapping>();
+        if (default_key != GLFW_KEY_UNKNOWN)
+            map->addMapping(default_key, default_mods);
+        addKeyboardDelegate(map.get());
+        name_to_key_state_[name] = std::move(map);
         it = name_to_key_state_.find(name);
-        if (default_mapping != GLFW_KEY_UNKNOWN) {
-            FTAssert(default_mapping > 0 && default_mapping <= GLFW_KEY_LAST, "Invalid Mapping");
-            key_to_state_[default_mapping].push_back(it->second);
-        }
     }
     FTAssert(it != name_to_key_state_.end(), "Failed to add key state");
     return it->second;
 }
 
-void FTInputManager::addMapping(const std::string& name, int key) {
-    auto& key_state = getKeyState(name);
-    FTAssert(key > 0 && key <= GLFW_KEY_LAST, "Invalid Mapping");
-    key_to_state_[key].push_back(key_state);
+void FTInputManager::keyPressedEvent(const FTKeyPressedEvent& event) {
+    FTAssert(event.key_ >= 0 && event.key_ <= GLFW_KEY_LAST, "Invalid Key");
+
+    FTKeyboardDelegate* delegate = nullptr;
+    for (auto it = keyboard_delegates_.begin(); it != keyboard_delegates_.end(); ++it) {
+        if ((*it)->getKeyboardDelegateEnabled() && (*it)->onKeyPressed(event)) {
+            delegate = *it;
+            break;
+        }
+    }
+    if (delegate == nullptr)
+        return;
+    active_keyboard_delegates_[event.key_] = delegate;
 }
 
-void FTInputManager::keyPressedEvent(const FTKeyPressedEvent& event) {
-    if (event.key_ == GLFW_KEY_UNKNOWN)
+void FTInputManager::keyRepeatEvent(const FTKeyRepeatEvent& event) {
+    auto it = active_keyboard_delegates_.find(event.key_);
+    if (it == active_keyboard_delegates_.end())
         return;
-    FTAssert(event.key_ >= 0 && event.key_ <= GLFW_KEY_LAST, "Invalid Key");
-    auto& key_states = key_to_state_[event.key_];
-    for (auto it = key_states.begin(); it != key_states.end(); ++it) {
-        (*it)->pressed_count_++;
-    }
+    it->second->onKeyRepeat(event);
 }
 
 void FTInputManager::keyReleasedEvent(const FTKeyReleasedEvent& event) {
     if (event.key_ == GLFW_KEY_UNKNOWN)
         return;
     FTAssert(event.key_ >= 0 && event.key_ <= GLFW_KEY_LAST, "Invalid Key");
-    auto& key_states = key_to_state_[event.key_];
-    for (auto it = key_states.begin(); it != key_states.end(); ++it) {
-        (*it)->released_count_++;
-    }
+    
+    auto it = active_keyboard_delegates_.find(event.key_);
+    if (it == active_keyboard_delegates_.end())
+        return;
+    it->second->onKeyRelease(event);
+    active_keyboard_delegates_.erase(it);
 }
 
 void FTInputManager::mouseButtonPressedEvent(const FTMouseButtonPressedEvent& event) {
@@ -107,13 +115,6 @@ void FTInputManager::mouseExitEvent(const FTMouseExitEvent& event) {
     }
 }
 
-void FTInputManager::update(const FTUpdateEvent& event) {
-    for (auto it = name_to_key_state_.begin(); it != name_to_key_state_.end(); ++it) {
-        auto& state = it->second;
-        state->pressed_count_ -= state->released_count_;
-        state->released_count_ = 0;
-    }
-}
 
 void FTInputManager::sortMouseDelegates() {
     std::stable_sort(mouse_delegates_.begin(), mouse_delegates_.end(), [](FTMouseDelegate* a, FTMouseDelegate* b) {
@@ -123,6 +124,16 @@ void FTInputManager::sortMouseDelegates() {
 
 void FTInputManager::mouseDelegatePriorityChange(FTMouseDelegate* mouse_delegate) {
     sortMouseDelegates();
+}
+
+void FTInputManager::sortKeyboardDelegates() {
+    std::stable_sort(keyboard_delegates_.begin(), keyboard_delegates_.end(), [](FTKeyboardDelegate* a, FTKeyboardDelegate* b) {
+        return a->getKeyboardDelegatePriority() > b->getKeyboardDelegatePriority();
+    });
+}
+
+void FTInputManager::keyboardDelegatePriorityChange(FTKeyboardDelegate* ft_keyboard_delegate) {
+    sortKeyboardDelegates();
 }
 
 void FTInputManager::addMouseDelegate(FTMouseDelegate* delegate) {
@@ -144,4 +155,29 @@ void FTInputManager::removeMouseDelegate(FTMouseDelegate* delegate) {
     FTAssert(it != mouse_delegates_.end(), "Couldn't find mouse delegate to remove");
     (*it)->is_added_ = false;
     mouse_delegates_.erase(it);
+}
+
+void FTInputManager::addKeyboardDelegate(FTKeyboardDelegate* delegate) {
+    // TODO Insert into correct position instead of sorting whole array
+    FTAssert(!delegate->is_added_, "Delegate already added");
+    delegate->is_added_ = true;
+    keyboard_delegates_.push_back(delegate);
+    sortKeyboardDelegates();
+}
+
+void FTInputManager::removeKeyboardDelegate(FTKeyboardDelegate* delegate) {
+    FTAssert(delegate->is_added_, "Delegate not added");
+
+    for (auto it = active_keyboard_delegates_.begin(); it != active_keyboard_delegates_.end();) {
+        if (it->second == delegate) {
+            it = active_keyboard_delegates_.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
+    auto it = std::find(keyboard_delegates_.begin(), keyboard_delegates_.end(), delegate);
+    FTAssert(it != keyboard_delegates_.end(), "Couldn't find mouse delegate to remove");
+    (*it)->is_added_ = false;
+    keyboard_delegates_.erase(it);
 }

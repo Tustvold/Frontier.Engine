@@ -15,13 +15,13 @@ private:
     float move_speed_;
     float rotation_speed_;
 
-    std::shared_ptr<FTKeyState> forward_state_;
-    std::shared_ptr<FTKeyState> back_state_;
-    std::shared_ptr<FTKeyState> left_state_;
-    std::shared_ptr<FTKeyState> right_state_;
-    std::shared_ptr<FTKeyState> up_state_;
-    std::shared_ptr<FTKeyState> down_state_;
-    std::shared_ptr<FTKeyState> freeze_frustrum_state_;
+    std::shared_ptr<FTKeyMapping> forward_state_;
+    std::shared_ptr<FTKeyMapping> back_state_;
+    std::shared_ptr<FTKeyMapping> left_state_;
+    std::shared_ptr<FTKeyMapping> right_state_;
+    std::shared_ptr<FTKeyMapping> up_state_;
+    std::shared_ptr<FTKeyMapping> down_state_;
+    std::shared_ptr<FTKeyMapping> freeze_frustrum_state_;
 
     void update(const FTUpdateEvent& event);
     void mouseMoveEvent(const FTMouseMoveEvent& event);

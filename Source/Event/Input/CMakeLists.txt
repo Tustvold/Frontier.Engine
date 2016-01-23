@@ -1,10 +1,14 @@
 set(SOURCES ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTInputManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FTMouseDelegate.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTKeyboardDelegate.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTKeyMapping.cpp
     PARENT_SCOPE)
 
 
 set (HEADERS ${HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTInputManager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTMouseDelegate.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTKeyboardDelegate.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FTKeyMapping.h
     PARENT_SCOPE)

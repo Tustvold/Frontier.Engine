@@ -1,11 +1,12 @@
 ﻿#pragma once
 #include "FTLabel.h"
+#include <Event/Input/FTKeyboardDelegate.h>
 
 struct FTKeyRepeatEvent;
 struct FTKeyPressedEvent;
 struct FTCharInputEvent;
 
-class FTInputLabel : public FTNode {
+class FTInputLabel : public FTNode, public FTKeyboardDelegate {
 public:
     FTInputLabel(const std::wstring& placeholder, const std::wstring& text, const std::string& font, int fontsize);
     
@@ -32,6 +33,15 @@ public:
         updateCursorRendererPos();
     }
 
+
+    bool onKeyPressed(const FTKeyPressedEvent& event) override {
+        // If active we swallow keyboard input
+        return true;
+    }
+
+    bool getKeyboardDelegateEnabled() const override {
+        return is_active_ && this->getIsActive();
+    }
 protected:
     bool is_active_;
     size_t cursor_pos_;
@@ -48,10 +58,11 @@ protected:
     void keyRepeatEvent(const FTKeyRepeatEvent& event);
     void applyKey(int key);
 
-    void setActive();
-    void setInactive();
+    void setInputLabelActive();
+    void setInputLabelInactive();
     void updateCursorRendererPos() const;
 
     void onPressed(FTButton* button, const FTMouseButtonPressedEvent& event);
+    void onSelect(FTButton* button);
     void onDeselect(FTButton* button);
 };
