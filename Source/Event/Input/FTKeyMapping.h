@@ -5,6 +5,8 @@
 class FTKeyMapping : public FTKeyboardDelegate {
 public:
     explicit FTKeyMapping() : pressed_count_(0) {
+        this->setKeyboardDelegatePriority(DEFAULT_KEYBOARD_INPUT_PRIORITY * 2);
+        this->setSwallowsEvents(false);
     }
 
     bool isPressed() const {

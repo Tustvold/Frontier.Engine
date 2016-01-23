@@ -34,10 +34,9 @@ public:
     }
 
 
-    bool onKeyPressed(const FTKeyPressedEvent& event) override {
-        // If active we swallow keyboard input
-        return true;
-    }
+    bool onKeyPressed(const FTKeyPressedEvent& event) override;
+
+    void onKeyRepeat(const FTKeyRepeatEvent& event) override;
 
     bool getKeyboardDelegateEnabled() const override {
         return is_active_ && this->getIsActive();
@@ -54,9 +53,7 @@ protected:
 
     void updateLabel();
     void charInput(const FTCharInputEvent& event);
-    void keyPressedEvent(const FTKeyPressedEvent& event);
-    void keyRepeatEvent(const FTKeyRepeatEvent& event);
-    void applyKey(int key);
+    bool applyKey(int key);
 
     void setInputLabelActive();
     void setInputLabelInactive();

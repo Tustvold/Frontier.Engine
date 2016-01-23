@@ -13,11 +13,26 @@ public:
     MOCK_METHOD2(onMouseDrag, void(const FTMouseMoveEvent&, int));
     MOCK_METHOD1(onMouseRelease, void(const FTMouseButtonReleasedEvent&));
 
-    MockMouseDelegate(int priority) : FTMouseDelegate() {
+    MockMouseDelegate(int priority) {
         setMouseDelegatePriority(priority);
+    }
+};
+
+class MockKeyboardDelegate : public FTKeyboardDelegate {
+public:
+
+    MockKeyboardDelegate(int priority) {
+        setKeyboardDelegatePriority(priority);
+    }
+
+    bool getKeyboardDelegateEnabled() const override {
+        return true;
     }
 
 
+    MOCK_METHOD1(onKeyPressed, bool(const FTKeyPressedEvent& event));
+    MOCK_METHOD1(onKeyRepeat, void(const FTKeyRepeatEvent& event));
+    MOCK_METHOD1(onKeyRelease, void(const FTKeyReleasedEvent& event));
 };
 
 TEST(TestInputManager, TestKeyStatePressed) {
@@ -367,6 +382,223 @@ TEST(TestInputManager, TestMouseDelegatePriorityChange) {
 
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
 
+
+    FTEngine::cleanup();
+}
+
+TEST(TestInputManager, TestKeyboardDelegate) {
+    GlfwMock mock;
+    FTEngine::setup(true);
+
+    MockKeyboardDelegate del1(5);
+    MockKeyboardDelegate del2(8);
+    MockKeyboardDelegate del3(7);
+
+    testing::Sequence s;
+
+    EXPECT_CALL(del1, onKeyPressed(testing::_)).Times(0);
+
+    EXPECT_CALL(del2, onKeyPressed(FTKeyPressedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s)
+        .WillOnce(testing::Return(false));
+
+    EXPECT_CALL(del3, onKeyPressed(FTKeyPressedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s)
+        .WillOnce(testing::Return(true));
+
+
+    FTEngine::getInputManager()->addKeyboardDelegate(&del1);
+    FTEngine::getInputManager()->addKeyboardDelegate(&del2);
+    FTEngine::getInputManager()->addKeyboardDelegate(&del3);
+
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_PRESS, 0);
+
+
+    FTEngine::cleanup();
+}
+
+TEST(TestInputManager, TestKeyboardDelegateMulti) {
+    GlfwMock mock;
+    FTEngine::setup(true);
+
+    MockKeyboardDelegate del1(5);
+    MockKeyboardDelegate del2(8);
+    MockKeyboardDelegate del3(7);
+
+    testing::Sequence s;
+
+    EXPECT_CALL(del1, onKeyPressed(testing::_)).Times(0);
+
+    EXPECT_CALL(del2, onKeyPressed(FTKeyPressedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s)
+        .WillOnce(testing::Return(false));
+
+    EXPECT_CALL(del3, onKeyPressed(FTKeyPressedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s)
+        .WillOnce(testing::Return(true));
+
+    EXPECT_CALL(del2, onKeyPressed(FTKeyPressedEvent(GLFW_KEY_0, 234, 0))).InSequence(s)
+        .WillOnce(testing::Return(true));
+
+
+    FTEngine::getInputManager()->addKeyboardDelegate(&del1);
+    FTEngine::getInputManager()->addKeyboardDelegate(&del2);
+    FTEngine::getInputManager()->addKeyboardDelegate(&del3);
+
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_PRESS, 0);
+    mock.key_callback_(nullptr, GLFW_KEY_0, 234, GLFW_PRESS, 0);
+
+
+    FTEngine::cleanup();
+}
+
+TEST(TestInputManager, TestKeyboardDelegateRepeat) {
+    GlfwMock mock;
+    FTEngine::setup(true);
+
+    MockKeyboardDelegate del1(5);
+    MockKeyboardDelegate del2(8);
+    MockKeyboardDelegate del3(7);
+
+    testing::Sequence s;
+
+    EXPECT_CALL(del1, onKeyPressed(testing::_)).Times(0);
+
+    EXPECT_CALL(del2, onKeyPressed(FTKeyPressedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s)
+        .WillOnce(testing::Return(false));
+
+    EXPECT_CALL(del3, onKeyPressed(FTKeyPressedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s)
+        .WillOnce(testing::Return(true));
+
+    EXPECT_CALL(del3, onKeyRepeat(FTKeyRepeatEvent(GLFW_KEY_ENTER, 234, 0))).Times(2).InSequence(s);
+
+
+    FTEngine::getInputManager()->addKeyboardDelegate(&del1);
+    FTEngine::getInputManager()->addKeyboardDelegate(&del2);
+    FTEngine::getInputManager()->addKeyboardDelegate(&del3);
+
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_PRESS, 0);
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_REPEAT, 0);
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_REPEAT, 0);
+
+
+    FTEngine::cleanup();
+}
+
+TEST(TestInputManager, TestKeyboardDelegateRelease) {
+    GlfwMock mock;
+    FTEngine::setup(true);
+
+    MockKeyboardDelegate del1(5);
+    MockKeyboardDelegate del2(8);
+    MockKeyboardDelegate del3(7);
+
+    testing::Sequence s;
+
+    EXPECT_CALL(del1, onKeyPressed(testing::_)).Times(0);
+
+    EXPECT_CALL(del2, onKeyPressed(FTKeyPressedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s)
+        .WillOnce(testing::Return(false));
+
+    EXPECT_CALL(del3, onKeyPressed(FTKeyPressedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s)
+        .WillOnce(testing::Return(true));
+
+    EXPECT_CALL(del3, onKeyRepeat(FTKeyRepeatEvent(GLFW_KEY_ENTER, 234, 0))).Times(2).InSequence(s);
+
+    EXPECT_CALL(del3, onKeyRelease(FTKeyReleasedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s);
+
+    FTEngine::getInputManager()->addKeyboardDelegate(&del1);
+    FTEngine::getInputManager()->addKeyboardDelegate(&del2);
+    FTEngine::getInputManager()->addKeyboardDelegate(&del3);
+
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_PRESS, 0);
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_REPEAT, 0);
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_REPEAT, 0);
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_RELEASE, 0);
+
+    FTEngine::cleanup();
+}
+
+TEST(TestInputManager, TestKeyboardDelegatePriorityChange) {
+    GlfwMock mock;
+    FTEngine::setup(true);
+
+    MockKeyboardDelegate del1(23);
+    MockKeyboardDelegate del2(2);
+    MockKeyboardDelegate del3(7);
+
+    testing::Sequence s;
+
+    EXPECT_CALL(del1, onKeyPressed(testing::_)).Times(0);
+
+    EXPECT_CALL(del2, onKeyPressed(FTKeyPressedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s)
+        .WillOnce(testing::Return(false));
+
+    EXPECT_CALL(del3, onKeyPressed(FTKeyPressedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s)
+        .WillOnce(testing::Return(true));
+
+    EXPECT_CALL(del3, onKeyRepeat(FTKeyRepeatEvent(GLFW_KEY_ENTER, 234, 0))).Times(2).InSequence(s);
+
+    EXPECT_CALL(del3, onKeyRelease(FTKeyReleasedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s);
+
+    FTEngine::getInputManager()->addKeyboardDelegate(&del1);
+    FTEngine::getInputManager()->addKeyboardDelegate(&del2);
+    FTEngine::getInputManager()->addKeyboardDelegate(&del3);
+
+    del1.setKeyboardDelegatePriority(5);
+    del2.setKeyboardDelegatePriority(8);
+    del3.setKeyboardDelegatePriority(7);
+
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_PRESS, 0);
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_REPEAT, 0);
+
+    del3.setKeyboardDelegatePriority(0);
+
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_REPEAT, 0);
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_RELEASE, 0);
+
+    FTEngine::cleanup();
+}
+
+TEST(TestInputManager, TestKeyboardDelegateSwallow) {
+    GlfwMock mock;
+    FTEngine::setup(true);
+
+    MockKeyboardDelegate del1(5);
+    MockKeyboardDelegate del2(8);
+    MockKeyboardDelegate del3(7);
+
+    del2.setSwallowsEvents(false);
+
+    testing::Sequence s;
+
+    EXPECT_CALL(del1, onKeyPressed(testing::_)).Times(0);
+
+    EXPECT_CALL(del2, onKeyPressed(FTKeyPressedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s)
+        .WillOnce(testing::Return(true));
+
+    EXPECT_CALL(del3, onKeyPressed(FTKeyPressedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s)
+        .WillOnce(testing::Return(true));
+
+    EXPECT_CALL(del2, onKeyRepeat(FTKeyRepeatEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s);
+
+    EXPECT_CALL(del3, onKeyRepeat(FTKeyRepeatEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s);
+   
+    EXPECT_CALL(del2, onKeyRepeat(FTKeyRepeatEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s);
+
+    EXPECT_CALL(del3, onKeyRepeat(FTKeyRepeatEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s);
+
+    EXPECT_CALL(del2, onKeyRelease(FTKeyReleasedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s);
+
+    EXPECT_CALL(del3, onKeyRelease(FTKeyReleasedEvent(GLFW_KEY_ENTER, 234, 0))).InSequence(s);
+
+
+
+    FTEngine::getInputManager()->addKeyboardDelegate(&del1);
+    FTEngine::getInputManager()->addKeyboardDelegate(&del3);
+    FTEngine::getInputManager()->addKeyboardDelegate(&del2);
+
+
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_PRESS, 0);
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_REPEAT, 0);
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_REPEAT, 0);
+    mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_RELEASE, 0);
 
     FTEngine::cleanup();
 }

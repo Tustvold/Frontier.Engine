@@ -45,8 +45,6 @@ FTInputLabel::FTInputLabel(const std::wstring& placeholder, const std::wstring& 
     this->getButton()->bindMousePressedDelegate(this, &FTInputLabel::onPressed);
     this->getButton()->bindOnDeselectDelegate(this, &FTInputLabel::onDeselect);
     this->getButton()->bindOnSelectDelegate(this, &FTInputLabel::onSelect);
-    FTEngine::getEventManager()->registerDelegate<FTKeyboardEventDispatcher>(this, &FTInputLabel::keyPressedEvent);
-    FTEngine::getEventManager()->registerDelegate<FTKeyboardEventDispatcher>(this, &FTInputLabel::keyRepeatEvent);
     FTEngine::getEventManager()->registerDelegate<FTKeyboardEventDispatcher>(this, &FTInputLabel::charInput);
 
     this->setKeyboardDelegatePriority(DEFAULT_KEYBOARD_INPUT_PRIORITY + 5);
@@ -55,10 +53,18 @@ FTInputLabel::FTInputLabel(const std::wstring& placeholder, const std::wstring& 
 }
 
 FTInputLabel::~FTInputLabel() {
-    FTEngine::getEventManager()->unregisterDelegate<FTKeyboardEventDispatcher>(this, &FTInputLabel::keyPressedEvent);
-    FTEngine::getEventManager()->unregisterDelegate<FTKeyboardEventDispatcher>(this, &FTInputLabel::keyRepeatEvent);
     FTEngine::getEventManager()->unregisterDelegate<FTKeyboardEventDispatcher>(this, &FTInputLabel::charInput);
     FTEngine::getInputManager()->removeKeyboardDelegate(this);
+}
+
+bool FTInputLabel::onKeyPressed(const FTKeyPressedEvent& event) {
+    // If active we swallow keyboard input corresponding to ASCII characters
+    // This method will only be called if active and therefore don't need to check again
+    return applyKey(event.key_) || event.key_ < GLFW_KEY_ESCAPE;
+}
+
+void FTInputLabel::onKeyRepeat(const FTKeyRepeatEvent& event) {
+    applyKey(event.key_);
 }
 
 void FTInputLabel::charInput(const FTCharInputEvent& event) {
@@ -72,20 +78,22 @@ void FTInputLabel::charInput(const FTCharInputEvent& event) {
     updateCursorRendererPos();
 }
 
-void FTInputLabel::applyKey(int key) {
+bool FTInputLabel::applyKey(int key) {
     if (!is_active_)
-        return;
+        return false;
     if (key == GLFW_KEY_LEFT) {
         if (cursor_pos_ > 0) {
             cursor_pos_--;
             cursor_renderer_->resetAllActions();
             updateCursorRendererPos();
+            return true;
         }
     } else if (key == GLFW_KEY_RIGHT) {
         if (cursor_pos_ < input_text_.size()) {
             cursor_pos_++;
             cursor_renderer_->resetAllActions();
             updateCursorRendererPos();
+            return true;
         }
     } else if (key == GLFW_KEY_BACKSPACE) {
         if (cursor_pos_ != 0) {
@@ -94,6 +102,7 @@ void FTInputLabel::applyKey(int key) {
             cursor_pos_--;
             cursor_renderer_->resetAllActions();
             updateCursorRendererPos();
+            return true;
         }
     } else if (key == GLFW_KEY_DELETE) {
         if (cursor_pos_ != input_text_.size()) {
@@ -101,16 +110,10 @@ void FTInputLabel::applyKey(int key) {
             updateLabel();
             cursor_renderer_->resetAllActions();
             updateCursorRendererPos();
+            return true;
         }
     }
-}
-
-void FTInputLabel::keyPressedEvent(const FTKeyPressedEvent& event) {
-    applyKey(event.key_);
-}
-
-void FTInputLabel::keyRepeatEvent(const FTKeyRepeatEvent& event) {
-    applyKey(event.key_);
+    return false;
 }
 
 void FTInputLabel::setInputLabelActive() {

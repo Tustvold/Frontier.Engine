@@ -8,7 +8,7 @@
 class FTMouseDelegate {
     friend class FTInputManager;
 public:
-    explicit FTMouseDelegate() : priority_(DEFAULT_MOUSE_INPUT_PRIORITY), is_added_(false) {
+    explicit FTMouseDelegate() : priority_(DEFAULT_MOUSE_INPUT_PRIORITY), is_added_(false), swallows_events_(true) {
 
     }
 
@@ -33,7 +33,17 @@ public:
         return is_added_;
     }
 
+
+    void setSwallowsEvents(bool swallows_touches) {
+        swallows_events_ = swallows_touches;
+    }
+
+    bool getSwallowsEvents() const {
+        return swallows_events_;
+    }
+
 private:
     int priority_;
     bool is_added_;
+    bool swallows_events_;
 };

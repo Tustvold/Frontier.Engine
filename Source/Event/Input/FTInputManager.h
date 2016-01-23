@@ -52,8 +52,8 @@ private:
     std::unordered_map<std::string, std::shared_ptr<FTKeyMapping>> name_to_key_state_;
 
     std::vector<FTMouseDelegate*> mouse_delegates_;
-    FTMouseDelegate* active_mouse_delegates_[GLFW_MOUSE_BUTTON_LAST + 1];
+    std::vector<FTMouseDelegate*> active_mouse_delegates_[GLFW_MOUSE_BUTTON_LAST + 1];
 
     std::vector<FTKeyboardDelegate*> keyboard_delegates_;
-    std::unordered_map<int, FTKeyboardDelegate*> active_keyboard_delegates_;
+    std::unordered_map<int, std::vector<FTKeyboardDelegate*>> active_keyboard_delegates_;
 };
