@@ -52,11 +52,6 @@ TEST(TestInputManager, TestKeyStateReleased) {
 
     mock.key_callback_(nullptr, GLFW_KEY_0, 23, GLFW_RELEASE, 0);
 
-    // We don't expect the state to get updated until the next world tick
-    EXPECT_TRUE(state->isPressed());
-
-    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
-
     EXPECT_FALSE(state->isPressed());
 
     FTEngine::cleanup();
@@ -80,10 +75,6 @@ TEST(TestInputManager, TestKeyStateMultiMap) {
 
     mock.key_callback_(nullptr, GLFW_KEY_0, 23, GLFW_RELEASE, 0);
 
-    // We don't expect the state to get updated until the next world tick
-    EXPECT_TRUE(state->isPressed());
-
-    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
 
     EXPECT_FALSE(state->isPressed());
 
@@ -92,11 +83,6 @@ TEST(TestInputManager, TestKeyStateMultiMap) {
     EXPECT_TRUE(state->isPressed());
 
     mock.key_callback_(nullptr, GLFW_KEY_1, 23, GLFW_RELEASE, 0);
-
-    // We don't expect the state to get updated until the next world tick
-    EXPECT_TRUE(state->isPressed());
-
-    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
 
     EXPECT_FALSE(state->isPressed());
 
@@ -120,22 +106,13 @@ TEST(TestInputManager, TestKeyStateMultiMap2) {
     EXPECT_TRUE(state->isPressed());
 
     mock.key_callback_(nullptr, GLFW_KEY_0, 23, GLFW_PRESS, 0);
-    EXPECT_TRUE(state->isPressed());
-
-    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
 
     EXPECT_TRUE(state->isPressed());
     
     mock.key_callback_(nullptr, GLFW_KEY_0, 23, GLFW_RELEASE, 0);
 
-    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
-
     EXPECT_TRUE(state->isPressed());
     mock.key_callback_(nullptr, GLFW_KEY_1, 23, GLFW_RELEASE, 0);
-
-    EXPECT_TRUE(state->isPressed());
-
-    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
 
     EXPECT_FALSE(state->isPressed());
 
@@ -158,8 +135,6 @@ TEST(TestInputManager, TestKeyStateMods) {
     EXPECT_FALSE(state->isPressed());
     mock.key_callback_(nullptr, GLFW_KEY_0, 0, GLFW_RELEASE, 0);
 
-    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
-
     EXPECT_FALSE(state->isPressed());
 
     mock.key_callback_(nullptr, GLFW_KEY_0, 23, GLFW_PRESS, GLFW_MOD_ALT | GLFW_MOD_CONTROL | GLFW_MOD_SHIFT);
@@ -167,11 +142,6 @@ TEST(TestInputManager, TestKeyStateMods) {
     EXPECT_TRUE(state->isPressed());
 
     mock.key_callback_(nullptr, GLFW_KEY_0, 23, GLFW_RELEASE, 0);
-
-    // We don't expect the state to get updated until the next world tick
-    EXPECT_TRUE(state->isPressed());
-
-    engine_event_dispatcher->raiseEvent(FTUpdateEvent(1.0));
 
     EXPECT_FALSE(state->isPressed());
 
