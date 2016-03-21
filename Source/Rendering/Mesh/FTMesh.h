@@ -82,7 +82,13 @@ class FTMesh : public FTShaderNode {
 public:
     typedef FTMeshData<VertexType> MeshData;
 
-    explicit FTMesh(FTVertexShaderProgram* program = getShaderUtil<FTVertexShaderProgram>()) :
+    // We use constructor chaining instead of default parameters to work around a MSVC bug
+    // Where using default parameters causes an internal compiler error
+    FTMesh() : FTMesh(getShaderUtil<FTVertexShaderProgram>()) {
+        
+    }
+
+    explicit FTMesh(FTVertexShaderProgram* program) :
         FTShaderNode(program),
         vertex_array_id_(0),
         vertex_buffer_id_(0),
