@@ -25,6 +25,10 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/bin)
 
+get_filename_component(FRONTIER_ENGINE_PARENT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
+# All libraries and executables below this will have folders generated for them
+set(FRONTIER_ENGINE_FOLDER_MACRO_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
 
 # Rebind these to group up all the ThirdParty Projects so they don't clutter up the IDE
 macro (add_library name)
@@ -34,16 +38,17 @@ macro (add_library name)
             set (IS_INTERFACE 1)
         endif (e STREQUAL "INTERFACE" OR e STREQUAL "IMPORTED")
     ENDFOREACH(e)
-
-
+		
     if (${IS_INTERFACE})
         _add_library(${name} ${ARGN})
-    else (${IS_INTERFACE})
-        string(REPLACE ${CMAKE_SOURCE_DIR}/ "" FOLDER "${CMAKE_CURRENT_SOURCE_DIR}")
+    elseif (CMAKE_CURRENT_SOURCE_DIR MATCHES ${FRONTIER_ENGINE_FOLDER_MACRO_DIR})
+        string(REPLACE ${FRONTIER_ENGINE_PARENT_DIR}/ "" FOLDER "${CMAKE_CURRENT_SOURCE_DIR}")
         string(REPLACE "/" "//" FOLDER "${FOLDER}")
-
+		
         _add_library (${name} ${ARGN})
         set_target_properties(${name} PROPERTIES FOLDER ${FOLDER})
+	else (${IS_INTERFACE})
+		_add_library(${name} ${ARGN})
     endif (${IS_INTERFACE})
 endmacro (add_library)
 
@@ -54,18 +59,17 @@ macro (add_executable name)
             set (IS_INTERFACE 1)
         endif (e STREQUAL "INTERFACE")
     ENDFOREACH(e)
-
-
-
+	
     if (${IS_INTERFACE})
         _add_executable(${name} ${ARGN})
-    else (${IS_INTERFACE})
-        string(REPLACE ${CMAKE_SOURCE_DIR}/ "" FOLDER "${CMAKE_CURRENT_SOURCE_DIR}")
+    elseif (CMAKE_CURRENT_SOURCE_DIR MATCHES ${FRONTIER_ENGINE_FOLDER_MACRO_DIR})
+        string(REPLACE ${FRONTIER_ENGINE_PARENT_DIR}/ "" FOLDER "${CMAKE_CURRENT_SOURCE_DIR}")
         string(REPLACE "/" "//" FOLDER "${FOLDER}")
 
         _add_executable (${name} ${ARGN})
         set_target_properties(${name} PROPERTIES FOLDER ${FOLDER})
-
+	else (${IS_INTERFACE})
+		_add_library(${name} ${ARGN})
     endif (${IS_INTERFACE})
 endmacro (add_executable)
 
