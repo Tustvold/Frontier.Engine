@@ -41,7 +41,7 @@ macro (add_library name)
 		
     if (${IS_INTERFACE})
         _add_library(${name} ${ARGN})
-    elseif (CMAKE_CURRENT_SOURCE_DIR MATCHES ${FRONTIER_ENGINE_FOLDER_MACRO_DIR})
+    elseif (FRONTIER_ENGINE_FOLDER_MACRO_DIR MATCHES ${CMAKE_CURRENT_SOURCE_DIR})
         string(REPLACE ${FRONTIER_ENGINE_PARENT_DIR}/ "" FOLDER "${CMAKE_CURRENT_SOURCE_DIR}")
         string(REPLACE "/" "//" FOLDER "${FOLDER}")
 		
@@ -62,7 +62,7 @@ macro (add_executable name)
 	
     if (${IS_INTERFACE})
         _add_executable(${name} ${ARGN})
-    elseif (CMAKE_CURRENT_SOURCE_DIR MATCHES ${FRONTIER_ENGINE_FOLDER_MACRO_DIR})
+    elseif (FRONTIER_ENGINE_FOLDER_MACRO_DIR MATCHES ${CMAKE_CURRENT_SOURCE_DIR})
         string(REPLACE ${FRONTIER_ENGINE_PARENT_DIR}/ "" FOLDER "${CMAKE_CURRENT_SOURCE_DIR}")
         string(REPLACE "/" "//" FOLDER "${FOLDER}")
 
