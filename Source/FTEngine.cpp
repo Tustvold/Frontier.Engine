@@ -45,7 +45,7 @@ bool FTEngine::_setup(bool is_mocked) {
 
         // Open a window and create its OpenGL context
         window_ = glfwCreateWindow((int)window_size_.x, (int)window_size_.y, "FPS:", nullptr, nullptr);
-        FTAssert(window_ != nullptr, "Failed to open GLFW window. Most likely your system doesn't support OpenGL version 3.3");
+        FTAssert(window_ != nullptr, "Failed to open GLFW window. Most likely your system doesn't support OpenGL version 3.1");
         
         glfwMakeContextCurrent(window_);
 
