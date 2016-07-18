@@ -69,9 +69,13 @@ TEST(TestNode, TestCallOrder) {
     EXPECT_CALL(node, draw());
     EXPECT_CALL(node, post_draw());
 
-    node.visit(parent_matrix, false);
-    node.performDraw(camera.get());
+    uint32_t draw_order = 0;
 
+    node.visit(parent_matrix, false);
+    node.performDraw(camera.get(), draw_order);
+
+    EXPECT_EQ(draw_order, 1);
+    EXPECT_EQ(node.getDrawOrder(), 0);
 }
 
 
@@ -86,52 +90,70 @@ TEST(TestNode, TestCulling) {
     MockNodeChildren node;
     node.setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 80, 0)));
 
+    uint32_t draw_order = 0;
+
     EXPECT_CALL(node, draw());
 
     node.visit(parent_matrix, false);
-    node.performDraw(camera.get());
+    node.performDraw(camera.get(), draw_order);
+    EXPECT_EQ(draw_order, 1);
+    EXPECT_EQ(node.getDrawOrder(), 0);
 
 
     testing::Mock::VerifyAndClearExpectations(&node);
 
+    draw_order = 0;
     EXPECT_CALL(node, draw()).Times(0);
 
     node.setPosition(glm::vec2(-55, -85));
 
     node.visit(parent_matrix, false);
-    node.performDraw(camera.get());
+    node.performDraw(camera.get(), draw_order);
 
+    EXPECT_EQ(draw_order, 0);
+    EXPECT_EQ(node.getDrawOrder(), NODE_DRAW_ORDER_INVALID);
 
     testing::Mock::VerifyAndClearExpectations(&node);
 
+
+    draw_order = 0;
     EXPECT_CALL(node, draw()).Times(0);
 
     node.setPosition(glm::vec2(-0.1f, -0.1f));
     node.setAnchorPoint(glm::vec2(1.0f, 0.0f));
 
     node.visit(parent_matrix, false);
-    node.performDraw(camera.get());
+    node.performDraw(camera.get(), draw_order);
+
+    EXPECT_EQ(draw_order, 0);
+    EXPECT_EQ(node.getDrawOrder(), NODE_DRAW_ORDER_INVALID);
 
     testing::Mock::VerifyAndClearExpectations(&node);
 
+    draw_order = 0;
     EXPECT_CALL(node, draw()).Times(0);
 
     node.setPosition(glm::vec2(100.1f, 0.0f));
     node.setAnchorPoint(glm::vec2(0.0f, 0.0f));
 
     node.visit(parent_matrix, false);
-    node.performDraw(camera.get());
+    node.performDraw(camera.get(), draw_order);
+
+    EXPECT_EQ(draw_order, 0);
+    EXPECT_EQ(node.getDrawOrder(), NODE_DRAW_ORDER_INVALID);
 
     testing::Mock::VerifyAndClearExpectations(&node);
 
-
+    draw_order = 0;
     EXPECT_CALL(node, draw());
 
     node.setRotationQuaternion(glm::angleAxis((float)M_PI, glm::vec3(0, 0, 1)));
 
     node.visit(parent_matrix, false);
-    node.performDraw(camera.get());
+    node.performDraw(camera.get(), draw_order);
 
+    EXPECT_EQ(draw_order, 1);
+    EXPECT_EQ(node.getDrawOrder(), 0);
 }
 
 TEST(TestNode, TestCullingHierarchy) {
@@ -145,58 +167,76 @@ TEST(TestNode, TestCullingHierarchy) {
     auto child = std::make_shared<MockNodeChildren>();
     parent.addChild(std::static_pointer_cast<FTNode>(child));
     child->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 80, 0)));
-
     EXPECT_CALL(parent, draw()).Times(testing::AnyNumber());
+
+
+    uint32_t draw_order = 0;
     EXPECT_CALL(*child.get(), draw());
 
     parent.visit(parent_matrix, false);
-    parent.performDraw(camera.get());
+    parent.performDraw(camera.get(), draw_order);
+
+    EXPECT_EQ(draw_order, 2);
+    EXPECT_EQ(parent.getDrawOrder(), 0);
+    EXPECT_EQ(child->getDrawOrder(), 1);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
 
+    draw_order = 0;
     parent.setPosition(glm::vec2(-100, -100));
     EXPECT_CALL(*child.get(), draw()).Times(0);
     parent.visit(parent_matrix, false);
-    parent.performDraw(camera.get());
+    parent.performDraw(camera.get(), draw_order);
+
+    EXPECT_EQ(draw_order, 1);
+    EXPECT_EQ(parent.getDrawOrder(), 0);
+    EXPECT_EQ(child->getDrawOrder(), NODE_DRAW_ORDER_INVALID);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
 
+    draw_order = 0;
     child->setPosition(glm::vec2(100, 100));
     EXPECT_CALL(*child.get(), draw());
     parent.visit(parent_matrix, false);
-    parent.performDraw(camera.get());
+    parent.performDraw(camera.get(), draw_order);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
+    draw_order = 0;
+    
     parent.setPosition(glm::vec2(50, 50));
 
     child->setPosition(glm::vec2(60, 0));
     EXPECT_CALL(*child.get(), draw()).Times(0);
     parent.visit(parent_matrix, false);
-    parent.performDraw(camera.get());
+    parent.performDraw(camera.get(), draw_order);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
+    draw_order = 0;
+
     parent.setPosition(glm::vec2(50, 50));
     parent.setScale(glm::vec2(0.5f, 1.0f));
 
     child->setPosition(glm::vec2(60, 0));
     EXPECT_CALL(*child.get(), draw());
     parent.visit(parent_matrix, false);
-    parent.performDraw(camera.get());
+    parent.performDraw(camera.get(), draw_order);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
+    draw_order = 0;
     parent.setPosition(glm::vec2(0, 0));
     parent.setScale(glm::vec2(1.0f, 1.0f));
 
     child->setPosition(glm::vec2(110, 50));
     EXPECT_CALL(*child.get(), draw()).Times(0);
     parent.visit(parent_matrix, false);
-    parent.performDraw(camera.get());
+    parent.performDraw(camera.get(), draw_order);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
+    draw_order = 0;
     child->setRotationQuaternion(glm::angleAxis((float)M_PI, glm::vec3(0, 0, 1)));
     EXPECT_CALL(*child.get(), draw());
     parent.visit(parent_matrix, false);
-    parent.performDraw(camera.get());
+    parent.performDraw(camera.get(), draw_order);
 
 }
 

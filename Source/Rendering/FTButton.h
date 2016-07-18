@@ -1,5 +1,7 @@
 #pragma once
 #include <Event/Input/FTMouseDelegate.h>
+// When using scene graph priority, the delegate's priority is determined by adding this number to the draw_order of the node
+#define FTBUTTON_BASE_NODE_PRIORITY 256
 
 class FTNode;
 // Wraps around an FTNode and performs intersection tests based on its bounding shape
@@ -15,6 +17,7 @@ public:
         ClickDelegatesEnabled = 1,
         SelectDelegatesEnabled = 1 << 1,
         EnterExitDelegatesEnabled = 1 << 2,
+        UseSceneGraphPriority = 1 << 3
     };
 
 
@@ -28,6 +31,13 @@ public:
     
     
     void onMouseMove(const FTMouseMoveEvent& event);
+
+    void setMouseDelegatePriority(uint32_t priority) override {
+        setUseSceneGraphPriority(false);
+        FTMouseDelegate::setMouseDelegatePriority(priority);
+    }
+
+    uint32_t getMouseDelegatePriority() const override;
 
     template <class X, class Y>
     void bindMouseEnterDelegate(Y* pthis, void(X::* function_to_bind)(FTButton*)) {
@@ -92,6 +102,17 @@ public:
 
     bool getEnterExitDelegatesEnabled() const {
         return (flags_ & EnterExitDelegatesEnabled) != 0;
+    }
+
+    bool getUseSceneGraphPriority() const {
+        return (flags_ & UseSceneGraphPriority) != 0;
+    }
+
+    void setUseSceneGraphPriority(bool enabled) {
+        if (enabled)
+            flags_ |= UseSceneGraphPriority;
+        else
+            flags_ &= ~UseSceneGraphPriority;
     }
 
     void enableClickDelegates();

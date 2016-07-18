@@ -23,9 +23,9 @@ public:
 
     virtual bool getMouseDelegateEnabled() const = 0;
 
-    void setMouseDelegatePriority(int priority);
+    virtual void setMouseDelegatePriority(uint32_t priority);
 
-    int getMouseDelegatePriority() const {
+    virtual uint32_t getMouseDelegatePriority() const {
         return priority_;
     }
 
@@ -43,7 +43,7 @@ public:
     }
 
 private:
-    int priority_;
+    uint32_t priority_;
     bool is_added_;
     bool swallows_events_;
 };

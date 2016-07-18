@@ -10,6 +10,9 @@ class FTView;
 class FTScene;
 class FTCamera;
 
+// The draw_order will be this if the node hasn't been drawn
+#define NODE_DRAW_ORDER_INVALID std::numeric_limits<uint32_t>::max()
+
 // The base class of all elements in the scene hierarchy
 class FTNode : public FTDrawable {
 public:
@@ -40,7 +43,7 @@ public:
     // Override to provide custom frustrum culling code
     virtual bool isVisible(FTCamera* camera);
 
-    virtual void performDraw(FTCamera* camera);
+    virtual void performDraw(FTCamera* camera, uint32_t& draw_order);
 
     virtual void pre_draw(const glm::mat4& mvp) {
     }
@@ -211,6 +214,10 @@ public:
         tag_ = tag;
     }
 
+    uint32_t getDrawOrder() const {
+        return draw_order_;
+    }
+
 protected:
     std::unique_ptr<FTBoundingShape> bounding_shape_;
     std::unique_ptr<FTButton> button_;
@@ -233,6 +240,7 @@ protected:
     FTNode* parent_;
     FTView* view_;
     FTScene* scene_;
+    uint32_t draw_order_; // The number node in the draw order - can be used for scene based priority
 
     // Called after this node is added to the hierarchy of an FTView
     virtual void onAddedToView(FTView* view);

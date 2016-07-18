@@ -3,7 +3,7 @@
 #include <Rendering/FTView.h>
 #include <vector>
 
-// The root object of every scene, contains a list of the FTLayers to be drawn
+// The root object of every scene, contains a list of the FTViews to be drawn
 class FTScene {
     friend class FTDirector;
 public:
@@ -30,8 +30,9 @@ public:
     }
 
     virtual void draw() {
+        uint32_t draw_order = 0;
         for (auto it = views_.begin(); it != views_.end(); ++it) {
-            (*it)->performDraw();
+            (*it)->performDraw(draw_order);
         }
     }
 

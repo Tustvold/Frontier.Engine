@@ -13,8 +13,6 @@ struct FTKeyPressedEvent;
 // Singleton which handles input
 class FTInputManager {
     friend class FTEngine;
-    friend class FTMouseDelegate;
-    friend class FTKeyboardDelegate;
 public:
 
     const std::shared_ptr<FTKeyMapping>& getKeyState(const std::string& name, int default_key = GLFW_KEY_UNKNOWN, int default_mods = 0);
@@ -26,6 +24,12 @@ public:
     void addKeyboardDelegate(FTKeyboardDelegate* delegate);
 
     void removeKeyboardDelegate(FTKeyboardDelegate* delegate);
+
+    // Sort list of delegates based on their priority
+    // Automatically called before glfwPollEvents
+    void sortDelegates();
+    void sortMouseDelegates();
+    void sortKeyboardDelegates();
 
 private:
 
@@ -42,12 +46,8 @@ private:
     void mouseButtonReleasedEvent(const FTMouseButtonReleasedEvent& event);
     void mouseMovedEvent(const FTMouseMoveEvent& event);
     void mouseExitEvent(const FTMouseExitEvent& event);
-
-    void sortMouseDelegates();
-    void mouseDelegatePriorityChange(FTMouseDelegate* mouse_delegate);
-
-    void sortKeyboardDelegates();
-    void keyboardDelegatePriorityChange(FTKeyboardDelegate* ft_keyboard_delegate);
+    
+    
 
     std::unordered_map<std::string, std::shared_ptr<FTKeyMapping>> name_to_key_state_;
 
@@ -56,4 +56,6 @@ private:
 
     std::vector<FTKeyboardDelegate*> keyboard_delegates_;
     std::unordered_map<int, std::vector<FTKeyboardDelegate*>> active_keyboard_delegates_;
+    bool mouse_delegates_protected_;
+    bool keyboard_delegates_protected_;
 };

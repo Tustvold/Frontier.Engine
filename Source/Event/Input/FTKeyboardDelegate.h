@@ -27,9 +27,9 @@ public:
 
     virtual bool getKeyboardDelegateEnabled() const = 0;
 
-    void setKeyboardDelegatePriority(int priority);
+    void setKeyboardDelegatePriority(uint32_t priority);
 
-    int getKeyboardDelegatePriority() const {
+    uint32_t getKeyboardDelegatePriority() const {
         return priority_;
     }
 
@@ -46,7 +46,7 @@ public:
     }
 
 private:
-    int priority_;
+    uint32_t priority_;
     bool is_added_;
     bool swallows_events_;
 };

@@ -15,10 +15,10 @@ public:
 
     }
 
-    void performDraw() {
+    void performDraw(uint32_t& draw_order) {
         camera_->visit();
         camera_->preDraw();
-        FTNode::performDraw(camera_.get());
+        FTNode::performDraw(camera_.get(), draw_order);
     }
 
 

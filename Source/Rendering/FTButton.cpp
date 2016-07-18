@@ -31,7 +31,7 @@ void FTButton::setDeselected() {
 
 FTButton::FTButton(FTNode* renderer) :
         mouse_entered_(false), 
-        flags_(0),
+        flags_(UseSceneGraphPriority),
         node_(renderer) {
 }
 
@@ -86,7 +86,15 @@ void FTButton::onMouseMove(const FTMouseMoveEvent& event) {
     mouse_entered_ = contains;
 }
 
+uint32_t FTButton::getMouseDelegatePriority() const {
+    if (!getUseSceneGraphPriority())
+        return FTMouseDelegate::getMouseDelegatePriority();
+    return node_->getDrawOrder() + FTBUTTON_BASE_NODE_PRIORITY;
+}
+
 bool FTButton::getMouseDelegateEnabled() const {
+    if (getUseSceneGraphPriority() && node_->getDrawOrder() == NODE_DRAW_ORDER_INVALID)
+        return false;
     if (mouse_input_enabled_delegate_.empty())
         return node_->getIsActive();
     return node_->getIsActive() && mouse_input_enabled_delegate_(this);

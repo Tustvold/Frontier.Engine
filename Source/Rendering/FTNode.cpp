@@ -80,6 +80,7 @@ bool FTNode::updateTransformMatrices(const glm::mat4& parent_matrix) {
 
 
 void FTNode::visit(const glm::mat4& parent_matrix, bool parent_updated) {
+    draw_order_ = NODE_DRAW_ORDER_INVALID;
     auto original_dirty = flags_ & DirtyMask;
 
     if (original_dirty & TransformDirty || parent_updated || bounding_shape_->getDirty())
@@ -93,7 +94,7 @@ void FTNode::visit(const glm::mat4& parent_matrix, bool parent_updated) {
         bounding_shape_->visit();
 }
 
-void FTNode::performDraw(FTCamera* camera) {
+void FTNode::performDraw(FTCamera* camera, uint32_t& draw_order) {
     if (getHidden())
         return;
 
@@ -101,13 +102,14 @@ void FTNode::performDraw(FTCamera* camera) {
     if ((flags_ & FrustrumCullEnabled) == 0 || isVisible(camera)) {
         glm::mat4 mvp = camera->getViewProjectionMatrix() * model_matrix_;
 
+        draw_order_ = draw_order++;
         this->pre_draw(mvp);
         this->draw();
         this->post_draw();
     }
 
     for (auto it = children_.begin(); it != children_.end(); ++it) {
-        (*it)->performDraw(camera);
+        (*it)->performDraw(camera, draw_order);
     }
 }
 
@@ -169,12 +171,14 @@ void FTNode::onRemovedFromScene() {
 
 void FTNode::onEnter() {
     flags_ |= IsActive;
+    draw_order_ = NODE_DRAW_ORDER_INVALID;
     for (auto it = children_.begin(); it != children_.end(); ++it)
         (*it)->onEnter();
 }
 
 void FTNode::onExit() {
     flags_ &= ~IsActive;
+    draw_order_ = NODE_DRAW_ORDER_INVALID;
     for (auto it = children_.begin(); it != children_.end(); ++it)
         (*it)->onExit();
 }

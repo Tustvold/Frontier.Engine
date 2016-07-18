@@ -2,8 +2,6 @@
 #include <FTEngine.h>
 #include "FTInputManager.h"
 
-void FTMouseDelegate::setMouseDelegatePriority(int priority) {
+void FTMouseDelegate::setMouseDelegatePriority(uint32_t priority) {
     priority_ = priority;
-    if (is_added_)
-        FTEngine::getInputManager()->mouseDelegatePriorityChange(this);
 }

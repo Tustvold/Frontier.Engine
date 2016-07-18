@@ -380,6 +380,8 @@ TEST(TestInputManager, TestMouseDelegatePriorityChange) {
     del2.setMouseDelegatePriority(8);
     del3.setMouseDelegatePriority(7);
 
+    FTEngine::getInputManager()->sortDelegates();
+
     mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
 
 
@@ -545,10 +547,14 @@ TEST(TestInputManager, TestKeyboardDelegatePriorityChange) {
     del2.setKeyboardDelegatePriority(8);
     del3.setKeyboardDelegatePriority(7);
 
+    FTEngine::getInputManager()->sortDelegates();
+
     mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_PRESS, 0);
     mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_REPEAT, 0);
 
     del3.setKeyboardDelegatePriority(0);
+
+    FTEngine::getInputManager()->sortDelegates();
 
     mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_REPEAT, 0);
     mock.key_callback_(nullptr, GLFW_KEY_ENTER, 234, GLFW_RELEASE, 0);

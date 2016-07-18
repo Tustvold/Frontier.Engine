@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <FTEngine.h>
 
-FTInputManager::FTInputManager() {
+FTInputManager::FTInputManager(): mouse_delegates_protected_(false), keyboard_delegates_protected_(false) {
 
 }
 
@@ -46,6 +46,7 @@ void FTInputManager::keyPressedEvent(const FTKeyPressedEvent& event) {
 
 
     std::vector<FTKeyboardDelegate*> delegates;
+    keyboard_delegates_protected_ = true;
     for (auto it = keyboard_delegates_.begin(); it != keyboard_delegates_.end(); ++it) {
         if ((*it)->getKeyboardDelegateEnabled() && (*it)->onKeyPressed(event)) {
             delegates.push_back(*it);
@@ -53,6 +54,7 @@ void FTInputManager::keyPressedEvent(const FTKeyPressedEvent& event) {
                 break;
         }
     }
+    keyboard_delegates_protected_ = false;
 
     if (delegates.size() == 0)
         return;
@@ -74,7 +76,7 @@ void FTInputManager::keyReleasedEvent(const FTKeyReleasedEvent& event) {
     if (event.key_ == GLFW_KEY_UNKNOWN)
         return;
     FTAssert(event.key_ >= 0 && event.key_ <= GLFW_KEY_LAST, "Invalid Key");
-    
+
     auto it = active_keyboard_delegates_.find(event.key_);
     if (it == active_keyboard_delegates_.end())
         return;
@@ -93,6 +95,7 @@ void FTInputManager::mouseButtonPressedEvent(const FTMouseButtonPressedEvent& ev
 
     std::vector<FTMouseDelegate*> delegates;
 
+    mouse_delegates_protected_ = true;
     for (auto it = mouse_delegates_.begin(); it != mouse_delegates_.end(); ++it) {
         if ((*it)->getMouseDelegateEnabled() && (*it)->onMouseDown(event)) {
             delegates.push_back(*it);
@@ -100,6 +103,7 @@ void FTInputManager::mouseButtonPressedEvent(const FTMouseButtonPressedEvent& ev
                 break;
         }
     }
+    mouse_delegates_protected_ = false;
     active_mouse_delegates_[event.mouse_button_] = std::move(delegates);
 }
 
@@ -134,31 +138,34 @@ void FTInputManager::mouseExitEvent(const FTMouseExitEvent& event) {
     }
 }
 
-
-void FTInputManager::sortMouseDelegates() {
-    std::stable_sort(mouse_delegates_.begin(), mouse_delegates_.end(), [](FTMouseDelegate* a, FTMouseDelegate* b) {
-                         return a->getMouseDelegatePriority() > b->getMouseDelegatePriority();
-                     });
-}
-
-void FTInputManager::mouseDelegatePriorityChange(FTMouseDelegate* mouse_delegate) {
+void FTInputManager::sortDelegates() {
     sortMouseDelegates();
-}
-
-void FTInputManager::sortKeyboardDelegates() {
-    std::stable_sort(keyboard_delegates_.begin(), keyboard_delegates_.end(), [](FTKeyboardDelegate* a, FTKeyboardDelegate* b) {
-        return a->getKeyboardDelegatePriority() > b->getKeyboardDelegatePriority();
-    });
-}
-
-void FTInputManager::keyboardDelegatePriorityChange(FTKeyboardDelegate* ft_keyboard_delegate) {
     sortKeyboardDelegates();
 }
 
+void FTInputManager::sortMouseDelegates() {
+    FTAssert(!mouse_delegates_protected_, "Mouse Delegates cannot be modified");
+    mouse_delegates_protected_ = true;
+    std::stable_sort(mouse_delegates_.begin(), mouse_delegates_.end(), [](FTMouseDelegate* a, FTMouseDelegate* b) {
+                         return a->getMouseDelegatePriority() > b->getMouseDelegatePriority();
+                     });
+    mouse_delegates_protected_ = false;
+}
+
+void FTInputManager::sortKeyboardDelegates() {
+    FTAssert(!keyboard_delegates_protected_, "Keyboard Delegates cannot be modified");
+    keyboard_delegates_protected_ = true;
+    std::stable_sort(keyboard_delegates_.begin(), keyboard_delegates_.end(), [](FTKeyboardDelegate* a, FTKeyboardDelegate* b) {
+                         return a->getKeyboardDelegatePriority() > b->getKeyboardDelegatePriority();
+                     });
+    keyboard_delegates_protected_ = false;
+}
+
 void FTInputManager::addMouseDelegate(FTMouseDelegate* delegate) {
-    // TODO Insert into correct position instead of sorting whole array
+    FTAssert(!mouse_delegates_protected_, "Mouse Delegates cannot be modified");
     FTAssert(!delegate->is_added_, "Delegate already added");
     delegate->is_added_ = true;
+    
     mouse_delegates_.push_back(delegate);
     sortMouseDelegates();
 }
@@ -174,6 +181,7 @@ void FTInputManager::removeMouseDelegate(FTMouseDelegate* delegate) {
         }
     }
 
+    FTAssert(!mouse_delegates_protected_, "Mouse Delegates cannot be modified");
     auto it = std::find(mouse_delegates_.begin(), mouse_delegates_.end(), delegate);
     FTAssert(it != mouse_delegates_.end(), "Couldn't find mouse delegate to remove");
     (*it)->is_added_ = false;
@@ -181,7 +189,7 @@ void FTInputManager::removeMouseDelegate(FTMouseDelegate* delegate) {
 }
 
 void FTInputManager::addKeyboardDelegate(FTKeyboardDelegate* delegate) {
-    // TODO Insert into correct position instead of sorting whole array
+    FTAssert(!keyboard_delegates_protected_, "Keyboard Delegates cannot be modified");
     FTAssert(!delegate->is_added_, "Delegate already added");
     delegate->is_added_ = true;
     keyboard_delegates_.push_back(delegate);
@@ -197,9 +205,10 @@ void FTInputManager::removeKeyboardDelegate(FTKeyboardDelegate* delegate) {
             it->second.erase(pos);
         }
     }
-
+    FTAssert(!keyboard_delegates_protected_, "Keyboard Delegates cannot be modified")
     auto it = std::find(keyboard_delegates_.begin(), keyboard_delegates_.end(), delegate);
     FTAssert(it != keyboard_delegates_.end(), "Couldn't find mouse delegate to remove");
     (*it)->is_added_ = false;
     keyboard_delegates_.erase(it);
 }
+

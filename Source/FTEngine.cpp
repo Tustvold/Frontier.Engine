@@ -140,6 +140,7 @@ int FTEngine::_run() {
         draw_event.window_ = window_;
         engine_event_dispatcher->raiseEvent(draw_event);
 
+        getInputManager()->sortDelegates();
         
         glfwPollEvents();
         

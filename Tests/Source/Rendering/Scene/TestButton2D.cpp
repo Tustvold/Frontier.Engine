@@ -131,6 +131,7 @@ TEST(TestButton2D, TestEnterExitDelegates) {
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
         auto& button = node->getButton();
 
+        button->setUseSceneGraphPriority(false);
         button->bindMouseEnterDelegate(&testDelegates, &FTButton2DTestDelegates::enterDelegate);
         button->bindMouseExitDelegate(&testDelegates, &FTButton2DTestDelegates::exitDelegate);
         button->bindMousePressedDelegate(&testDelegates, &FTButton2DTestDelegates::pressedDelegate);
@@ -208,6 +209,7 @@ TEST(TestButton2D, TestPressDelegates) {
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
 
         auto& button = node->getButton();
+        button->setUseSceneGraphPriority(false);
         button->bindMouseEnterDelegate(&testDelegates, &FTButton2DTestDelegates::enterDelegate);
         button->bindMouseExitDelegate(&testDelegates, &FTButton2DTestDelegates::exitDelegate);
         button->bindMousePressedDelegate(&testDelegates, &FTButton2DTestDelegates::pressedDelegate);
@@ -338,6 +340,7 @@ TEST(TestButton2D, TestEnabledDelegate) {
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
         auto& button = node->getButton();
+        button->setUseSceneGraphPriority(false);
         button->bindEnabledDelegate(&testDelegates, &FTButton2DTestDelegates::enabledDelegate);
 
         auto view = std::make_shared<FTView>();
@@ -377,6 +380,7 @@ TEST(TestButton2D, TestSelectDelegatesSimple) {
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
 
         auto& button = node->getButton();
+        button->setUseSceneGraphPriority(false);
         button->bindMousePressedDelegate(&testDelegates, &FTButton2DTestDelegates::pressedDelegate);
         button->bindOnSelectDelegate(&testDelegates, &FTButton2DTestDelegates::selectDelegate);
         button->bindOnDeselectDelegate(&testDelegates, &FTButton2DTestDelegates::deselectDelegate);
@@ -440,6 +444,7 @@ TEST(TestButton2D, TestDeselectDelegates) {
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
 
         auto& button = node->getButton();
+        button->setUseSceneGraphPriority(false);
         button->bindMousePressedDelegate(&testDelegates, &FTButton2DTestDelegates::pressedDelegate);
         button->bindOnSelectDelegate(&testDelegates, &FTButton2DTestDelegates::selectDelegate);
         button->bindOnDeselectDelegate(&testDelegates, &FTButton2DTestDelegates::deselectDelegate);
@@ -507,12 +512,14 @@ TEST(TestButton2D, TestSelectMultiple) {
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
 
         auto& button = node->getButton();
+        button->setUseSceneGraphPriority(false);
         button->bindMousePressedDelegate(&testDelegates, &FTButton2DTestDelegates::pressedDelegate);
         button->bindOnSelectDelegate(&testDelegates, &FTButton2DTestDelegates::selectDelegate);
         button->bindOnDeselectDelegate(&testDelegates, &FTButton2DTestDelegates::deselectDelegate);
         button->bindMouseReleasedDelegate(&testDelegates, &FTButton2DTestDelegates::releasedDelegate);
 
         auto& other_button = other_node->getButton();
+        other_button->setUseSceneGraphPriority(false);
         other_button->bindMousePressedDelegate(&other_testDelegates, &FTButton2DTestDelegates::pressedDelegate);
         other_button->bindOnSelectDelegate(&other_testDelegates, &FTButton2DTestDelegates::selectDelegate);
         other_button->bindOnDeselectDelegate(&other_testDelegates, &FTButton2DTestDelegates::deselectDelegate);
