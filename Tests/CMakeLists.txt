@@ -1,7 +1,7 @@
 enable_testing()
 
-SET(SOURCES )
-SET(HEADERS )
+SET(SOURCES)
+SET(HEADERS)
 
 add_subdirectory(Source)
 
@@ -11,36 +11,43 @@ FILE(GLOB_RECURSE CMAKELISTS Source/*CMakeLists.txt)
 
 add_executable(Frontier.Engine.Tests ${SOURCES} ${HEADERS} ${CMAKELISTS})
 target_include_directories(Frontier.Engine.Tests PUBLIC
-    ../ThirdParty/glmock/glfwmock/
-    Source)
+        ../ThirdParty/glmock/glfwmock/
+        Source)
 
 # Rebuild directory structure within Visual Studio
-foreach(FILE ${SOURCES} ${HEADERS} ${CMAKELISTS})
-	get_filename_component(PARENT_DIR "${FILE}" PATH)
+foreach (FILE ${SOURCES} ${HEADERS} ${CMAKELISTS})
+    get_filename_component(PARENT_DIR "${FILE}" PATH)
 
-	string(REPLACE ${CMAKE_CURRENT_SOURCE_DIR} "" GROUP "${PARENT_DIR}")
-	string(REPLACE "/" "\\" GROUP "${GROUP}")
+    string(REPLACE ${CMAKE_CURRENT_SOURCE_DIR} "" GROUP "${PARENT_DIR}")
+    string(REPLACE "/" "\\" GROUP "${GROUP}")
 
-	source_group("${GROUP}" FILES "${FILE}")
-endforeach()
+    source_group("${GROUP}" FILES "${FILE}")
+endforeach ()
 
-	
+
 target_link_libraries(Frontier.Engine.Tests
-    Frontier.Engine
-    freetype-gl
-    freetype
-    glfwmock
-    glewmock
-    glmock
-)
-	
+        Frontier.Engine
+        freetype-gl
+        freetype
+        glfwmock
+        glewmock
+        glmock
+        )
+
 
 # Move back into Frontier.Engine directory within Visual Studio
 set_target_properties(Frontier.Engine.Tests PROPERTIES FOLDER Frontier.Engine)
-target_compile_features ( Frontier.Engine.Tests PRIVATE cxx_static_assert
-    cxx_auto_type )
+target_compile_features(Frontier.Engine.Tests PRIVATE cxx_static_assert
+        cxx_auto_type)
+
+# MSVC by default runs programs with project's directory as the working directory
+# So we need to copy resources there also
+if (MSVC)
+    add_custom_command(TARGET Frontier.Engine.Tests POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_CURRENT_SOURCE_DIR}/Resources ${CMAKE_CURRENT_BINARY_DIR}/TestResources)
+endif ()
 
 add_custom_command(TARGET Frontier.Engine.Tests POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy_directory
-                       ${CMAKE_CURRENT_SOURCE_DIR}/Resources ${CMAKE_CURRENT_BINARY_DIR}/Resources)
-
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/Resources ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TestResources)

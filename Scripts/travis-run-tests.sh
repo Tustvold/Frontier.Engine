@@ -9,5 +9,5 @@ cmake .. -G "Unix Makefiles"
 
 cmake --build . --target Frontier.Engine.Tests
 
-cd Tests
-../bin/Frontier.Engine.Tests
+cd bin
+./Frontier.Engine.Tests

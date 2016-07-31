@@ -68,7 +68,11 @@ void FTFileManager::writeToFile(const std::string& file_path, const std::string&
 
 void FTFileManager::createDirectory(const std::string& path) {
 #if defined(_WIN32)
-    _mkdir(path.c_str());
+    #if defined(_MSC_VER)
+        _mkdir(path.c_str());
+    #else
+        mkdir(path.c_str());
+    #endif
 #else 
     mkdir(path.c_str(), 0777); // notice that 777 is different than 0777
 #endif
@@ -76,7 +80,11 @@ void FTFileManager::createDirectory(const std::string& path) {
 
 void FTFileManager::deleteEmptyDirectory(const std::string& path) {
 #if defined(_WIN32)
-    _rmdir(path.c_str());
+    #if defined(_MSC_VER)
+        _rmdir(path.c_str());
+    #else
+        rmdir(path.c_str());
+    #endif
 #else 
     rmdir(path.c_str());
 #endif

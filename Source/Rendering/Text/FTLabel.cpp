@@ -17,7 +17,7 @@ FTIndexedTexturedMesh(shader),
 is_mutable_(is_mutable),
 font_size_(font_size) {
 
-    load(fontpath, FTStringUtil<wchar_t>::convertString(text));
+    load(fontpath, FTWCharUtil::convertString(text));
 }
 
 void FTLabel::load(const std::string& fontpath, const std::wstring& text) {

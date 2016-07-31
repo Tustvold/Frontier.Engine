@@ -15,9 +15,9 @@ FTFont::~FTFont() {
 }
 
 ftgl::texture_font_t* FTFont::cacheFontSize(int size) {
-    static auto cache = L" !\"#$%&'()*+,-./0123456789:;<=>?"
-        L"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
-        L"`abcdefghijklmnopqrstuvwxyz{|}~";
+    static auto cache = " !\"#$%&'()*+,-./0123456789:;<=>?"
+        "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
+        "`abcdefghijklmnopqrstuvwxyz{|}~";
 
     auto it = fonts_.find(size);
     if (it != fonts_.end())
@@ -25,6 +25,7 @@ ftgl::texture_font_t* FTFont::cacheFontSize(int size) {
 
     ftgl::texture_font_t* font = texture_font_new_from_file(font_texture_->getTextureAtlas(), (float)(size), font_path_.c_str());
     size_t missed = texture_font_load_glyphs(font, cache);
+    font_texture_->flushData();
 
     fonts_[size] = font;
 
@@ -42,6 +43,7 @@ std::unique_ptr<FTFontMeshData> FTFont::generateMeshForString(const std::basic_s
 
 void FTFont::populateMeshDataForString(FTFontMeshData* data, const std::basic_string<wchar_t>& text, int size) {
     ftgl::texture_font_t* font = cacheFontSize(size);
+    auto* atlas = font_texture_->getTextureAtlas();
     size_t length = text.length();
     auto& vertices = data->getVertices();
     auto& indices = data->getIndices();
@@ -53,14 +55,26 @@ void FTFont::populateMeshDataForString(FTFontMeshData* data, const std::basic_st
 
     FTVertexTexture<glm::vec2> vertex;
 
+    // TODO: Rework to use UTF-8 everywhere
+    std::vector<char> buffer(MB_CUR_MAX);
+
+    bool texture_dirty = false;
+
     float maxHeight = 0.0f;
     //float r = color->red, g = color->green, b = color->blue, a = color->alpha;
     for (i = 0; i < length; ++i) {
-        texture_glyph_t* glyph = texture_font_get_glyph(font, text[i]);
+        wctomb(buffer.data(), text[i]);
+
+        auto before = atlas->used;
+        texture_glyph_t* glyph = texture_font_get_glyph(font, buffer.data());
+        // This is a hack to determine if the texture has been modified
+        texture_dirty |= atlas->used != before;
+
         if (glyph != nullptr) {
             float kerning = 0.0f;
             if (i > 0) {
-                kerning = texture_glyph_get_kerning(glyph, text[i - 1]);
+                wctomb(buffer.data(), text[i - 1]);
+                kerning = texture_glyph_get_kerning(glyph, buffer.data());
             }
             pen.x += kerning;
             glyph_starts.push_back(pen.x);

@@ -4,6 +4,14 @@
 
 #define INT_TO_FVECTOR(a,b,c) (irr::f32)(a),(irr::f32)(b),(irr::f32)(c)
 
+#ifndef M_PI
+#define M_PI           3.14159265358979323846
+#endif
+
+#ifndef M_PI_2
+#define M_PI_2         1.57079632679489661923
+#endif
+
 #define FTMAX(a, b) ( (a > b) ? a : b )
 #define FTMIN(a, b) ( (a < b) ? a : b )
 #define FTABS(a) (((a)<0) ? -(a) : (a))
