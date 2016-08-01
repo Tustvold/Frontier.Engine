@@ -27,7 +27,10 @@ option( GLFW_INSTALL "Generate Installation Target" OFF)
 option( GLFW_BUILD_EXAMPLES "Build the GLFW example programs" OFF)
 option( GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
 option(gtest_force_shared_crt "Use shared (DLL) run-time lib even when Google Test is built as static lib." ON)
+
+if (WIN32)
 option(gtest_disable_pthreads "" ON)
+endif()
 
 add_definitions(-DGLEW_STATIC)
 
