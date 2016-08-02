@@ -6,7 +6,7 @@
 	url = https://github.com/glfw/glfw.git
 [submodule "ThirdParty/freetype-gl"]
 	path = ThirdParty/freetype-gl
-	url = https://github.com/Tustvold/freetype-gl.git
+url=https://github.com/rougier/freetype-gl.git
 [submodule "ThirdParty/freetype2"]
 	path = ThirdParty/freetype2
 	url = git://git.savannah.nongnu.org/freetype/freetype2.git
