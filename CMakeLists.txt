@@ -45,6 +45,49 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
 
+# All libraries and executables below this will have folders generated for them
+set(FRONTIER_ENGINE_FOLDER_MACRO_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE STRING "Frontier Engine Folder Macro Directory")
+
+
+# Rebind these to group up all the ThirdParty Projects so they don't clutter up the IDE
+macro (add_library name)
+    set (IS_INTERFACE FALSE)
+    FOREACH (e ${ARGN})
+        if (e STREQUAL "INTERFACE" OR e STREQUAL "IMPORTED")
+            set (IS_INTERFACE TRUE)
+        endif (e STREQUAL "INTERFACE" OR e STREQUAL "IMPORTED")
+    ENDFOREACH(e)
+	
+	file(RELATIVE_PATH REL_PATH "${FRONTIER_ENGINE_FOLDER_MACRO_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
+	if (NOT IS_INTERFACE AND NOT "${REL_PATH}" MATCHES \\.\\.\\/)
+		get_filename_component(MACRO_PARENT_DIR ${FRONTIER_ENGINE_FOLDER_MACRO_DIR} DIRECTORY)
+		file(RELATIVE_PATH FOLDER "${MACRO_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
+        _add_library (${name} ${ARGN})
+        set_target_properties(${name} PROPERTIES FOLDER "${FOLDER}")
+	else ()
+		_add_library(${name} ${ARGN})
+    endif ()
+endmacro (add_library)
+
+macro (add_executable name)
+    set (IS_INTERFACE 0)
+    FOREACH (e ${ARGN})
+        if (e STREQUAL "INTERFACE")
+            set (IS_INTERFACE 1)
+        endif (e STREQUAL "INTERFACE")
+    ENDFOREACH(e)
+	
+    file(RELATIVE_PATH REL_PATH "${FRONTIER_ENGINE_FOLDER_MACRO_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
+	if (NOT IS_INTERFACE AND NOT "${REL_PATH}" MATCHES \\.\\.\\/)
+		get_filename_component(MACRO_PARENT_DIR ${FRONTIER_ENGINE_FOLDER_MACRO_DIR} DIRECTORY)
+		file(RELATIVE_PATH FOLDER "${MACRO_PARENT_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
+        _add_executable(${name} ${ARGN})
+        set_target_properties(${name} PROPERTIES FOLDER "${FOLDER}")
+	else ()
+		_add_executable(${name} ${ARGN})
+    endif ()
+endmacro (add_executable)
+
 # Set variables for freetype-gl
 set(GLEW_LIBRARY libglew_static)
 set(GLEW_INCLUDE_PATH  ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glew/include)
@@ -63,7 +106,25 @@ add_subdirectory(ThirdParty/glmock)
 # We disable this project as it doesn't build correctly on windows
 set_target_properties(makefont PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
 
+# We can use GLOB here as in order for a CMakeList to be used a pre-existing one
+# must have been modified and therefore the build system will know to rebuild
+FILE(GLOB_RECURSE CMAKELISTS Source/*CMakeLists.txt)
+
+# Rebuild directory structure within Visual Studio
+foreach(FILE ${SOURCES} ${HEADERS} ${CMAKELISTS})
+  get_filename_component(PARENT_DIR "${FILE}" PATH)
+
+  string(REPLACE ${CMAKE_CURRENT_SOURCE_DIR} "" GROUP "${PARENT_DIR}")
+  string(REPLACE "/" "\\" GROUP "${GROUP}")
+
+  source_group("${GROUP}" FILES "${FILE}")
+endforeach()
+
+
 add_library(Frontier.Engine STATIC ${SOURCES} ${HEADERS} ${CMAKELISTS})
+
+get_target_property(FRONTIER_DIR Frontier.Engine FOLDER)
+set_target_properties(glfw PROPERTIES FOLDER ${FRONTIER_DIR}/ThirdParty/glfw)
 
 SET (FRONTIER_ENGINE_INCLUDES 
     ${CMAKE_CURRENT_SOURCE_DIR}/Source

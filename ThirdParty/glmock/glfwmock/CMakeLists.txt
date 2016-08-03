@@ -9,5 +9,4 @@ target_link_libraries(glfwmock
 
 target_include_directories(glfwmock PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../../glfw/include/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../glewmock/
 )

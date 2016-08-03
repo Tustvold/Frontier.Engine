@@ -1,4 +1,5 @@
 #include "glfwmock.h"
+#include <GLFW/glfw3.h>
 
 GlfwMock::GlfwMock() {
 
@@ -9,156 +10,155 @@ GlfwMock::~GlfwMock() {
 }
 
 GlfwMock* GlfwMock::getMock() {
-    return (GlfwMock*)GlewMock::getMock();
+    return (GlfwMock*)IGLMock::getMock();
 }
 
 
 int glfwInit(void) {
-    return GlfwMock::getMock()->glfwInit();
+    return 0;
 }
 
 void glfwTerminate(void) {
-    GlfwMock::getMock()->glfwTerminate();
+    
 }
 
 void glfwGetVersion(int* major, int* minor, int* rev) {
-    GlfwMock::getMock()->glfwGetVersion(major, minor, rev);
 }
 
 const char* glfwGetVersionString(void) {
-    return GlfwMock::getMock()->glfwGetVersionString();
+    return 0;
 }
 
 GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun) {
-    return GlfwMock::getMock()->glfwSetErrorCallback(cbfun);
+    return 0;
 }
 
 GLFWmonitor** glfwGetMonitors(int* count) {
-    return GlfwMock::getMock()->glfwGetMonitors(count);
+    return 0;
 }
 
 GLFWmonitor* glfwGetPrimaryMonitor(void) {
-    return GlfwMock::getMock()->glfwGetPrimaryMonitor();
+    return 0;
 }
 
 void glfwGetMonitorPos(GLFWmonitor* monitor, int* xpos, int* ypos) {
-    GlfwMock::getMock()->glfwGetMonitorPos(monitor, xpos, ypos);
+    
 }
 
 void glfwGetMonitorPhysicalSize(GLFWmonitor* monitor, int* widthMM, int* heightMM) {
-    GlfwMock::getMock()->glfwGetMonitorPhysicalSize(monitor, widthMM, heightMM);
+    
 }
 
 const char* glfwGetMonitorName(GLFWmonitor* monitor) {
-    return GlfwMock::getMock()->glfwGetMonitorName(monitor);
+    return 0;
 }
 
 GLFWmonitorfun glfwSetMonitorCallback(GLFWmonitorfun cbfun) {
-    return GlfwMock::getMock()->glfwSetMonitorCallback(cbfun);
+    return 0;
 }
 
 const GLFWvidmode* glfwGetVideoModes(GLFWmonitor* monitor, int* count) {
-    return GlfwMock::getMock()->glfwGetVideoModes(monitor, count);
+    return 0;
 }
 
 const GLFWvidmode* glfwGetVideoMode(GLFWmonitor* monitor) {
-    return GlfwMock::getMock()->glfwGetVideoMode(monitor);
+    return 0;
 }
 
 void glfwSetGamma(GLFWmonitor* monitor, float gamma) {
-    GlfwMock::getMock()->glfwSetGamma(monitor, gamma);
+    
 }
 
 const GLFWgammaramp* glfwGetGammaRamp(GLFWmonitor* monitor) {
-    return GlfwMock::getMock()->glfwGetGammaRamp(monitor);
+    return 0;
 }
 
 void glfwSetGammaRamp(GLFWmonitor* monitor, const GLFWgammaramp* ramp) {
-    GlfwMock::getMock()->glfwSetGammaRamp(monitor, ramp);
+    
 }
 
 void glfwDefaultWindowHints(void) {
-    GlfwMock::getMock()->glfwDefaultWindowHints();
+    
 }
 
 void glfwWindowHint(int target, int hint) {
-    GlfwMock::getMock()->glfwWindowHint(target, hint);
+    
 }
 
 GLFWwindow* glfwCreateWindow(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share) {
-    return GlfwMock::getMock()->glfwCreateWindow(width, height, title, monitor, share);
+    return 0;
 }
 
 void glfwDestroyWindow(GLFWwindow* window) {
-    GlfwMock::getMock()->glfwDestroyWindow(window);
+    
 }
 
 int glfwWindowShouldClose(GLFWwindow* window) {
-    return GlfwMock::getMock()->glfwWindowShouldClose(window);
+    return 0;
 }
 
 void glfwSetWindowShouldClose(GLFWwindow* window, int value) {
-    GlfwMock::getMock()->glfwSetWindowShouldClose(window, value);
+    
 }
 
 void glfwSetWindowTitle(GLFWwindow* window, const char* title) {
-    GlfwMock::getMock()->glfwSetWindowTitle(window, title);
+    
 }
 
 void glfwGetWindowPos(GLFWwindow* window, int* xpos, int* ypos) {
-    GlfwMock::getMock()->glfwGetWindowPos(window, xpos, ypos);
+    
 }
 
 void glfwSetWindowPos(GLFWwindow* window, int xpos, int ypos) {
-    GlfwMock::getMock()->glfwSetWindowPos(window, xpos, ypos);
+    
 }
 
 void glfwGetWindowSize(GLFWwindow* window, int* width, int* height) {
-    GlfwMock::getMock()->glfwGetWindowSize(window, width, height);
+    
 }
 
 void glfwSetWindowSize(GLFWwindow* window, int width, int height) {
-    GlfwMock::getMock()->glfwSetWindowSize(window, width, height);
+    
 }
 
 void glfwGetFramebufferSize(GLFWwindow* window, int* width, int* height) {
-    GlfwMock::getMock()->glfwGetFramebufferSize(window, width, height);
+    
 }
 
 void glfwGetWindowFrameSize(GLFWwindow* window, int* left, int* top, int* right, int* bottom) {
-    GlfwMock::getMock()->glfwGetWindowFrameSize(window, left, top, right, bottom);
+    
 }
 
 void glfwIconifyWindow(GLFWwindow* window) {
-    GlfwMock::getMock()->glfwIconifyWindow(window);
+    
 }
 
 void glfwRestoreWindow(GLFWwindow* window) {
-    GlfwMock::getMock()->glfwRestoreWindow(window);
+    
 }
 
 void glfwShowWindow(GLFWwindow* window) {
-    GlfwMock::getMock()->glfwShowWindow(window);
+    
 }
 
 void glfwHideWindow(GLFWwindow* window) {
-    GlfwMock::getMock()->glfwHideWindow(window);
+    
 }
 
 GLFWmonitor* glfwGetWindowMonitor(GLFWwindow* window) {
-    return GlfwMock::getMock()->glfwGetWindowMonitor(window);
+    return 0;
 }
 
 int glfwGetWindowAttrib(GLFWwindow* window, int attrib) {
-    return GlfwMock::getMock()->glfwGetWindowAttrib(window, attrib);
+    return 0;
 }
 
 void glfwSetWindowUserPointer(GLFWwindow* window, void* pointer) {
-    GlfwMock::getMock()->glfwSetWindowUserPointer(window, pointer);
+    
 }
 
 void* glfwGetWindowUserPointer(GLFWwindow* window) {
-    return GlfwMock::getMock()->glfwGetWindowUserPointer(window);
+    return 0;
 }
 
 GLFWwindowposfun glfwSetWindowPosCallback(GLFWwindow* window, GLFWwindowposfun cbfun) {
@@ -190,55 +190,55 @@ GLFWframebuffersizefun glfwSetFramebufferSizeCallback(GLFWwindow* window, GLFWfr
 }
 
 void glfwPollEvents(void) {
-    GlfwMock::getMock()->glfwPollEvents();
+    
 }
 
 void glfwWaitEvents(void) {
-    GlfwMock::getMock()->glfwWaitEvents();
+    
 }
 
 void glfwPostEmptyEvent(void) {
-    GlfwMock::getMock()->glfwPostEmptyEvent();
+    
 }
 
 int glfwGetInputMode(GLFWwindow* window, int mode) {
-    return GlfwMock::getMock()->glfwGetInputMode(window, mode);
+    return 0;
 }
 
 void glfwSetInputMode(GLFWwindow* window, int mode, int value) {
-    GlfwMock::getMock()->glfwSetInputMode(window, mode, value);
+    
 }
 
 int glfwGetKey(GLFWwindow* window, int key) {
-    return GlfwMock::getMock()->glfwGetKey(window, key);
+    return 0;
 }
 
 int glfwGetMouseButton(GLFWwindow* window, int button) {
-    return GlfwMock::getMock()->glfwGetMouseButton(window, button);
+    return 0;
 }
 
 void glfwGetCursorPos(GLFWwindow* window, double* xpos, double* ypos) {
-    GlfwMock::getMock()->glfwGetCursorPos(window, xpos, ypos);
+    
 }
 
 void glfwSetCursorPos(GLFWwindow* window, double xpos, double ypos) {
-    GlfwMock::getMock()->glfwSetCursorPos(window, xpos, ypos);
+    
 }
 
 GLFWcursor* glfwCreateCursor(const GLFWimage* image, int xhot, int yhot) {
-    return GlfwMock::getMock()->glfwCreateCursor(image, xhot, yhot);
+    return 0;
 }
 
 GLFWcursor* glfwCreateStandardCursor(int shape) {
-    return GlfwMock::getMock()->glfwCreateStandardCursor(shape);
+    return 0;
 }
 
 void glfwDestroyCursor(GLFWcursor* cursor) {
-    GlfwMock::getMock()->glfwDestroyCursor(cursor);
+    
 }
 
 void glfwSetCursor(GLFWwindow* window, GLFWcursor* cursor) {
-    GlfwMock::getMock()->glfwSetCursor(window, cursor);
+    
 }
 
 GLFWkeyfun glfwSetKeyCallback(GLFWwindow* window, GLFWkeyfun cbfun) {
@@ -274,57 +274,57 @@ GLFWdropfun glfwSetDropCallback(GLFWwindow* window, GLFWdropfun cbfun) {
 }
 
 int glfwJoystickPresent(int joy) {
-    return GlfwMock::getMock()->glfwJoystickPresent(joy);
+    return 0;
 }
 
 const float* glfwGetJoystickAxes(int joy, int* count) {
-    return GlfwMock::getMock()->glfwGetJoystickAxes(joy, count);
+    return 0;
 }
 
 const unsigned char* glfwGetJoystickButtons(int joy, int* count) {
-    return GlfwMock::getMock()->glfwGetJoystickButtons(joy, count);
+    return 0;
 }
 
 const char* glfwGetJoystickName(int joy) {
-    return GlfwMock::getMock()->glfwGetJoystickName(joy);
+    return 0;
 }
 
 void glfwSetClipboardString(GLFWwindow* window, const char* string) {
-    GlfwMock::getMock()->glfwSetClipboardString(window, string);
+    
 }
 
 const char* glfwGetClipboardString(GLFWwindow* window) {
-    return GlfwMock::getMock()->glfwGetClipboardString(window);
+    return 0;
 }
 
 double glfwGetTime(void) {
-    return GlfwMock::getMock()->glfwGetTime();
+    return 0;
 }
 
 void glfwSetTime(double time) {
-    GlfwMock::getMock()->glfwSetTime(time);
+    
 }
 
 void glfwMakeContextCurrent(GLFWwindow* window) {
-    GlfwMock::getMock()->glfwMakeContextCurrent(window);
+    
 }
 
 GLFWwindow* glfwGetCurrentContext(void) {
-    return GlfwMock::getMock()->glfwGetCurrentContext();
+    return 0;
 }
 
 void glfwSwapBuffers(GLFWwindow* window) {
-    GlfwMock::getMock()->glfwSwapBuffers(window);
+    
 }
 
 void glfwSwapInterval(int interval) {
-    GlfwMock::getMock()->glfwSwapInterval(interval);
+    
 }
 
 int glfwExtensionSupported(const char* extension) {
-    return GlfwMock::getMock()->glfwExtensionSupported(extension);
+    return 0;
 }
 
 GLFWglproc glfwGetProcAddress(const char* procname) {
-    return GlfwMock::getMock()->glfwGetProcAddress(procname);
+    return 0;
 }

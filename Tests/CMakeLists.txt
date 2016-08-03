@@ -5,11 +5,7 @@ SET(HEADERS)
 
 add_subdirectory(Source)
 
-# We can use GLOB here as in order for a CMakeList to be used a pre-existing one
-# must have been modified and therefore the build system will know to rebuild
-FILE(GLOB_RECURSE CMAKELISTS Source/*CMakeLists.txt)
-
-add_executable(Frontier.Engine.Tests ${SOURCES} ${HEADERS} ${CMAKELISTS})
+add_executable(Frontier.Engine.Tests ${SOURCES} ${HEADERS})
 target_include_directories(Frontier.Engine.Tests PUBLIC
         ../ThirdParty/glmock/glfwmock/
         Source)
@@ -36,7 +32,8 @@ target_link_libraries(Frontier.Engine.Tests
 
 
 # Move back into Frontier.Engine directory within Visual Studio
-set_target_properties(Frontier.Engine.Tests PROPERTIES FOLDER Frontier.Engine)
+get_target_property(FRONTIER_DIR Frontier.Engine FOLDER)
+set_target_properties(Frontier.Engine.Tests PROPERTIES FOLDER ${FRONTIER_DIR})
 target_compile_features(Frontier.Engine.Tests PRIVATE cxx_static_assert
         cxx_auto_type)
 

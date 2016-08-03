@@ -1,5 +1,6 @@
-﻿#include "FTFontTexture.h"
-#include "freetype-gl.h"
+﻿#include "freetype-gl.h"
+#include "FTFontTexture.h"
+
 
 FTFontTexture::FTFontTexture(ftgl::texture_atlas_t* texture_atlas) : texture_atlas_(texture_atlas) {
     glGenTextures(1, &texture_atlas_->id);

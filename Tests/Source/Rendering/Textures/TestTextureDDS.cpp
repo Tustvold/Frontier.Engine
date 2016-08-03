@@ -1,19 +1,12 @@
 #include <Rendering/Textures/FTTextureDDS.h>
 #include <glfwmock.h>
 #include <FTEngine.h>
+#include <gmock/gmock.h>
 
 using ::testing::_;
 TEST(TestTextureDDS, TestLoadTextureDDS) {
     GlfwMock mock;
     FTEngine::setup(true);
-
-
-    EXPECT_CALL(mock, gl_GenTextures(1,_));
-    EXPECT_CALL(mock,
-        gl_CompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, 512, 512, 0, _, testing::NotNull()));
-    EXPECT_CALL(mock, gl_DeleteTextures(1, _));
-    EXPECT_CALL(mock, gl_BindTexture(_, _));
-    EXPECT_CALL(mock, gl_PixelStorei(_, _)).WillRepeatedly(testing::Return());
 
     auto texture = std::make_unique<FTTextureDDS>("TestResources/Textures/checker.DDS");
     EXPECT_EQ(texture->getWidth(), 512);
