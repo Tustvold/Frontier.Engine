@@ -62,7 +62,6 @@ TEST(TestCamera, TestRaycast3D) {
         camera->setClippingPlanes(1.0f, 10.0f);
         camera->setFov((float)M_PI_2);
         camera->setPosition(glm::vec3(50, 30, 20));
-        camera->setRotationDegrees(glm::vec2(0, 0));
 
 
         // Call this to update matrices
