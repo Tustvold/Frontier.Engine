@@ -14,6 +14,7 @@ private:
 
     float move_speed_;
     float rotation_speed_;
+    glm::vec2 rotation_euler_radians_;
 
     std::shared_ptr<FTKeyMapping> forward_state_;
     std::shared_ptr<FTKeyMapping> back_state_;

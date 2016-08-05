@@ -12,14 +12,6 @@ public:
     
     void visit() override;
 
-    void setVectors(const glm::vec3& up_vector, const glm::vec3& right_vector) {
-        up_vector_ = glm::normalize(up_vector);
-        right_vector_ = glm::normalize(right_vector);
-        look_direction_ = glm::cross(up_vector_, right_vector_);
-        view_matrix_dirty_ = true;
-        rotation_dirty_ = false;
-    }
-
     void setPosition(const glm::vec3& pos) {
         view_matrix_dirty_ = true;
         position_ = pos;
@@ -30,18 +22,18 @@ public:
         fov_ = fov;
     }
 
-    void setRotationRadians(const glm::vec2& rotation) {
-        rotation_euler_radians = rotation;
+    void setRotation(const glm::quat& rotation) {
+        rotation_ = rotation;
         rotation_dirty_ = true;
         view_matrix_dirty_ = true;
     }
 
-    void setRotationDegrees(const glm::vec2& rotation) {
-        setRotationRadians(rotation * DEG2RAD);
+    const glm::vec3& getPosition() const {
+        return position_;
     }
 
-    const glm::vec3& getPosition() {
-        return position_;
+    const glm::quat& getRotation() const {
+        return rotation_;
     }
 
     void setShouldUpdateViewFrustrum(bool should_update_view_frustrum) {
@@ -50,12 +42,19 @@ public:
 
     bool testBoundingBox(const glm::vec3& aab_origin, const glm::vec3& aab_half_extents) const override;
 
-    const glm::vec3& getUpVector() {
+    // Specify the up and look vectors for when there is no rotation applied
+    void setAxes(const glm::vec3& up_axis, const glm::vec3& look_axis) {
+        up_axis_ = up_axis;
+        look_axis_ = look_axis;
+        rotation_dirty_ = true;
+    }
+
+    const glm::vec3& getUpVector() const {
         return up_vector_;
     }
 
-    const glm::vec3& getForwardVector() {
-        return look_direction_;
+    const glm::vec3& getForwardVector() const {
+        return look_vector_;
     }
 
     FTRaycast generateRaycastForMousePos(double x, double y) override;
@@ -79,12 +78,20 @@ protected:
 
     // View Matrix parameters
     glm::vec3 position_;
-    glm::vec3 look_direction_;
-    glm::vec3 up_vector_;
-    glm::vec3 right_vector_;
-    glm::vec2 rotation_euler_radians;
+    glm::quat rotation_;
     bool rotation_dirty_;
     bool update_view_frustrum_;
+    
+    // Specify the default orientation of the camera
+    glm::vec3 up_axis_;
+    glm::vec3 right_axis_;
+    glm::vec3 look_axis_;
+
+    // The actual direction vectors, post rotation
+    glm::vec3 up_vector_;
+    glm::vec3 right_vector_;
+    glm::vec3 look_vector_;
+    
 
     // Projection Matrix parameters
     float fov_;

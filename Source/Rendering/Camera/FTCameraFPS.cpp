@@ -30,12 +30,12 @@ void FTCameraFPS::update(const FTUpdateEvent& event) {
     float dt = (float)event.delta_time_;
 
     if (forward_state_->isPressed()) {
-        position_ += look_direction_ * dt * move_speed_;
+        position_ += look_vector_ * dt * move_speed_;
         view_matrix_dirty_ = true;
     }
 
     if (back_state_->isPressed()) {
-        position_ -= look_direction_ * dt * move_speed_;
+        position_ -= look_vector_ * dt * move_speed_;
         view_matrix_dirty_ = true;
     }
 
@@ -50,12 +50,12 @@ void FTCameraFPS::update(const FTUpdateEvent& event) {
     }
 
     if (up_state_->isPressed()) {
-        position_.y += dt * move_speed_;
+        position_ += up_axis_ * dt * move_speed_;
         view_matrix_dirty_ = true;
     }
 
     if (down_state_->isPressed()) {
-        position_.y -= dt * move_speed_;
+        position_ -= up_axis_ * dt * move_speed_;
         view_matrix_dirty_ = true;
     }
 
@@ -63,15 +63,14 @@ void FTCameraFPS::update(const FTUpdateEvent& event) {
 }
 
 void FTCameraFPS::mouseMoveEvent(const FTMouseMoveEvent& event) {
-    rotation_euler_radians.x += event.delta_.x * rotation_speed_;
-    rotation_euler_radians.y += event.delta_.y * rotation_speed_;
+    rotation_euler_radians_.x += event.delta_.x * rotation_speed_;
+    rotation_euler_radians_.y += event.delta_.y * rotation_speed_;
 
-    if (rotation_euler_radians.y > M_PI / 2.0f)
-        rotation_euler_radians.y = (float)M_PI / 2.0f;
-    else if (rotation_euler_radians.y < -M_PI / 2.0f)
-        rotation_euler_radians.y = -(float)M_PI / 2.0f;
+    if (rotation_euler_radians_.y > M_PI / 2.0f)
+        rotation_euler_radians_.y = (float)M_PI / 2.0f;
+    else if (rotation_euler_radians_.y < -M_PI / 2.0f)
+        rotation_euler_radians_.y = -(float)M_PI / 2.0f;
 
 
-    rotation_dirty_ = true;
-    view_matrix_dirty_ = true;
+    setRotation(glm::angleAxis(rotation_euler_radians_.y, right_vector_) * glm::angleAxis(-rotation_euler_radians_.x, up_axis_));
 }

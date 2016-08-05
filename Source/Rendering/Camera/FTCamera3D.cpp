@@ -8,7 +8,7 @@
 #include <glm/detail/type_vec4.hpp>
 
 
-FTCamera3D::FTCamera3D() : position_(0, 0, 0), rotation_euler_radians(0, 0), rotation_dirty_(true), update_view_frustrum_(true), fov_((float)M_PI_2) {
+FTCamera3D::FTCamera3D() : position_(0, 0, 0), rotation_dirty_(true), update_view_frustrum_(true), up_axis_(0,1,0), look_axis_(0,0,-1), fov_((float)M_PI_2) {
     setCullFaceEnabled(true);
     setDepthTestEnabled(true);
 };
@@ -23,14 +23,13 @@ void FTCamera3D::visit() {
     }
     if (view_matrix_dirty_) {
         if (rotation_dirty_) {
-            look_direction_ = glm::vec3(cos(rotation_euler_radians.y) * sin(rotation_euler_radians.x), sin(rotation_euler_radians.y), cos(rotation_euler_radians.y) * -cos(rotation_euler_radians.x));
-
-            right_vector_ = glm::vec3(cos(rotation_euler_radians.x), 0, sin(rotation_euler_radians.x));
-            up_vector_ = glm::cross(right_vector_, look_direction_);
-
+            up_vector_ = rotation_ * up_axis_;
+            look_vector_ = rotation_ * look_axis_;
+            right_vector_ = glm::cross(look_vector_, up_vector_);
+            
             rotation_dirty_ = false;
         }
-        view_matrix_ = glm::lookAt(position_, look_direction_ + position_, up_vector_);
+        view_matrix_ = glm::lookAt(position_, look_vector_ + position_, up_vector_);
     }
     if (view_matrix_dirty_ || projection_matrix_dirty_) {
         view_projection_matrix_ = projection_matrix_ * view_matrix_;
