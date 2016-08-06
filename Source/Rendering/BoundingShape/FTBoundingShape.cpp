@@ -34,7 +34,7 @@ void FTBoundingShape::computeWorldAABFromLocalAAB(const glm::vec3& origin, const
     world_aab_origin = (max + min) / 2.0f;
 }
 
-FTBoundingShape::FTBoundingShape() : anchor_point_transform_(new FTTransformPosition()), node_(nullptr), dirty_(false) {
+FTBoundingShape::FTBoundingShape() : anchor_point_transform_(new FTTransformPosition()), node_(nullptr), dirty_(true) {
 
 }
 

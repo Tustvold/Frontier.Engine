@@ -9,6 +9,7 @@
 #include "Rendering/Action/FTActionManager.h"
 #include "Event/Engine/FTEngineEventDispatcher.h"
 #include <sstream>
+#include "Event/Window/FTWindowEventDispatcher.h"
 
 static FTEngine* s_instance = nullptr;
 
@@ -49,7 +50,7 @@ bool FTEngine::_setup(bool is_mocked) {
         
         glfwMakeContextCurrent(window_);
 
-        //glfwSwapInterval(0);
+        glfwSwapInterval(1);
 
         glewExperimental = true;
 
@@ -60,13 +61,19 @@ bool FTEngine::_setup(bool is_mocked) {
         glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
     }
 
-
     file_manager_->setup();
     input_manager_->setup();
 
     director_->setup();
 
+    getEventManager()->registerDelegate<FTWindowEventDispatcher>(this, &FTEngine::screensizeChanged);
+
     return true;
+}
+
+void FTEngine::setWindowsSize(const glm::tvec2<int>& size) {
+    auto window = s_instance->window_;
+    glfwSetWindowSize(window, size.x, size.y);
 }
 
 
@@ -152,6 +159,11 @@ int FTEngine::_run() {
     glfwTerminate();
 
     return 0;
+}
+
+void FTEngine::screensizeChanged(const FTWindowResizeEvent& event) {
+    window_size_.x = event.width_;
+    window_size_.y = event.height_;
 }
 
 bool FTEngine::cleanup() {

@@ -1,6 +1,7 @@
 #pragma once
 #include <Frontier.h>
 
+struct FTWindowResizeEvent;
 class FTEventManager;
 class FTInputManager;
 class FTDirector;
@@ -42,6 +43,8 @@ public:
         return getSharedInstance()->window_size_;
     }
 
+    static void setWindowsSize(const glm::tvec2<int>& size);
+
 private:
     static FTEngine* getSharedInstance();
 
@@ -51,6 +54,8 @@ private:
     bool _setup(bool is_mocked);
 
     int _run();
+
+    void screensizeChanged(const FTWindowResizeEvent& event);
 
     FTEventManager* event_manager_;
     
