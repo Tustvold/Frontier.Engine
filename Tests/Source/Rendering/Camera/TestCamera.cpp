@@ -74,14 +74,14 @@ TEST(TestCamera, TestRaycast3D) {
         auto direction = raycast.getDirection();
 
         expectVectorEqual(origin, glm::vec3(50, 30, 20));
-        expectVectorEqual(direction, glm::vec3(0, 0, -1), 0.00001f);
+        expectVectorEqual(direction, glm::vec3(0, 0, -1));
 
         raycast = camera->generateRaycastForMousePos(screensize.x / 2.0f, screensize.y / 2.0f + 20);
         origin = raycast.getOrigin();
         direction = raycast.getDirection();
 
-        expectVectorEqual(origin, glm::vec3(50, 30, 20), 0.00001f);
-        expectFuzzyEq(direction.x, 0.0f, 0.00001f);
+        expectVectorEqual(origin, glm::vec3(50, 30, 20));
+        expectFuzzyEq(direction.x, 0.0f);
         EXPECT_TRUE(direction.y > 0.0f);
 
         raycast = camera->generateRaycastForMousePos(0, screensize.y / 2.0f);
@@ -92,7 +92,7 @@ TEST(TestCamera, TestRaycast3D) {
 
         expectVectorEqual(origin, glm::vec3(50, 30, 20));
         glm::vec3 delta = glm::normalize(glm::vec3(-9.0f * tanf(45.0f * DEG2RAD) * aspect, 0, -9));
-        expectVectorEqual(direction, delta, 0.00001f);
+        expectVectorEqual(direction, delta);
     }
     FTEngine::cleanup();
 }

@@ -8,18 +8,18 @@ TEST(TestRaycast, TestPlaneIntersection) {
     // Test Standard
     glm::vec3 intersection;
     EXPECT_TRUE(ray.intersectsPlane(glm::vec3(2,1,-4), glm::vec3(3,2,1), intersection));
-    expectVectorEqual(intersection, glm::vec3(2, 8, 2), 1e-6f);
+    expectVectorEqual(intersection, glm::vec3(2, 8, 2));
 
     // Test parrallel no intersection
     intersection = glm::vec3(23, 5, 78);
     FTRaycast ray2(glm::vec3(1, 4, 0), glm::vec3(1, 2, 1));
     EXPECT_FALSE(ray2.intersectsPlane(glm::vec3(2, 1, -4), glm::vec3(3, 2, 1), intersection));
-    expectVectorEqual(intersection, glm::vec3(23, 5, 78), 1e-6f);
+    expectVectorEqual(intersection, glm::vec3(23, 5, 78));
 
     // Test parallel with intersection
     FTRaycast ray3(glm::vec3(2, 8, 2), glm::vec3(1, 2, 1));
     EXPECT_TRUE(ray3.intersectsPlane(glm::vec3(2, 1, -4), glm::vec3(3, 2, 1), intersection));
-    expectVectorEqual(intersection, glm::vec3(3, 2, 1), 1e-6f);
+    expectVectorEqual(intersection, glm::vec3(3, 2, 1));
 
 }
 
@@ -44,6 +44,6 @@ TEST(TestRaycast, TestSphereIntersection) {
     EXPECT_TRUE(ray2.intersectsSphere(glm::vec3(0, 0, 0), 4, intersection, distance));
 
     glm::vec3 expectedIntersection = glm::normalize(glm::vec3(1,1,0))*2.0f;
-    expectVectorEqual(intersection, expectedIntersection, 1e-6f);
-    expectFuzzyEq(distance, glm::length(glm::vec3(5, 5, 0)) - glm::length(expectedIntersection), 1e-6f);
+    expectVectorEqual(intersection, expectedIntersection);
+    expectFuzzyEq(distance, glm::length(glm::vec3(5, 5, 0)) - glm::length(expectedIntersection));
 }

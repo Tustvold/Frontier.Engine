@@ -81,13 +81,13 @@ bool FTNode::updateTransformMatrices(const glm::mat4& parent_matrix) {
 
 void FTNode::visit(const glm::mat4& parent_matrix, bool parent_updated) {
     draw_order_ = NODE_DRAW_ORDER_INVALID;
-    auto original_dirty = flags_ & DirtyMask;
+    auto original_dirty = flags_ & DirtyMask || bounding_shape_->getDirty() || parent_updated;
 
     if (original_dirty & TransformDirty || parent_updated || bounding_shape_->getDirty())
         updateTransformMatrices(parent_matrix);
 
     for (auto it = children_.begin(); it != children_.end(); ++it) {
-        (*it)->visit(model_matrix_, parent_updated || original_dirty != 0);
+        (*it)->visit(model_matrix_, original_dirty != 0);
     }
 
     if (original_dirty & BoundingShapeDirtyMask || parent_updated || bounding_shape_->getDirty())

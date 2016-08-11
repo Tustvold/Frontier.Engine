@@ -76,11 +76,11 @@ TEST(TestNodeTransform, TestTransform) {
 
     expectMatrixEqual(node->getPositionTransform()->getTransformMatrix(), expectedPosition);
 
-    expectMatrixEqual(node->getRotationTransform()->getTransformMatrix(), expectedRotation, 0.0001f);
+    expectMatrixEqual(node->getRotationTransform()->getTransformMatrix(), expectedRotation);
 
     expectMatrixEqual(node->getScaleTransform()->getTransformMatrix(), expectedScale);
 
-    expectMatrixEqual(node->getTransformMatrix(), expectedPosition * expectedRotation * expectedScale, 0.0001f);
+    expectMatrixEqual(node->getTransformMatrix(), expectedPosition * expectedRotation * expectedScale);
 }
 
 TEST(TestNodeTransform, TestAnchorPointSimple) {
@@ -154,5 +154,5 @@ TEST(TestNodeTransform, TestAnchorPointRotate) {
         0, 0, 0, 1
         );
 
-    expectMatrixEqual(node->getModelMatrix(), expectedPosition, 0.0001f);
+    expectMatrixEqual(node->getModelMatrix(), expectedPosition);
 }

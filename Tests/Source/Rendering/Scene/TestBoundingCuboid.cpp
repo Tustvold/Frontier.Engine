@@ -58,7 +58,7 @@ TEST(TestBoundingCuboid, TestAABAnchorPoint) {
     node->setScale(glm::vec3(5, 2, 7));
     node->visit(glm::mat4(), false);
 
-    expectVectorEqual(bounding_shape->getAABCenter(), glm::vec3((17 - 0.3f * 34) * 5 + 542, 2, (11 - 0.7f * 22) * 7 + 7.0f), 0.00001f);
+    expectVectorEqual(bounding_shape->getAABCenter(), glm::vec3((17 - 0.3f * 34) * 5 + 542, 2, (11 - 0.7f * 22) * 7 + 7.0f));
     expectVectorEqual(bounding_shape->getAABHalfExtents(), glm::vec3(17 * 5, 44 * 2, 11 * 7));
 
 
@@ -66,6 +66,6 @@ TEST(TestBoundingCuboid, TestAABAnchorPoint) {
     node->setRotationQuaternion(quat);
     node->visit(glm::mat4(), false);
 
-    expectVectorEqual(bounding_shape->getAABCenter(), glm::vec3(542, 2 + (17 - 0.3f * 34) * 5, (11 - 0.7f * 22) * 7 + 7.0f), 0.00001f);
+    expectVectorEqual(bounding_shape->getAABCenter(), glm::vec3(542, 2 + (17 - 0.3f * 34) * 5, (11 - 0.7f * 22) * 7 + 7.0f));
     expectVectorEqual(bounding_shape->getAABHalfExtents(), glm::vec3(44 * 2, 17 * 5, 11 * 7));
 }

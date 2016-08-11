@@ -9,6 +9,8 @@ add_executable(Frontier.Engine.Tests ${SOURCES} ${HEADERS})
 target_include_directories(Frontier.Engine.Tests PUBLIC
         ../ThirdParty/glmock/glfwmock/
         Source)
+		
+FILE(GLOB_RECURSE CMAKELISTS Source/*CMakeLists.txt)
 
 # Rebuild directory structure within Visual Studio
 foreach (FILE ${SOURCES} ${HEADERS} ${CMAKELISTS})

@@ -119,7 +119,7 @@ TEST(TestTransform, TestTransformPositionScaleRotation) {
                               0, -scale.x, 0, 0,
                               scale.y, 0, 0, 0,
                               0, 0, scale.z, 0,
-                              pos.x, pos.y, pos.z, 1), 0.00001f);
+                              pos.x, pos.y, pos.z, 1));
     }
 }
 
