@@ -8,6 +8,9 @@ bool FTKeyMapping::onKeyPressed(const FTKeyPressedEvent& event) {
 
     pressed_count_++;
 
+    if (pressed_count_ == 1)
+        on_pressed_();
+
     return true;
 }
 
@@ -15,6 +18,9 @@ bool FTKeyMapping::onKeyPressed(const FTKeyPressedEvent& event) {
 void FTKeyMapping::onKeyRelease(const FTKeyReleasedEvent& event) {
     pressed_count_--;
     FTAssert(pressed_count_ >= 0, "Invalid Pressed count");
+
+    if (pressed_count_ == 0)
+        on_released_();
 }
 
 bool FTKeyMapping::getKeyboardDelegateEnabled() const {

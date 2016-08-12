@@ -34,7 +34,7 @@ public:
     }
 
     template <typename T>
-    void registerDelegate(const Gallant::Delegate1<const T&>& delegate) const {
+    void registerDelegate(const Gallant::Delegate1<const T&>& delegate) {
         details::FTSignalSelector<T, EventType, Others...> selector;
         auto manager = (details::FTSignalManager<T>*)this;
         auto& eventHandler = selector.getEventHandler(manager);
@@ -42,12 +42,12 @@ public:
     }
 
     template <typename T, typename X, typename Y>
-    void registerDelegate(Y* obj, void (X::*func)(const T& p1)) const {
+    void registerDelegate(Y* obj, void (X::*func)(const T& p1)) {
         registerDelegate(Gallant::MakeDelegate(obj, func));
     }
 
     template <typename T>
-    void unregisterDelegate(const Gallant::Delegate1<const T&>& delegate) const {
+    void unregisterDelegate(const Gallant::Delegate1<const T&>& delegate) {
         details::FTSignalSelector<T, EventType, Others...> selector;
         auto manager = (details::FTSignalManager<T>*)this;
         auto& eventHandler = selector.getEventHandler(manager);
@@ -55,7 +55,7 @@ public:
     }
 
     template <typename T, typename X, typename Y>
-    void unregisterDelegate(Y* obj, void (X::*func)(const T& p1)) const {
+    void unregisterDelegate(Y* obj, void (X::*func)(const T& p1)) {
         unregisterDelegate(Gallant::MakeDelegate(obj, func));
     }
 
