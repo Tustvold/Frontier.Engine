@@ -31,7 +31,7 @@ endif()
 find_package(Freetype REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(GLFW3 REQUIRED)
-find_package(OPENGL REQUIRED)
+find_package(OpenGL REQUIRED)
 
 add_subdirectory(Source)
 
