@@ -11,7 +11,7 @@
 #include <glm/gtx/quaternion.hpp>
 
 // Include GLFW
-#include <glfw3.h>
+#include <GLFW/glfw3.h>
 
 #include <stdarg.h>
 #include <stdexcept>

@@ -1,18 +1,40 @@
 #include "glfwmock.h"
 #include <GLFW/glfw3.h>
 
-GlfwMock::GlfwMock() {
+#include <thread>
+#include <mutex>
+#include <map>
+#include <ostream>
+#include <iostream>
 
+
+static std::map<std::thread::id, GlfwMock*> gMap;
+static std::mutex gMutex;
+
+GlfwMock::GlfwMock() {
+    gMutex.lock();
+    gMap.insert(std::pair<std::thread::id, GlfwMock *>(std::this_thread::get_id(), this));
+    gMutex.unlock();
 }
 
 GlfwMock::~GlfwMock() {
-
+    gMutex.lock();
+    auto it = gMap.find(std::this_thread::get_id());
+    gMap.erase(std::this_thread::get_id());
+    gMutex.unlock();
 }
 
-GlfwMock* GlfwMock::getMock() {
-    return (GlfwMock*)IGLMock::getMock();
+GlfwMock *GlfwMock::getMock() {
+    gMutex.lock();
+    auto it = gMap.find(std::this_thread::get_id());
+    if (it == gMap.end()) {
+        std::cerr << "Initialize IGLMock first" << std::endl;
+        gMutex.unlock();
+        std::abort();
+    }
+    gMutex.unlock();
+    return it->second;
 }
-
 
 int glfwInit(void) {
     return 0;

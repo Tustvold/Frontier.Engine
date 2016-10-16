@@ -4,9 +4,11 @@
 add_library(glfwmock STATIC glfwmock.cpp glfwmock.h)
 
 target_link_libraries(glfwmock
-    glewmock
+        ${FRONTIER_ENGINE_TEST_LIBS}
+        gmock
 )
 
 target_include_directories(glfwmock PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../glfw/include/
+        ${FRONTIER_ENGINE_TEST_INCLUDES}
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )

@@ -1,10 +1,9 @@
 #pragma once
-#include <iglmock.hpp>
 #include "GL/glew.h"
 #include <GLFW/glfw3.h>
 #include <gmock/gmock.h>
 
-class GlfwMock : public IGLMock {
+class GlfwMock {
 
 public:
 
