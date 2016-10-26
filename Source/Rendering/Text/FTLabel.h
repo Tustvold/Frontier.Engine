@@ -39,6 +39,7 @@ protected:
     glm::vec3 fill_color_;
     bool is_mutable_;
     int font_size_;
+    bool string_dirty_;
 
 private:
     void load(const std::string& fontpath, const std::wstring& text);

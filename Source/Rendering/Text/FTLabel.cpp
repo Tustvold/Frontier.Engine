@@ -7,7 +7,8 @@
 FTLabel::FTLabel(const std::string& fontpath, const std::wstring& text, int font_size, bool is_mutable, FTFontShader* shader) : 
     FTIndexedTexturedMesh(shader),
     is_mutable_(is_mutable),
-    font_size_(font_size) {
+    font_size_(font_size),
+    string_dirty_(false) {
 
     load(fontpath, text);
 }
@@ -39,6 +40,13 @@ FTLabel::~FTLabel() {
 }
 
 void FTLabel::pre_draw(const glm::mat4& mvp) {
+    if (string_dirty_) {
+        mesh_data_->clear();
+
+        font_->populateMeshDataForString(mesh_data_.get(), text_, font_size_);
+        setIndexedMeshData(mesh_data_.get());
+    }
+
     FTLabelBase_::pre_draw(mvp);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
@@ -59,9 +67,5 @@ void FTLabel::setString(const std::wstring& text) {
     FTAssert(is_mutable_, "Trying to change immutable FTLabel!");
 
     text_ = text;
-
-    mesh_data_->clear();
-
-    font_->populateMeshDataForString(mesh_data_.get(), text, font_size_);
-    setIndexedMeshData(mesh_data_.get());
+    string_dirty_ = true;
 }
