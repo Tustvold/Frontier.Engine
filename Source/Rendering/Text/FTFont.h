@@ -3,6 +3,7 @@
 #include <Rendering/Mesh/FTIndexedTexturedMesh.h>
 #include <Rendering/Textures/FTFontTexture.h>
 #include <unordered_map>
+#include <freetype-gl.h>
 
 namespace ftgl
 {
@@ -51,21 +52,47 @@ protected:
 
 class FTFont {
 public:
-    explicit FTFont(const std::string& filename);
+    explicit FTFont(const std::string& filename, const char* cache =
+            " !\"#$%&'()*+,-./0123456789:;<=>?"
+            "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
+            "`abcdefghijklmnopqrstuvwxyz{|}~");
     virtual ~FTFont();
 
     std::shared_ptr<FTFontTexture>& getTexture() {
         return font_texture_;
     }
 
-    ftgl::texture_font_t* cacheFontSize(int size);
+    ftgl::texture_font_t* getTextureFont() {
+        return font_;
+    }
 
-    std::unique_ptr<FTFontMeshData> generateMeshForString(const std::basic_string<wchar_t>& string, int size);
+    std::unique_ptr<FTFontMeshData> generateMeshForString(const std::basic_string<wchar_t>& string, float point_size);
+    void populateMeshDataForString(FTFontMeshData* data, const std::basic_string<wchar_t>& string, float point_size);
 
-    void populateMeshDataForString(FTFontMeshData* data, const std::basic_string<wchar_t>& string, int size);
+    static constexpr float getPointSize() {
+        return 48;
+    }
+
+    static constexpr float getLowResSize() {
+        return 48*2;
+    }
+
+    static constexpr float getHighResSize() {
+        return 512;
+    }
+
+    static constexpr float getPadding() {
+        return 0.1f;
+    }
+
+    void updateTexture() {
+        font_texture_->flushData();
+    }
+
 
 protected:
     std::shared_ptr<FTFontTexture> font_texture_;
-    std::string font_path_;
-    std::unordered_map<int, ftgl::texture_font_t*> fonts_;
+    ftgl::texture_font_t* font_;
+
+    void add_glyph(const char *codepoint);
 };

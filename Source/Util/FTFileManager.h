@@ -29,5 +29,4 @@ private:
     void setup();
 
     std::vector<std::string> search_paths_;
-    std::string working_directory_;
 };

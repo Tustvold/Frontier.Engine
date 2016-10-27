@@ -3,7 +3,7 @@ sudo: required
 dist: trusty
 install:
   - sudo apt-get -y update
-  - sudo apt-get -y install cmake gcc xorg-dev libgl1-mesa-dev libfreetype6-dev libglew-dev
+  - sudo apt-get -y install cmake gcc xorg-dev libgl1-mesa-dev libfreetype6-dev libglew-dev zlib1g-dev
   - git clone https://github.com/glfw/glfw.git /tmp/glfw
   - cd /tmp/glfw
   - cmake . -DBUILD_SHARED_LIBS=ON

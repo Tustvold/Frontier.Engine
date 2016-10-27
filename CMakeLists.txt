@@ -32,6 +32,7 @@ find_package(Freetype REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(GLFW3 REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(ZLIB REQUIRED)
 
 add_subdirectory(Source)
 
@@ -47,6 +48,7 @@ SET (FRONTIER_ENGINE_INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/freetype-gl
         ${GLEW_INCLUDE_DIRS}
         ${GLFW_INCLUDE_DIRS}
+        ${ZLIB_INCLUDE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glm
         CACHE INTERNAL "Include Directories for Frontier.Engine"
         )
@@ -64,6 +66,7 @@ SET (FRONTIER_ENGINE_TEST_LIBS
         ${GLEW_LIBRARIES}
         ${FREETYPE_LIBRARIES}
         ${OPENGL_LIBRARIES}
+        ${ZLIB_LIBRARIES}
         CACHE INTERNAL "Dependencies of Frontier.Engine")
 
 SET (FRONTIER_ENGINE_LIBS

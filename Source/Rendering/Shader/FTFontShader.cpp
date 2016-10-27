@@ -2,17 +2,34 @@
 
 const char* FTFontShader::fragment_shader_source_ = {
     "#version 140\n\
+    precision highp float;\
 	\n\
 	in vec2 UV;\n\
 	\n\
 	uniform sampler2D textureSampler;\n\
     uniform vec3 fill_color;\n\
-	// Ouput data\n\
 	out vec4 color;\n\
 	\n\
+    float contour(in float d, in float w) {\n\
+        return smoothstep(0.5 - w, 0.5 + w, d);\n\
+    }\n\
+    \n\
+    float samp(in vec2 uv, float w) {\n\
+        return contour(texture2D(textureSampler, uv).r, w);\n\
+    }\n\
 	void main(){\n\
-		\n\
-		color = vec4(fill_color,texture2D(textureSampler, UV).r);\n\
+		float dist = texture2D(textureSampler, UV).r;\n\
+        float width = fwidth(dist);\n\
+        float alpha = contour(dist, width);\
+        float dscale = 0.354;\
+        vec2 duv = dscale * (dFdx(UV) + dFdy(UV));\
+        vec4 box = vec4(UV-duv, UV+duv);\
+        float asum = samp( box.xy, width )\n\
+                           + samp( box.zw, width )\n\
+                           + samp( box.xw, width )\n\
+                           + samp( box.zy, width );\
+        alpha = (alpha + 0.5 * asum) / 3.0;\n\
+		color = vec4(fill_color,alpha);\n\
 		\n\
 	}"
 };
