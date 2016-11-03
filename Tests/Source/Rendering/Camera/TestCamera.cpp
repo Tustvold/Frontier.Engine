@@ -11,7 +11,6 @@ TEST(TestCamera, TestRaycast2D) {
         auto camera = std::make_unique<FTCamera2D>();
 
         // Call this to update matrices
-        auto screensize = FTEngine::getWindowSize();
         camera->visit();
 
         auto raycast = camera->generateRaycastForMousePos(50, 123);

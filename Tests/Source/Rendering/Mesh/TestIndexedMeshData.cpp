@@ -3,10 +3,10 @@
 
 TEST(TestIndexedMeshData, TestPreAllocate) {
     FTIndexedMeshData<FTVertexColor<glm::vec3>, uint16_t> mesh(40, 80);
-    EXPECT_EQ(mesh.getVertices().capacity(), 40);
-    EXPECT_EQ(mesh.getIndices().capacity(), 80);
-    EXPECT_EQ(mesh.getVertexCount(), 0);
-    EXPECT_EQ(mesh.getIndexCount(), 0);
+    EXPECT_EQ(mesh.getVertices().capacity(), (size_t)40);
+    EXPECT_EQ(mesh.getIndices().capacity(), (size_t)80);
+    EXPECT_EQ(mesh.getVertexCount(), (size_t)0);
+    EXPECT_EQ(mesh.getIndexCount(), (size_t)0);
 }
 
 TEST(TestIndexedMeshData, TestDynamic) {
@@ -21,8 +21,8 @@ TEST(TestIndexedMeshData, TestDynamic) {
     for (int i = 0; i < 15; i++) {
         indices.push_back(i);
     }
-    EXPECT_EQ(mesh.getVertexCount(), 15);
-    EXPECT_EQ(mesh.getIndexCount(), 15);
+    EXPECT_EQ(mesh.getVertexCount(), (size_t)15);
+    EXPECT_EQ(mesh.getIndexCount(), (size_t)15);
 }
 
 TEST(TestIndexedMeshData, TestData) {
@@ -36,12 +36,12 @@ TEST(TestIndexedMeshData, TestData) {
         indices[i] = i;
     }
 
-    EXPECT_EQ(mesh.getVertexCount(), 0);
-    EXPECT_EQ(mesh.getIndexCount(), 0);
+    EXPECT_EQ(mesh.getVertexCount(), (size_t)0);
+    EXPECT_EQ(mesh.getIndexCount(), (size_t)0);
     mesh.setVertexCount(10);
     mesh.setIndexCount(15);
-    EXPECT_EQ(mesh.getVertexCount(), 10);
-    EXPECT_EQ(mesh.getIndexCount(), 15);
+    EXPECT_EQ(mesh.getVertexCount(), (size_t)10);
+    EXPECT_EQ(mesh.getIndexCount(), (size_t)15);
 
     EXPECT_THROW(mesh.setVertexCount(15), FTException);
     EXPECT_THROW(mesh.setIndexCount(20), FTException);

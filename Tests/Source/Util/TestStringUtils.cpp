@@ -61,7 +61,7 @@ TEST(TestStringUtils, TestSplit) {
     EXPECT_EQ(bv.size(), bv_correct.size());
     EXPECT_EQ(av.size(), bv.size());
 
-    for (int i = 0; i < av.size(); i++) {
+    for (size_t i = 0; i < av.size(); i++) {
         EXPECT_EQ(av[i], av_correct[i]);
         EXPECT_EQ(bv[i], bv_correct[i]);
     }

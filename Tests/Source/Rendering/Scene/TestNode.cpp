@@ -74,8 +74,8 @@ TEST(TestNode, TestCallOrder) {
     node.visit(parent_matrix, false);
     node.performDraw(camera.get(), draw_order);
 
-    EXPECT_EQ(draw_order, 1);
-    EXPECT_EQ(node.getDrawOrder(), 0);
+    EXPECT_EQ(draw_order, (uint32_t)1);
+    EXPECT_EQ(node.getDrawOrder(), (uint32_t)0);
 }
 
 
@@ -96,8 +96,8 @@ TEST(TestNode, TestCulling) {
 
     node.visit(parent_matrix, false);
     node.performDraw(camera.get(), draw_order);
-    EXPECT_EQ(draw_order, 1);
-    EXPECT_EQ(node.getDrawOrder(), 0);
+    EXPECT_EQ(draw_order, (uint32_t)1);
+    EXPECT_EQ(node.getDrawOrder(), (uint32_t)0);
 
 
     testing::Mock::VerifyAndClearExpectations(&node);
@@ -110,8 +110,8 @@ TEST(TestNode, TestCulling) {
     node.visit(parent_matrix, false);
     node.performDraw(camera.get(), draw_order);
 
-    EXPECT_EQ(draw_order, 0);
-    EXPECT_EQ(node.getDrawOrder(), NODE_DRAW_ORDER_INVALID);
+    EXPECT_EQ(draw_order, (uint32_t)0);
+    EXPECT_EQ(node.getDrawOrder(), (uint32_t)NODE_DRAW_ORDER_INVALID);
 
     testing::Mock::VerifyAndClearExpectations(&node);
 
@@ -125,8 +125,8 @@ TEST(TestNode, TestCulling) {
     node.visit(parent_matrix, false);
     node.performDraw(camera.get(), draw_order);
 
-    EXPECT_EQ(draw_order, 0);
-    EXPECT_EQ(node.getDrawOrder(), NODE_DRAW_ORDER_INVALID);
+    EXPECT_EQ(draw_order, (uint32_t)0);
+    EXPECT_EQ(node.getDrawOrder(), (uint32_t)NODE_DRAW_ORDER_INVALID);
 
     testing::Mock::VerifyAndClearExpectations(&node);
 
@@ -139,8 +139,8 @@ TEST(TestNode, TestCulling) {
     node.visit(parent_matrix, false);
     node.performDraw(camera.get(), draw_order);
 
-    EXPECT_EQ(draw_order, 0);
-    EXPECT_EQ(node.getDrawOrder(), NODE_DRAW_ORDER_INVALID);
+    EXPECT_EQ(draw_order, (uint32_t)0);
+    EXPECT_EQ(node.getDrawOrder(), (uint32_t)NODE_DRAW_ORDER_INVALID);
 
     testing::Mock::VerifyAndClearExpectations(&node);
 
@@ -152,8 +152,8 @@ TEST(TestNode, TestCulling) {
     node.visit(parent_matrix, false);
     node.performDraw(camera.get(), draw_order);
 
-    EXPECT_EQ(draw_order, 1);
-    EXPECT_EQ(node.getDrawOrder(), 0);
+    EXPECT_EQ(draw_order, (uint32_t)1);
+    EXPECT_EQ(node.getDrawOrder(), (uint32_t)0);
 }
 
 TEST(TestNode, TestCullingHierarchy) {
@@ -176,9 +176,9 @@ TEST(TestNode, TestCullingHierarchy) {
     parent.visit(parent_matrix, false);
     parent.performDraw(camera.get(), draw_order);
 
-    EXPECT_EQ(draw_order, 2);
-    EXPECT_EQ(parent.getDrawOrder(), 0);
-    EXPECT_EQ(child->getDrawOrder(), 1);
+    EXPECT_EQ(draw_order, (uint32_t)2);
+    EXPECT_EQ(parent.getDrawOrder(), (uint32_t)0);
+    EXPECT_EQ(child->getDrawOrder(), (uint32_t)1);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
 
@@ -188,9 +188,9 @@ TEST(TestNode, TestCullingHierarchy) {
     parent.visit(parent_matrix, false);
     parent.performDraw(camera.get(), draw_order);
 
-    EXPECT_EQ(draw_order, 1);
-    EXPECT_EQ(parent.getDrawOrder(), 0);
-    EXPECT_EQ(child->getDrawOrder(), NODE_DRAW_ORDER_INVALID);
+    EXPECT_EQ(draw_order, (uint32_t)1);
+    EXPECT_EQ(parent.getDrawOrder(), (uint32_t)0);
+    EXPECT_EQ(child->getDrawOrder(), (uint32_t)NODE_DRAW_ORDER_INVALID);
 
     testing::Mock::VerifyAndClearExpectations(child.get());
 

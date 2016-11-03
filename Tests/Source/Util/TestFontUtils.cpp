@@ -10,7 +10,7 @@ void expectVectorEqual(vector_t*a, vector_t*b) {
     EXPECT_EQ(a->size, b->size);
     EXPECT_EQ(a->item_size, b->item_size);
 
-    for (int i = 0; i < b->size * b->item_size; i++) {
+    for (size_t i = 0; i < b->size * b->item_size; i++) {
         EXPECT_EQ(((uint8_t*)a->items)[i], ((uint8_t*)b->items)[i]);
     }
 }
@@ -24,7 +24,7 @@ void expectAtlasEqual(texture_atlas_t* a, texture_atlas_t* b) {
 
     expectVectorEqual(a->nodes, b->nodes);
 
-    for (int i = 0; i < a->depth* a->width * a->height; i++)
+    for (size_t i = 0; i < a->depth* a->width * a->height; i++)
         EXPECT_EQ(a->data[i], b->data[i]);
 }
 
@@ -81,7 +81,7 @@ TEST(TestFontUtils, FontTest) {
 
     expectAtlasEqual(out_font->atlas, in_font->atlas);
     EXPECT_EQ(vector_size(in_font->glyphs), vector_size(out_font->glyphs));
-    for(int i=0; i<vector_size(in_font->glyphs); ++i ) {
+    for(size_t i=0; i<vector_size(in_font->glyphs); ++i ) {
         texture_glyph_t * a = *(texture_glyph_t **) vector_get(in_font->glyphs, i );
         texture_glyph_t * b = *(texture_glyph_t **) vector_get(out_font->glyphs, i );
         expectGlyphEqual(a,b);

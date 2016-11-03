@@ -303,7 +303,7 @@ TEST(TestButton2D, TestDisconnectedDelegates) {
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
-        auto& button = node->getButton();
+        node->getButton();
 
         auto view = std::make_shared<FTView>();
         view->setCamera(std::make_shared<FTCamera2D>());
