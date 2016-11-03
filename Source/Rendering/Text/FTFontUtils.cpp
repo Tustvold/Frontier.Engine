@@ -127,7 +127,7 @@ std::unique_ptr<Tag> FTFontUtils::createTagForFont(ftgl::texture_font_t* font) {
 
 
     auto glyphs = std::make_unique<Tag>(Tag::TAG_List);
-    for(int i=0; i<vector_size(font->glyphs); ++i ) {
+    for(size_t i=0; i<vector_size(font->glyphs); ++i ) {
         texture_glyph_t * glyph = *(texture_glyph_t **) vector_get(font->glyphs, i );
         glyphs->payload_tagList->addTag(createTagForGlyph(glyph));
     }

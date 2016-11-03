@@ -22,5 +22,5 @@ private:
     static const char* fragment_shader_source_;
     static const char* vertex_shader_source_;
 
-    GLuint mvp_uniform_;
+    GLint mvp_uniform_;
 };

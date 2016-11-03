@@ -1,7 +1,7 @@
 #include "FTPolygon.h"
 #include <Rendering/BoundingShape/FTBoundingEllipsoid.h>
 
-static int wrapSize(size_t size, int i) {
+static int wrapSize(size_t size, unsigned int i) {
     if (i < 0)
         return i + (int)size;
     if (i >= size)
@@ -32,7 +32,6 @@ std::unique_ptr<FTPolygon::MeshData> FTPolygon::generateRegularPolygonData(float
     auto offset = glm::vec2(radius);
 
     for (int i = 0; i < n; i++) {
-        float cos = cosf(angle);
         vertices[i].position_ = offset + glm::vec2(radius * cosf(angle), radius * sinf(angle));
         angle += t;
     }
@@ -70,7 +69,7 @@ std::unique_ptr<FTPolygon::MeshData> FTPolygon::generateBorderPolygonData(const 
     auto data = std::make_unique<MeshData>(num_verts * 2 + 1);
     auto& data_vertices = data->getVertices();
 
-    for (auto i = 0; i < num_verts; i++) {
+    for (size_t i = 0; i < num_verts; i++) {
         auto previous_vertex = vertices[wrapSize(num_verts, i - 1)].position_;
         auto current_vertex = vertices[i].position_;
         auto next_vertex = vertices[wrapSize(num_verts, i + 1)].position_;

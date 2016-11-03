@@ -19,7 +19,6 @@ GlfwMock::GlfwMock() {
 
 GlfwMock::~GlfwMock() {
     gMutex.lock();
-    auto it = gMap.find(std::this_thread::get_id());
     gMap.erase(std::this_thread::get_id());
     gMutex.unlock();
 }

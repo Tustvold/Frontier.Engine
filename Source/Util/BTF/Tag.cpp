@@ -138,7 +138,7 @@ Tag::Tag(CompressionBuffer *buffer, uint8_t _type) {
 			uint32_t len;
 			readUInt32(buffer, &len);
             payload_byteArray->data.resize(len);
-			for (int i = 0; i < len; i++) {
+			for (uint32_t i = 0; i < len; i++) {
 				readUInt8(buffer, &payload_byteArray->data[i]);
 			}
 			break;
@@ -148,7 +148,7 @@ Tag::Tag(CompressionBuffer *buffer, uint8_t _type) {
             readUInt8(buffer, &len);
             payload_string = new tagStringData(len);
 
-            for (int i = 0; i < len; i++) {
+            for (uint8_t i = 0; i < len; i++) {
 				readChar(buffer, &payload_string->data[i]);
 			}
             break;
@@ -159,7 +159,7 @@ Tag::Tag(CompressionBuffer *buffer, uint8_t _type) {
 			readUInt8(buffer, &dataType);
 			uint16_t len;
 			readUInt16(buffer, &len);
-			for (int i = 0; i < len; i++) {
+			for (uint16_t i = 0; i < len; i++) {
 				payload_tagList->addTag(std::make_unique<Tag>(buffer, dataType));
 			}
 			break;
@@ -206,9 +206,9 @@ void Tag::writeToBuffer(CompressionBuffer *buffer) {
 			buffer->buffer_append(be2ne(&payload_float, 4), 4);
 			break;
 		case TAG_Byte_Array: {
-			uint32_t len = payload_byteArray->data.size();
+			uint32_t len = (uint32_t)payload_byteArray->data.size();
 			buffer->buffer_append(be2ne(&len, 4), 4);
-			for (int i = 0; i < len; i++) {
+			for (uint32_t i = 0; i < len; i++) {
 				char character = payload_byteArray->data[i];
 				buffer->buffer_append(be2ne(&character, 1), 1);
 			}

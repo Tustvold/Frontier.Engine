@@ -21,7 +21,7 @@ struct CompressionBuffer : public Buffer {
 
 	int writeFile(FILE *fp) {
         auto ret = compressBuffer();
-        ret->Buffer::writeFile(fp);
+        return ret->Buffer::writeFile(fp);
 	}
 
 private:

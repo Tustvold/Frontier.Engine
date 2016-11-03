@@ -17,5 +17,5 @@ public:
 
 protected:
     std::vector<std::unique_ptr<FTAction>> actions_;
-    int action_index_;
+    size_t action_index_;
 };

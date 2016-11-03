@@ -21,5 +21,5 @@ protected:
     static const char* vertex_shader_source_;
     static const char* fragment_shader_source_;
 
-    GLuint texture_uniform_id_;
+    GLint texture_uniform_id_;
 };

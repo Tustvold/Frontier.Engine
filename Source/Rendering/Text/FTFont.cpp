@@ -101,7 +101,7 @@ static int resize( double *src_data, int src_width, int src_height,
         memcpy( dst_data, src_data, src_width*src_height*sizeof(double));
         return 0;
     }
-    size_t i,j;
+    int i,j;
     float xscale = src_width / (float) dst_width;
     float yscale = src_height / (float) dst_height;
     for( j=0; j < dst_height; ++j )
@@ -257,9 +257,6 @@ void FTFont::populateMeshDataForString(FTFontMeshData* data, const std::basic_st
     std::vector<char> buffer(MB_CUR_MAX);
 
     bool texture_dirty = false;
-
-    float texture_width = getTexture()->getWidth();
-    float texture_height = getTexture()->getHeight();
 
     float maxHeight = 0.0f;
 

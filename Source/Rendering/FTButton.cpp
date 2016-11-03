@@ -54,8 +54,6 @@ bool FTButton::onMouseDown(const FTMouseButtonPressedEvent& event) {
         return false;
     }
 
-    bool ret = true;
-
     mouse_pressed_delegate_(this, event);
 
     setSelected();
