@@ -230,9 +230,9 @@ void FTFont::add_glyph(const char *codepoint) {
     glyph->advance_x = (int)round(ratio * face->glyph->advance.x/64.0 * (1 + 2*getPadding()));
     glyph->advance_y = (int)round(ratio * face->glyph->advance.y/64.0 * (1 + 2*getPadding()));
 
-    delete highres_data;
-    delete lowres_data;
-    delete data;
+    delete[] highres_data;
+    delete[] lowres_data;
+    delete[] data;
 
     vector_push_back( font_->glyphs, &glyph );
 }

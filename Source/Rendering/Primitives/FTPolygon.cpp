@@ -2,8 +2,6 @@
 #include <Rendering/BoundingShape/FTBoundingEllipsoid.h>
 
 static int wrapSize(size_t size, unsigned int i) {
-    if (i < 0)
-        return i + (int)size;
     if (i >= size)
         return i - (int)size;
     return i;

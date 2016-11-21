@@ -15,6 +15,7 @@ public:
 
     }
 
+    using FTNode::performDraw;
     void performDraw(uint32_t& draw_order) {
         camera_->visit();
         camera_->preDraw();
