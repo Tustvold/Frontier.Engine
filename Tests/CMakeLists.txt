@@ -6,6 +6,12 @@ SET(HEADERS)
 add_subdirectory(glfwmock)
 add_subdirectory(Source)
 
+if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+    # Google mock doesn't set override specifier
+    set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -Wno-inconsistent-missing-override")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-inconsistent-missing-override")
+endif()
+
 add_executable(Frontier.Engine.Tests ${SOURCES} ${HEADERS})
 
 target_include_directories(Frontier.Engine.Tests PUBLIC
