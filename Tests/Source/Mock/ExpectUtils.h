@@ -1,4 +1,6 @@
 #pragma once
+
+#include <gtest/gtest.h>
 #include <Frontier.h>
 
 inline void expectFuzzyEq(float A, float B) {

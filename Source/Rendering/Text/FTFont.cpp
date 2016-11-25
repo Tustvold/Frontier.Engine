@@ -1,19 +1,12 @@
 ﻿#include "FTFont.h"
-#include <Rendering/Mesh/FTIndexedTexturedMesh.h>
 #include <Util/FTFileManager.h>
-#include "freetype-gl.h"
 #include "distance-field.h"
 #include "vertex-buffer.h"
-#include "shader.h"
-#include "mat4.h"
-#include "texture-font.h"
-#include "texture-atlas.h"
 #include "platform.h"
 #include "utf8-utils.h"
+#include <sstream>
 
 #include <ft2build.h>
-#include <stdlib.h>
-#include <sstream>
 #include FT_FREETYPE_H
 #include "FTFontUtils.h"
 

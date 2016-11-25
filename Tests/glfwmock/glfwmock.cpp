@@ -1,10 +1,7 @@
 #include "glfwmock.h"
-#include <GLFW/glfw3.h>
-
 #include <thread>
 #include <mutex>
 #include <map>
-#include <ostream>
 #include <iostream>
 
 

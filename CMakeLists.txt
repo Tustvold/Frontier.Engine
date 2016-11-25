@@ -23,6 +23,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 option( freetype-gl_BUILD_DEMOS "Build the freetype-gl example programs" OFF)
 option( freetype-gl_BUILD_APIDOC "Build the freetype-gl API documentation" OFF)
+option( freetype-gl_BUILD_TESTS "Build the freetype-gl Tests" OFF)
 
 if (WIN32)
     option(gtest_disable_pthreads "" ON)
@@ -33,6 +34,7 @@ find_package(GLEW REQUIRED)
 find_package(GLFW3 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(ZLIB REQUIRED)
+find_package(GLM REQUIRED)
 
 add_subdirectory(Source)
 
@@ -54,14 +56,7 @@ SET (FRONTIER_ENGINE_INCLUDES
         ${GLEW_INCLUDE_DIRS}
         ${GLFW_INCLUDE_DIRS}
         ${ZLIB_INCLUDE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glm
-        CACHE INTERNAL "Include Directories for Frontier.Engine"
-        )
-
-SET (FRONTIER_ENGINE_TEST_INCLUDES
-        ${FRONTIER_ENGINE_INCLUDES}
-        ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/googletest/googletest/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/googletest/googlemock/include
+        ${GLM_INCLUDE_DIRS}
         CACHE INTERNAL "Include Directories for Frontier.Engine"
         )
 

@@ -2,6 +2,7 @@
 #include <FTEngine.h>
 #include <Event/Input/FTInputManager.h>
 #include <Mock/MockEngineEventDispatcher.h>
+#include <gmock/gmock.h>
 
 class MockMouseDelegate : public FTMouseDelegate {
 public:

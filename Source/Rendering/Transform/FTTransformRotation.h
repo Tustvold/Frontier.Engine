@@ -1,6 +1,6 @@
 #pragma once
 #include <Rendering/Transform/FTTransform.h>
-#include <glm/gtx/quaternion.hpp>
+#include <Frontier.h>
 
 class FTTransformRotation : public FTTransform {
 public:

@@ -2,6 +2,7 @@
 #include <FTEngine.h>
 #include <Event/FTEventManager.h>
 #include <Event/Window/FTWindowEventDispatcher.h>
+#include <gmock/gmock.h>
 
 class MockWindowEventListener {
 public:

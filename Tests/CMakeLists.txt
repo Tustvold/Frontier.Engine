@@ -14,13 +14,16 @@ endif()
 
 add_executable(Frontier.Engine.Tests ${SOURCES} ${HEADERS})
 
-target_include_directories(Frontier.Engine.Tests PUBLIC
-        Source)
+target_include_directories(Frontier.Engine.Tests PRIVATE
+        Source
+        )
 
 
 target_link_libraries(Frontier.Engine.Tests
         ${FRONTIER_ENGINE_TEST_LIBS}
         glfwmock
+        gmock
+        gtest
 )
 
 

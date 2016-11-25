@@ -1,6 +1,4 @@
 #include "gtest/gtest.h"
-#include "glm/glm.hpp"
-#include <glm/gtx/quaternion.hpp>
 #include <Rendering/Transform/FTTransformUtil.h>
 #include <Frontier.h>
 #include <Mock/ExpectUtils.h>

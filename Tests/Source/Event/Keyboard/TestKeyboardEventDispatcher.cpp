@@ -1,7 +1,8 @@
 #include <glfwmock.h>
 #include <FTEngine.h>
-#include <Event/FTEventManager.h>
 #include <Event/Keyboard/FTKeyboardEventDispatcher.h>
+#include <Event/FTEventManager.h>
+#include <gmock/gmock.h>
 
 class MockKeyboardEventListener {
 public:
