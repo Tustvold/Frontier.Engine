@@ -11,7 +11,7 @@ FTCamera::FTCamera() : draw_rect_relative_(0, 0, 1, 1),
                        cull_face_enabled_(false) {
     auto screensize = FTEngine::getWindowSize();
     draw_rect_abs_ = FTRect<int>(0, 0, screensize.x, screensize.y);
-    FTEngine::getEventManager()->registerDelegate<FTWindowEventDispatcher>(this, &FTCamera::screensizeChanged);
+    FTEngine::getEventManager()->registerDelegate<FTWindowEventDispatcher>(this, &FTCamera::screensizeChangedEvent);
 }
 
 void FTCamera::preDraw() const {

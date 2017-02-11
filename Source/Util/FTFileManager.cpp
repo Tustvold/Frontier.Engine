@@ -92,15 +92,11 @@ void FTFileManager::deleteEmptyDirectory(const std::string& path) {
 
 bool FTFileManager::fileExistsAtPath(const std::string& path) {
     struct stat buffer;
-    if (stat(path.c_str(), &buffer) == -1)
-        return false;
-    return (buffer.st_mode & S_IFREG) != 0;
+    return stat(path.c_str(), &buffer) == -1 ? false : (buffer.st_mode & S_IFREG) != 0;
 }
 
 bool FTFileManager::directoryExistsAtPath(const std::string& path) {
     struct stat buffer;
-    if (stat(path.c_str(), &buffer) == -1)
-        return false;
-    return (buffer.st_mode & S_IFDIR) != 0;
+    return stat(path.c_str(), &buffer) == -1 ? false : (buffer.st_mode & S_IFDIR) != 0;
 }
 

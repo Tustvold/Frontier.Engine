@@ -16,7 +16,7 @@ public:
     FTCamera();
 
     virtual ~FTCamera() {
-        FTEngine::getEventManager()->unregisterDelegate<FTWindowEventDispatcher>(this, &FTCamera::screensizeChanged);
+        FTEngine::getEventManager()->unregisterDelegate<FTWindowEventDispatcher>(this, &FTCamera::screensizeChangedEvent);
     }
 
     const glm::mat4& getViewMatrix() const {
@@ -112,11 +112,11 @@ protected:
         projection_matrix_dirty_ = true;
     }
 
-    void screensizeChanged(float width, float height) {
-        setDrawRectAbs(FTRect<int>((int)(draw_rect_relative_.x_ * width), (int)(draw_rect_relative_.y_ * height), (int)(draw_rect_relative_.width_ * width), (int)(draw_rect_relative_.height_ * height)));
+    void screensizeChangedEvent(const FTWindowResizeEvent& event) {
+        screensizeChanged((float)event.width_, (float)event.height_);
     }
 
-    void screensizeChanged(const FTWindowResizeEvent& event) {
-        screensizeChanged((float)event.width_, (float)event.height_);
+    void screensizeChanged(float width, float height) {
+        setDrawRectAbs(FTRect<int>((int)(draw_rect_relative_.x_ * width), (int)(draw_rect_relative_.y_ * height), (int)(draw_rect_relative_.width_ * width), (int)(draw_rect_relative_.height_ * height)));
     }
 };

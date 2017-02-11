@@ -56,9 +56,7 @@ struct FTVertex : public IFTVertex {
     }
 
     bool operator==(const FTVertex& other) const {
-        if (other.position_ != position_)
-            return false;
-        return true;
+        return other.position_ == position_;
     }
 
     bool operator!=(const FTVertex& other) const {
@@ -92,11 +90,7 @@ struct FTVertexColor {
     }
 
     bool operator==(const FTVertexColor& other) const {
-        if (other.position_ != position_)
-            return false;
-        if (other.color_ != color_)
-            return false;
-        return true;
+        return other.position_ == position_ && other.color_ == color_;
     }
 
     bool operator!=(const FTVertexColor& other) const {
@@ -140,11 +134,7 @@ struct FTVertexTexture {
     }
 
     bool operator==(const FTVertexTexture& other) const {
-        if (other.position_ != position_)
-            return false;
-        if (other.uv_ != uv_)
-            return false;
-        return true;
+        return other.position_ == position_ && other.uv_ == uv_;
     }
 
     bool operator!=(const FTVertexTexture& other) const {
@@ -186,13 +176,7 @@ struct FTVertexColorTexture {
     }
 
     bool operator==(const FTVertexColorTexture& other) const {
-        if (other.position_ != position_)
-            return false;
-        if (other.color_ != color_)
-            return false;
-        if (other.uv_ != uv_)
-            return false;
-        return true;
+        return other.position_ == position_ && other.color_ == color_ && other.uv_ == uv_;
     }
 
     bool operator!=(const FTVertexColorTexture& other) const {
