@@ -71,6 +71,5 @@ void FTCameraFPS::mouseMoveEvent(const FTMouseMoveEvent& event) {
     else if (rotation_euler_radians_.y < -M_PI / 2.0f)
         rotation_euler_radians_.y = -(float)M_PI / 2.0f;
 
-
-    setRotation(glm::angleAxis(rotation_euler_radians_.y, right_vector_) * glm::angleAxis(-rotation_euler_radians_.x, up_axis_));
+    setRotation(glm::angleAxis(-rotation_euler_radians_.x, up_axis_) * glm::angleAxis(rotation_euler_radians_.y, right_axis_));
 }

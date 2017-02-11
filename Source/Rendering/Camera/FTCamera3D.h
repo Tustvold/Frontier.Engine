@@ -46,6 +46,7 @@ public:
     void setAxes(const glm::vec3& up_axis, const glm::vec3& look_axis) {
         up_axis_ = up_axis;
         look_axis_ = look_axis;
+        right_axis_ = glm::cross(look_axis, up_axis);
         rotation_dirty_ = true;
     }
 
