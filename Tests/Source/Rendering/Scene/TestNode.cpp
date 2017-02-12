@@ -10,7 +10,7 @@
 class MockNodeDraw : public FTNode {
 
 public:
-    MOCK_METHOD1(pre_draw, void(const glm::mat4&));
+    MOCK_METHOD1(pre_draw, void(const FTCamera* camera));
     MOCK_METHOD0(draw, void());
     MOCK_METHOD0(post_draw, void());
     MOCK_METHOD1(onAddedToView, void(FTView* view));
