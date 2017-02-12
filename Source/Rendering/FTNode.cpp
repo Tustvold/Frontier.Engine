@@ -100,10 +100,8 @@ void FTNode::performDraw(FTCamera* camera, uint32_t& draw_order) {
 
 
     if ((flags_ & FrustrumCullEnabled) == 0 || isVisible(camera)) {
-        glm::mat4 mvp = camera->getViewProjectionMatrix() * model_matrix_;
-
         draw_order_ = draw_order++;
-        this->pre_draw(mvp);
+        this->pre_draw(camera);
         this->draw();
         this->post_draw();
     }

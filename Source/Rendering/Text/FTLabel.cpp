@@ -4,31 +4,47 @@
 #include "FTFontCache.h"
 #include <Util/FTStringUtils.h>
 
-FTLabel::FTLabel(const std::string& fontpath, const std::wstring& text, int font_size, bool is_mutable, FTFontShader* shader) : 
-    FTIndexedTexturedMesh(shader),
-    is_mutable_(is_mutable),
-    font_size_(font_size),
-    string_dirty_(false) {
+FTLabel::FTLabel(const std::wstring &text, int font_size, bool is_mutable, const std::string &style,
+                 FTFontShader *shader) :
+        FTIndexedMesh(shader),
+        font_(nullptr),
+        is_mutable_(is_mutable),
+        font_size_(font_size),
+        string_dirty_(false) {
 
-    load(fontpath, text);
+    load(style, text);
 }
 
-FTLabel::FTLabel(const std::string& fontpath, const std::string& text, int font_size, bool is_mutable, FTFontShader* shader) :
-FTIndexedTexturedMesh(shader),
-is_mutable_(is_mutable),
-font_size_(font_size) {
+FTLabel::FTLabel(const std::string &text, int font_size, bool is_mutable, const std::string &style,
+                 FTFontShader *shader) :
+        FTIndexedMesh(shader),
+        font_(nullptr),
+        is_mutable_(is_mutable),
+        font_size_(font_size),
+        string_dirty_(false) {
 
-    load(fontpath, FTWCharUtil::convertString(text));
+    load(style, FTWCharUtil::convertString(text));
 }
 
-void FTLabel::load(const std::string& fontpath, const std::wstring& text) {
-    font_ = FTEngine::getDirector()->getFontCache()->getFont(fontpath);
+void FTLabel::setStyle(const std::string &style) {
+    auto ret = FTEngine::getDirector()->getFontCache()->getFontStyle(style);
+
+    if (font_ != ret.first) {
+        FTAssert(is_mutable_, "Cannot change font of non-mutable string");
+        font_ = ret.first;
+        string_dirty_ = true;
+    }
+    material_ = ret.second;
+}
+
+void FTLabel::load(const std::string &style, const std::wstring &text) {
+    auto ret = FTEngine::getDirector()->getFontCache()->getFontStyle(style);
+
+    font_ = ret.first;
+    material_ = ret.second;
 
     mesh_data_ = font_->generateMeshForString(text, font_size_);
 
-    auto texture = font_->getTexture();
-
-    setTexture(texture);
     loadIndexedMeshData(mesh_data_.get(), !is_mutable_);
 
     text_ = text;
@@ -39,7 +55,7 @@ FTLabel::~FTLabel() {
 
 }
 
-void FTLabel::pre_draw(const glm::mat4& mvp) {
+void FTLabel::pre_draw(const FTCamera *camera) {
     if (string_dirty_) {
         mesh_data_->clear();
 
@@ -47,12 +63,9 @@ void FTLabel::pre_draw(const glm::mat4& mvp) {
         setIndexedMeshData(mesh_data_.get());
     }
 
-    FTLabelBase_::pre_draw(mvp);
+    FTLabelBase_::pre_draw(camera);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-    auto shader = (FTFontShader*)current_shader_program_;
-    glUniform3f(shader->getFillColorUniformID(), fill_color_.x, fill_color_.y, fill_color_.z);
-
 }
 
 void FTLabel::post_draw() {
@@ -60,7 +73,7 @@ void FTLabel::post_draw() {
     glDisable(GL_BLEND);
 }
 
-void FTLabel::setString(const std::wstring& text) {
+void FTLabel::setString(const std::wstring &text) {
     if (text_ == text)
         return;
 
@@ -69,3 +82,5 @@ void FTLabel::setString(const std::wstring& text) {
     text_ = text;
     string_dirty_ = true;
 }
+
+

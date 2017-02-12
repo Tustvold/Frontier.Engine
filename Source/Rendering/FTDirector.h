@@ -6,6 +6,7 @@
 class FTScene;
 class FTCamera;
 class FTShaderCache;
+class FTMaterialCache;
 class FTFontCache;
 class FTActionManager;
 
@@ -24,6 +25,10 @@ public:
 
     FTShaderCache* getShaderCache() const {
         return shader_cache_;
+    }
+
+    FTMaterialCache* getMaterialCache() const {
+        return material_cache_;
     }
 
     FTFontCache* getFontCache() const {
@@ -49,6 +54,7 @@ private:
     void preTick(const FTPreTickEvent& event);
 
     FTShaderCache* shader_cache_;
+    FTMaterialCache* material_cache_;
     FTFontCache* font_cache_;
     FTActionManager* action_manager_;
 

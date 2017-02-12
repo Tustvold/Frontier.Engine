@@ -28,10 +28,6 @@ public:
         view_matrix_dirty_ = true;
     }
 
-    const glm::vec3& getPosition() const {
-        return position_;
-    }
-
     const glm::quat& getRotation() const {
         return rotation_;
     }
@@ -78,7 +74,6 @@ protected:
     glm::vec3 frustrum_planes_sign_flipped_[6];
 
     // View Matrix parameters
-    glm::vec3 position_;
     glm::quat rotation_;
     bool rotation_dirty_;
     bool update_view_frustrum_;

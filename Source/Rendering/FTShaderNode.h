@@ -2,8 +2,10 @@
 #include <Rendering/FTNode.h>
 #include <Rendering/Shader/FTVertexShaderProgram.h>
 #include <Rendering/Shader/FTShaderCache.h>
+#include <Rendering/Material/FTMaterialCache.h>
 #include <FTEngine.h>
 #include <Rendering/FTDirector.h>
+#include <Rendering/Material/FTMaterial.h>
 
 // A subclass of FTNode which manages a FTVertexShaderProgram
 class FTShaderNode : public FTNode {
@@ -13,13 +15,14 @@ public:
         return FTEngine::getDirector()->getShaderCache()->getShaderProgram<ShaderProgram>();
     }
 
-    explicit FTShaderNode(FTVertexShaderProgram* shader = getShaderUtil<FTVertexShaderProgram>()) : current_shader_program_(shader) {
+    static FTMaterial* getMaterialUtil(const std::string& name) {
+        return FTEngine::getDirector()->getMaterialCache()->getMaterial(name);
     }
 
-    void pre_draw(const glm::mat4& mvp) override {
-        current_shader_program_->use();
-        current_shader_program_->updateMvpUniforms(&mvp[0][0]);
+    explicit FTShaderNode(FTVertexShaderProgram* shader = getShaderUtil<FTVertexShaderProgram>()) : current_shader_program_(shader), material_(getMaterialUtil("Default")) {
     }
+
+    void pre_draw(const FTCamera* camera) override;
 
     void draw() override {
 
@@ -30,8 +33,20 @@ public:
         current_shader_program_ = FTEngine::getDirector()->getShaderCache()->getShaderProgram<NewShaderProgram>();
     }
 
-    
+    bool setMaterial(const std::string& name) {
+        material_ = FTEngine::getDirector()->getMaterialCache()->getMaterial(name);
+        return material_ != nullptr;
+    }
+
+    void setMaterial(const std::string& name, const FTMaterial& material) {
+        material_ =  FTEngine::getDirector()->getMaterialCache()->loadMaterial(name, material);
+    }
+
+    FTMaterial * getMaterial() const {
+        return material_;
+    }
 
 protected:
     FTVertexShaderProgram* current_shader_program_;
+    FTMaterial* material_;
 };

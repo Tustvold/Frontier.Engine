@@ -34,7 +34,8 @@ namespace details
 enum {
     kVertexAttribLocation = 0,
     kColorAttribLocation = 1,
-    kUVAttribLocation = 2
+    kUVAttribLocation = 2,
+    kNormalAttribLocation = 3,
 };
 
 // TODO: Add alignment specifiers to these to make sure the compiler doesn't insert padding
@@ -119,6 +120,62 @@ struct FTVertexColor {
         glEnableVertexAttribArray(kColorAttribLocation);
     };
 };
+
+template <typename PosType>
+struct FTVertexColorNormal {
+    PosType position_;
+    glm::vec3 color_;
+    glm::vec3 normal_;
+
+    FTVertexColorNormal() {
+
+    }
+
+    FTVertexColorNormal(const PosType& position, const glm::vec3 color, const glm::vec3 normal) : position_(position), color_(color), normal_(normal) {
+
+    }
+
+    bool operator==(const FTVertexColorNormal& other) const {
+        return other.position_ == position_ && other.color_ == color_ && other.normal_ == normal_;
+    }
+
+    bool operator!=(const FTVertexColorNormal& other) const {
+        return !((*this) == other);
+    }
+
+    static void bind() {
+        glVertexAttribPointer(
+                kVertexAttribLocation,
+                details::VectorInfo<PosType>::getNumComponents(),
+                GL_FLOAT,
+                GL_FALSE,
+                sizeof(FTVertexColorNormal),
+                (void*)0
+        );
+
+        glVertexAttribPointer(
+                kColorAttribLocation,
+                3,
+                GL_FLOAT,
+                GL_FALSE,
+                sizeof(FTVertexColorNormal),
+                (void*)(sizeof(PosType))
+        );
+
+        glVertexAttribPointer(
+                kNormalAttribLocation,
+                3,
+                GL_FLOAT,
+                GL_FALSE,
+                sizeof(FTVertexColorNormal),
+                (void*)(sizeof(PosType)+sizeof(glm::vec3))
+        );
+        glEnableVertexAttribArray(kVertexAttribLocation);
+        glEnableVertexAttribArray(kColorAttribLocation);
+        glEnableVertexAttribArray(kNormalAttribLocation);
+    };
+};
+
 
 template <typename PosType>
 struct FTVertexTexture {

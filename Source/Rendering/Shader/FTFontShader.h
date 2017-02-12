@@ -10,11 +10,9 @@ public:
         return createShaderProgram(vertex_shader_source_, fragment_shader_source_);
     }
 
-    GLint getFillColorUniformID() const {
-        return fill_color_uniform_id_;
-    }
-
     bool load() override;
+
+    void updateUniforms(const FTCamera *camera, const FTShaderNode *node) override;
 
 protected:
     GLint fill_color_uniform_id_;

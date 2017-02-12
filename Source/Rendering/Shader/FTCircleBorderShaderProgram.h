@@ -12,9 +12,7 @@ public:
         return createShaderProgram(vertex_shader_source_, fragment_shader_source_);
     }
 
-    GLint getBorderUniformID() const {
-        return border_uniform_id_;
-    }
+    void updateUniforms(const FTCamera *camera, const FTShaderNode *node) override;
 
 protected:
     GLint border_uniform_id_;

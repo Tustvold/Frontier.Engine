@@ -1,8 +1,8 @@
 #include "FTCircleSprite.h"
 #include <Rendering/FTView.h>
 
-FTCircleSprite::FTCircleSprite(float radius, const glm::vec3& color, FTCircleShaderProgram* shader) :
-    FTCircleSpriteBase_(shader), fill_color_(color) {
+FTCircleSprite::FTCircleSprite(float radius, FTCircleShaderProgram* shader) :
+    FTCircleSpriteBase_(shader) {
 
     auto data = std::make_shared<FTMeshData<FTVertexTexture<glm::vec2>>>(4);
 
@@ -39,11 +39,8 @@ FTCircleSprite::FTCircleSprite(float radius, const glm::vec3& color, FTCircleSha
 FTCircleSprite::~FTCircleSprite() {
 }
 
-void FTCircleSprite::pre_draw(const glm::mat4& mvp) {
-    FTCircleSpriteBase_::pre_draw(mvp);
-    
-    auto shader = (FTCircleShaderProgram*)current_shader_program_;
-    glUniform3f(shader->getFillColorUniformID(), fill_color_.x, fill_color_.y, fill_color_.z);
+void FTCircleSprite::pre_draw(const FTCamera* camera) {
+    FTCircleSpriteBase_::pre_draw(camera);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);

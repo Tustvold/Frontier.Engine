@@ -89,11 +89,17 @@ public:
         return tmp;
     }
 
+    const glm::vec3& getPosition() const {
+        return position_;
+    }
+
 protected:
     glm::mat4 projection_matrix_;
     glm::mat4 view_matrix_;
     glm::mat4 view_projection_matrix_;
     glm::mat4 view_projection_matrix_inv_;
+
+    glm::vec3 position_;
 
     FTRect<float> draw_rect_relative_;
     FTRect<int> draw_rect_abs_;

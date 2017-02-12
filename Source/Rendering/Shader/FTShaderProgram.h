@@ -2,6 +2,9 @@
 #include <vector>
 #include <Frontier.h>
 
+class FTShaderNode;
+class FTCamera;
+
 // Base class for ShaderProgram Objects
 // These encapsulate OpenGl program functionality
 // Including binding the program and updating uniforms
@@ -21,6 +24,10 @@ public:
 
     void use() const {
         glUseProgram(program_id_);
+    }
+
+    virtual void updateUniforms(const FTCamera *camera, const FTShaderNode *node) {
+
     }
 
 protected:

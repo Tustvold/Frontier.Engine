@@ -1,3 +1,4 @@
+#include <Rendering/FTShaderNode.h>
 #include "FTVertexShaderProgram.h"
 
 const char* FTVertexShaderProgram::fragment_shader_source_ = {
@@ -41,6 +42,7 @@ bool FTVertexShaderProgram::load() {
     return mvp_uniform_ != -1;
 }
 
-void FTVertexShaderProgram::updateMvpUniforms(const GLfloat* mvp) {
-    glUniformMatrix4fv(mvp_uniform_, 1, GL_FALSE, mvp);
+void FTVertexShaderProgram::updateUniforms(const FTCamera *camera, const FTShaderNode *node) {
+    glm::mat4 mvp = camera->getViewProjectionMatrix() * node->getModelMatrix();
+    glUniformMatrix4fv(mvp_uniform_, 1, GL_FALSE, (const GLfloat *)&mvp);
 }

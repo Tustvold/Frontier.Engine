@@ -1,4 +1,6 @@
 ﻿#include "FTVertexTextureShaderProgram.h"
+#include "Rendering/FTShaderNode.h"
+
 const char* FTVertexTextureShaderProgram::fragment_shader_source_ = {
     "#version 140\n\
 	\n\
@@ -47,4 +49,14 @@ bool FTVertexTextureShaderProgram::load() {
         return false;
     texture_uniform_id_ = glGetUniformLocation(program_id_, "textureSampler");
     return texture_uniform_id_ != -1;
+}
+
+void FTVertexTextureShaderProgram::updateUniforms(const FTCamera *camera, const FTShaderNode *node) {
+    FTVertexShaderProgram::updateUniforms(camera, node);
+    auto& texture = node->getMaterial()->texture;
+
+    // TODO: Support using multiple texture units
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture->getTextureId());
+    glUniform1i(texture_uniform_id_, 0);
 }

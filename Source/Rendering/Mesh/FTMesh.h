@@ -203,8 +203,8 @@ public:
         }
     }
 
-    virtual void pre_draw(const glm::mat4& mvp) override {
-        FTShaderNode::pre_draw(mvp);
+    virtual void pre_draw(const FTCamera* camera) override {
+        FTShaderNode::pre_draw(camera);
         if (!is_loaded_) {
             FTLogError("Trying to draw mesh before calling load!");
             return;

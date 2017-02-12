@@ -45,7 +45,7 @@ public:
 
     virtual void performDraw(FTCamera* camera, uint32_t& draw_order);
 
-    virtual void pre_draw(const glm::mat4& mvp) {
+    virtual void pre_draw(const FTCamera* camera) {
     }
 
     void draw() override {
@@ -216,6 +216,10 @@ public:
 
     uint32_t getDrawOrder() const {
         return draw_order_;
+    }
+
+    FTView* getView() const {
+        return view_;
     }
 
 protected:

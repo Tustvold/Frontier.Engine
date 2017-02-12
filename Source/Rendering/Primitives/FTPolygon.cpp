@@ -12,13 +12,6 @@ FTPolygon::FTPolygon(const glm::vec3& color, FTVertexShaderProgramColor* shader)
     
 }
 
-void FTPolygon::pre_draw(const glm::mat4& mvp) {
-    FTPolygonBase_::pre_draw(mvp);
-
-    auto shader = (FTVertexShaderProgramColor*)current_shader_program_;
-    glUniform3f(shader->getFillColorUniformID(), fill_color_.x, fill_color_.y, fill_color_.z);
-}
-
 std::unique_ptr<FTPolygon::MeshData> FTPolygon::generateRegularPolygonData(float radius, int n, float start_angle) {
     FTAssert(n >= 3, "Cannot create a polygon with less than 3 vertices");
 

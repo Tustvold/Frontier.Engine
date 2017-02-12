@@ -1,13 +1,14 @@
 ﻿#pragma once
 #include <Rendering/Camera/FTCamera.h>
 #include <Rendering/FTNode.h>
+#include <Rendering/Lighting/LightManager.h>
 
 // Subclass of FTNode which manages a camera
 class FTView : public FTNode {
 private:
     friend class FTScene;
 public:
-    explicit FTView() {
+    FTView() : light_manager_(new LightManager()){
         view_ = this;
     }
 
@@ -35,6 +36,11 @@ public:
         return camera_;
     }
 
+    const std::shared_ptr<LightManager>& getLightManager() const {
+        return light_manager_;
+    }
+
 protected:
     std::shared_ptr<FTCamera> camera_;
+    std::shared_ptr<LightManager> light_manager_;
 };

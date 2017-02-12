@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <Frontier.h>
-#include <Rendering/Mesh/FTIndexedTexturedMesh.h>
-#include <Rendering/Textures/FTFontTexture.h>
+#include <Rendering/Mesh/FTIndexedMesh.h>
+#include <Rendering/Texture/FTFontTexture.h>
 #include <unordered_map>
 #include <freetype-gl.h>
 

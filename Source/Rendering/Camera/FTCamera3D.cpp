@@ -8,7 +8,7 @@
 #include <glm/detail/type_vec4.hpp>
 
 
-FTCamera3D::FTCamera3D() : position_(0, 0, 0), rotation_dirty_(true), update_view_frustrum_(true), up_axis_(0,1,0), right_axis_(1,0,0), look_axis_(0,0,-1), fov_((float)M_PI_2) {
+FTCamera3D::FTCamera3D() : rotation_dirty_(true), update_view_frustrum_(true), up_axis_(0,1,0), right_axis_(1,0,0), look_axis_(0,0,-1), fov_((float)M_PI_2) {
     setCullFaceEnabled(true);
     setDepthTestEnabled(true);
 };

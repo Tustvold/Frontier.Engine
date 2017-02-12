@@ -1,6 +1,10 @@
 #pragma once
+
+#include <Rendering/Camera/FTCamera.h>
 #include "FTShaderProgram.h"
 
+
+class FTNode;
 
 class FTVertexShaderProgram : public FTShaderProgram {
 public:
@@ -11,7 +15,7 @@ public:
 
     virtual bool load() override;
 
-    virtual void updateMvpUniforms(const GLfloat* mvp);
+    void updateUniforms(const FTCamera *camera, const FTShaderNode *node) override;
 
     virtual bool compile() override {
         return createShaderProgram(vertex_shader_source_, fragment_shader_source_);

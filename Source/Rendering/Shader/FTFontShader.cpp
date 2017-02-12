@@ -1,4 +1,5 @@
 ﻿#include "FTFontShader.h"
+#include "Rendering/FTShaderNode.h"
 
 const char* FTFontShader::fragment_shader_source_ = {
     "#version 140\n\
@@ -62,4 +63,11 @@ bool FTFontShader::load() {
         return false;
     fill_color_uniform_id_ = glGetUniformLocation(program_id_, "fill_color");
     return fill_color_uniform_id_ != -1;
+}
+
+void FTFontShader::updateUniforms(const FTCamera *camera, const FTShaderNode *node) {
+    FTVertexShaderProgram::updateUniforms(camera, node);
+
+    auto color = node->getMaterial()->diffuse_color;
+    glUniform3f(fill_color_uniform_id_, color.x, color.y, color.z);
 }

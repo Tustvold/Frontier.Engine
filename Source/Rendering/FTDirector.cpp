@@ -53,6 +53,7 @@ FTDirector::~FTDirector() {
 
 void FTDirector::setup() {
     shader_cache_ = new FTShaderCache();
+    material_cache_ = new FTMaterialCache();
     font_cache_ = new FTFontCache();
     action_manager_ = new FTActionManager();
 

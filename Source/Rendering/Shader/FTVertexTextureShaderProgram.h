@@ -8,13 +8,11 @@ public:
 
     virtual bool load() override;
 
-    GLuint getTextureUniformId() const {
-        return texture_uniform_id_;
-    }
-
     virtual bool compile() override {
         return createShaderProgram(vertex_shader_source_, fragment_shader_source_);
     }
+
+    void updateUniforms(const FTCamera *camera, const FTShaderNode *node) override;
 
 protected:
 

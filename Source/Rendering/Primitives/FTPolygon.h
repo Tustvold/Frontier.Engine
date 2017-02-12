@@ -13,8 +13,6 @@ private:
 public:
     explicit FTPolygon(const glm::vec3& color, FTVertexShaderProgramColor* shader = FTShaderNode::getShaderUtil<FTVertexShaderProgramColor>());
 
-    void pre_draw(const glm::mat4& mvp) override;
-    
     static std::unique_ptr<MeshData> generateRegularPolygonData(float radius, int n, float start_angle);
 
     static std::unique_ptr<MeshData> generateRegularPolygonData(float radius, int n);

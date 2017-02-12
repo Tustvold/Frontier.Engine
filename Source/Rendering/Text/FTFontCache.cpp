@@ -9,10 +9,21 @@ FTFontCache::~FTFontCache() {
     FTLOG("FTFontCache Destroyed");
 }
 
-bool FTFontCache::loadFont(const std::string& filename) {
-    if (loaded_fonts_.find(filename) != loaded_fonts_.end()) {
-        return false;
+void FTFontCache::loadFontStyle(const std::string &style, const std::string &filename) {
+    if (loaded_styles.find(style) != loaded_styles.end())
+        return;
+
+    auto it = loaded_fonts_.find(filename);
+    if (it == loaded_fonts_.end()) {
+        auto font = std::make_unique<FTFont>(filename);
+        font->updateTexture();
+        loaded_fonts_[filename] = std::move(font);
+        it = loaded_fonts_.find(filename);
     }
-    (loaded_fonts_[filename] = std::make_shared<FTFont>(filename))->updateTexture();
-    return true;
+
+    FTMaterial material;
+    material.texture = it->second->getTexture();
+    FTEngine::getDirector()->getMaterialCache()->loadMaterial(style, material);
+
+    loaded_styles[style] = std::make_pair(it->second.get(), FTEngine::getDirector()->getMaterialCache()->getMaterial(style));
 }

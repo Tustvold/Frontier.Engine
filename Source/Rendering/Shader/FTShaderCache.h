@@ -22,10 +22,6 @@ public:
         return (Type*)it->second.get();
     }
 
-    void unloadAllShaders() {
-        shader_store_.clear();
-    }
-
 private:
     FTShaderCache();
     ~FTShaderCache();

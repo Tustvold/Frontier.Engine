@@ -9,10 +9,10 @@
 #include <Rendering/BoundingShape/FTBoundingShapeWrapper.h>
 #include <Event/Input/FTInputManager.h>
 
-FTInputLabel::FTInputLabel(const std::wstring& placeholder, const std::wstring& text, const std::string& font, int fontsize)
+FTInputLabel::FTInputLabel(const std::wstring& placeholder, const std::wstring& text, int fontsize)
     : cursor_pos_(0), placeholder_(placeholder), input_text_(text)  {
 
-    label_ = std::make_shared<FTLabel>(font, text, fontsize, true);
+    label_ = std::make_shared<FTLabel>(text, fontsize, true);
     addChild(label_);
 
     updateLabel();
@@ -180,11 +180,11 @@ void FTInputLabel::onDeselect(FTButton* button) {
 void FTInputLabel::updateLabel() {
     if (input_text_.size() == 0 && !is_active_) {
         label_->setString(placeholder_);
-        label_->setFillColor(placeholder_fill_color_);
+        label_->setStyle("DefaultTextPlaceholder");
     }
     else {
         label_->setString(input_text_);
-        label_->setFillColor(fill_color_);
+        label_->setStyle("DefaultText");
     }
 }
 
