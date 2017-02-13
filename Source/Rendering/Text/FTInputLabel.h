@@ -16,6 +16,8 @@ public:
         return input_text_;
     }
 
+    std::string getUTF8Text() const;
+
     void setText(const std::wstring& text) {
         input_text_ = text;
         updateLabel();

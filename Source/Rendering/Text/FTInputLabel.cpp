@@ -8,6 +8,8 @@
 #include <Event/Keyboard/FTKeyboardEventDispatcher.h>
 #include <Rendering/BoundingShape/FTBoundingShapeWrapper.h>
 #include <Event/Input/FTInputManager.h>
+#include <Util/FTStringUtils.h>
+
 
 FTInputLabel::FTInputLabel(const std::wstring& placeholder, const std::wstring& text, int fontsize)
     : cursor_pos_(0), placeholder_(placeholder), input_text_(text)  {
@@ -186,5 +188,9 @@ void FTInputLabel::updateLabel() {
         label_->setString(input_text_);
         label_->setStyle("DefaultText");
     }
+}
+
+std::string FTInputLabel::getUTF8Text() const {
+    return FTCharUtil::convertString(input_text_);
 }
 

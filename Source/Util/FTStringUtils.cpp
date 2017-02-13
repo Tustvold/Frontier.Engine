@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cctype>
 #include <sstream>
+#include <codecvt>
+#include <locale>
 
 
 wchar_t* FTWCharUtil::formatString(wchar_t* buff, std::size_t buf_size, const wchar_t* format...) {
@@ -21,26 +23,10 @@ vswprintf(buff, buf_size, format, args);
 
 
 std::wstring FTWCharUtil::convertString(const std::string& from) {
-    std::wstring ret;
-    mbstate_t mbs;
-    wchar_t buffer[32];
-    const char* source = from.c_str();
-    // Initialize mbs
-    memset(&mbs, 0, sizeof(mbs));
+    using convert_typeX = std::codecvt_utf8<wchar_t>;
+    std::wstring_convert<convert_typeX, wchar_t> converterX;
 
-    std::size_t written_bytes;
-    do {
-
-#ifdef WIN32
-        mbsrtowcs_s(&written_bytes, buffer, 32, &source, 31, &mbs);
-#else
-        written_bytes = mbsrtowcs(buffer, &source, 32, &mbs);
-#endif
-
-        ret.append(buffer, buffer[written_bytes - 1] == 0 ? written_bytes - 1 : written_bytes);
-    } while (written_bytes == 32);
-
-    return ret;
+    return converterX.from_bytes(from);
 }
 
 void FTWCharUtil::toLowerCase(std::wstring& string) {
@@ -72,26 +58,10 @@ std::vector<std::wstring> FTWCharUtil::splitString(const std::wstring& str, wcha
 }
 
 std::string FTCharUtil::convertString(const std::wstring& from) {
-    std::string ret;
-    mbstate_t mbs;
-    char buffer[32];
+    using convert_typeX = std::codecvt_utf8<wchar_t>;
+    std::wstring_convert<convert_typeX, wchar_t> converterX;
 
-    const wchar_t* source = from.c_str();
-
-    // Initialize mbs
-    memset(&mbs, 0, sizeof(mbs));
-
-    std::size_t written_bytes;
-    do {
-#ifdef WIN32
-        wcsrtombs_s(&written_bytes, buffer, 32, &source, 31, &mbs);
-#else
-            written_bytes = wcsrtombs(buffer, &source, 32, &mbs);
-#endif 
-        // Don't append superfluous null terminators
-        ret.append(buffer, buffer[written_bytes - 1] == 0 ? written_bytes - 1 : written_bytes);
-    } while (written_bytes == 32);
-    return ret;
+    return converterX.to_bytes(from);
 }
 
 void FTCharUtil::toLowerCase(std::string& string) {

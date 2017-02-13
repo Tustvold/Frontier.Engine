@@ -1,7 +1,7 @@
 #include "FTCircleSprite.h"
 #include <Rendering/FTView.h>
 
-FTCircleSprite::FTCircleSprite(float radius, FTCircleShaderProgram* shader) :
+FTCircleSprite::FTCircleSprite(float radius, const glm::vec3& color, FTCircleShaderProgram* shader) :
     FTCircleSpriteBase_(shader) {
 
     auto data = std::make_shared<FTMeshData<FTVertexTexture<glm::vec2>>>(4);
@@ -34,6 +34,8 @@ FTCircleSprite::FTCircleSprite(float radius, FTCircleShaderProgram* shader) :
     data->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(radiusx2, radiusx2, 0)));
 
     loadMeshData(data.get(), true);
+
+    material_.diffuse_color = color;
 }
 
 FTCircleSprite::~FTCircleSprite() {

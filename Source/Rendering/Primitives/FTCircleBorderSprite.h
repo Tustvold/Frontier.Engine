@@ -6,7 +6,7 @@
 
 class FTCircleBorderSprite : public FTCircleSprite {
 public:
-    explicit FTCircleBorderSprite(float radius, FTCircleBorderShaderProgram* shader = FTShaderNode::getShaderUtil<FTCircleBorderShaderProgram>());
+    explicit FTCircleBorderSprite(float radius, const glm::vec3& color, float border, FTCircleBorderShaderProgram* shader = FTShaderNode::getShaderUtil<FTCircleBorderShaderProgram>());
     virtual ~FTCircleBorderSprite();
 protected:
 };

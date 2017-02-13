@@ -44,7 +44,4 @@ public:
     void loadBorderPolygon(std::vector<glm::vec2>&& vertices, const glm::vec2& size, float border_thickness) {
         loadMeshData(generateBorderPolygonData(generateFilledPolygonData(std::move(vertices), size), border_thickness).get(), true);
     }
-
-protected:
-    glm::vec3 fill_color_;
 };

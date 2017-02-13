@@ -1,15 +1,17 @@
 #include "FTPolygon.h"
 #include <Rendering/BoundingShape/FTBoundingEllipsoid.h>
 
-static int wrapSize(size_t size, unsigned int i) {
+static int wrapSize(int size, int i) {
     if (i >= size)
-        return i - (int)size;
+        return i - size;
+    if (i < 0)
+        return i + size;
     return i;
 }
 
 FTPolygon::FTPolygon(const glm::vec3& color, FTVertexShaderProgramColor* shader) :
-    FTPolygonBase_(shader), fill_color_(color) {
-    
+    FTPolygonBase_(shader) {
+    material_.diffuse_color = color;
 }
 
 std::unique_ptr<FTPolygon::MeshData> FTPolygon::generateRegularPolygonData(float radius, int n, float start_angle) {
@@ -52,7 +54,7 @@ std::unique_ptr<FTPolygon::MeshData> FTPolygon::generateFilledPolygonData(std::v
 }
 
 std::unique_ptr<FTPolygon::MeshData> FTPolygon::generateBorderPolygonData(const std::unique_ptr<MeshData>& from_data, float border_thickness) {
-    size_t num_verts = from_data->getVertexCount();
+    int num_verts = (int) from_data->getVertexCount();
     FTAssert(num_verts >= 3, "Cannot create from data with less than 3 vertices");
     FTAssert(from_data->getPrimitiveType() == GL_TRIANGLE_FAN, "Data not in correct format");
     auto vertices = from_data->getVertices().data();
@@ -60,7 +62,7 @@ std::unique_ptr<FTPolygon::MeshData> FTPolygon::generateBorderPolygonData(const 
     auto data = std::make_unique<MeshData>(num_verts * 2 + 1);
     auto& data_vertices = data->getVertices();
 
-    for (size_t i = 0; i < num_verts; i++) {
+    for (int i = 0; i < num_verts; i++) {
         auto previous_vertex = vertices[wrapSize(num_verts, i - 1)].position_;
         auto current_vertex = vertices[i].position_;
         auto next_vertex = vertices[wrapSize(num_verts, i + 1)].position_;

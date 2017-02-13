@@ -34,14 +34,14 @@ void FTLabel::setStyle(const std::string &style) {
         font_ = ret.first;
         string_dirty_ = true;
     }
-    material_ = ret.second;
+    material_ = *ret.second;
 }
 
 void FTLabel::load(const std::string &style, const std::wstring &text) {
     auto ret = FTEngine::getDirector()->getFontCache()->getFontStyle(style);
 
     font_ = ret.first;
-    material_ = ret.second;
+    material_ = *ret.second;
 
     mesh_data_ = font_->generateMeshForString(text, font_size_);
 
@@ -56,12 +56,7 @@ FTLabel::~FTLabel() {
 }
 
 void FTLabel::pre_draw(const FTCamera *camera) {
-    if (string_dirty_) {
-        mesh_data_->clear();
-
-        font_->populateMeshDataForString(mesh_data_.get(), text_, font_size_);
-        setIndexedMeshData(mesh_data_.get());
-    }
+    updateMesh();
 
     FTLabelBase_::pre_draw(camera);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -81,6 +76,20 @@ void FTLabel::setString(const std::wstring &text) {
 
     text_ = text;
     string_dirty_ = true;
+}
+
+const std::shared_ptr<FTFontMeshData> &FTLabel::getMeshData() {
+    updateMesh();
+    return mesh_data_;
+}
+
+void FTLabel::updateMesh() {
+    if (string_dirty_) {
+        mesh_data_->clear();
+
+        font_->populateMeshDataForString(mesh_data_.get(), text_, font_size_);
+        setIndexedMeshData(mesh_data_.get());
+    }
 }
 
 

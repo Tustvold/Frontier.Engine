@@ -59,7 +59,7 @@ bool FTCircleBorderShaderProgram::load() {
 }
 
 void FTCircleBorderShaderProgram::updateUniforms(const FTCamera *camera, const FTShaderNode *node) {
-    FTVertexShaderProgram::updateUniforms(camera, node);
+    FTCircleShaderProgram::updateUniforms(camera, node);
 
     glUniform1f(border_uniform_id_, node->getMaterial()->border_thickness);
 }

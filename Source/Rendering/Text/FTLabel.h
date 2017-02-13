@@ -23,9 +23,7 @@ public:
         return font_size_;
     }
 
-    const std::shared_ptr<FTFontMeshData>& getMeshData() const {
-        return mesh_data_;
-    }
+    const std::shared_ptr<FTFontMeshData>& getMeshData();
 
     void setStyle(const std::string& style);
 
@@ -40,4 +38,6 @@ protected:
 
 private:
     void load(const std::string& style, const std::wstring& text);
+
+    void updateMesh();
 };
