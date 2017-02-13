@@ -9,7 +9,7 @@ FTFontCache::~FTFontCache() {
     FTLOG("FTFontCache Destroyed");
 }
 
-void FTFontCache::loadFontStyle(const std::string &style, const std::string &filename) {
+void FTFontCache::loadFontStyle(const std::string &style, const std::string &filename, const glm::vec3& color) {
     if (loaded_styles.find(style) != loaded_styles.end())
         return;
 
@@ -23,6 +23,7 @@ void FTFontCache::loadFontStyle(const std::string &style, const std::string &fil
 
     FTMaterial material;
     material.texture = it->second->getTexture();
+    material.diffuse_color = color;
     FTEngine::getDirector()->getMaterialCache()->loadMaterial(style, material);
 
     loaded_styles[style] = std::make_pair(it->second.get(), FTEngine::getDirector()->getMaterialCache()->getMaterial(style));

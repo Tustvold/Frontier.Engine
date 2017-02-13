@@ -6,7 +6,7 @@ class FTFontCache {
     friend class FTDirector;
 public:
 
-    void loadFontStyle(const std::string &style, const std::string& fontpath);
+    void loadFontStyle(const std::string &style, const std::string& fontpath, const glm::vec3& color = glm::vec3(0,0,0));
 
     std::pair<FTFont*, FTMaterial*> getFontStyle(const std::string& style) {
         auto it = loaded_styles.find(style);

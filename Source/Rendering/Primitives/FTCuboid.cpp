@@ -13,18 +13,19 @@ FTCuboid::FTCuboid(const glm::vec3& origin, const glm::vec3& size, const glm::ve
 }
 
 void FTCuboid::load(const glm::vec3& origin, const glm::vec3& size, const glm::vec3 face_colors[6]) {
-    auto data = std::make_shared<FTIndexedMeshData<FTVertexColor<glm::vec3>, uint16_t>>(4 * 6, 36);
+    auto data = std::make_shared<FTIndexedMeshData<FTVertexColorNormal<glm::vec3>, uint16_t>>(4 * 6, 36);
 
     auto vertices = data->getVertices().data();
     auto indices = data->getIndices().data();
 
-    FTVertexColor<glm::vec3> vertex;
+    FTVertexColorNormal<glm::vec3> vertex;
     int cur_index = 0;
     int vertex_index = 0;
     int indices_index = 0;
 
     vertex.color_ = face_colors[0];
 
+    vertex.normal_ = glm::vec3(1,0,0);
     vertex.position_ = glm::vec3(origin.x + size.x, origin.y, origin.z);
     vertices[vertex_index++] = vertex;
     vertex.position_ = glm::vec3(origin.x + size.x, origin.y, origin.z + size.z);
@@ -43,6 +44,7 @@ void FTCuboid::load(const glm::vec3& origin, const glm::vec3& size, const glm::v
 
     cur_index += 4;
 
+    vertex.normal_ = glm::vec3(-1,0,0);
     vertex.color_ = face_colors[1];
     vertex.position_ = glm::vec3(origin.x, origin.y, origin.z);
     vertices[vertex_index++] = vertex;
@@ -63,6 +65,7 @@ void FTCuboid::load(const glm::vec3& origin, const glm::vec3& size, const glm::v
 
     cur_index += 4;
 
+    vertex.normal_ = glm::vec3(0,1,0);
     vertex.color_ = face_colors[2];
     vertex.position_ = glm::vec3(origin.x, origin.y + size.y, origin.z);
     vertices[vertex_index++] = vertex;
@@ -83,6 +86,7 @@ void FTCuboid::load(const glm::vec3& origin, const glm::vec3& size, const glm::v
 
     cur_index += 4;
 
+    vertex.normal_ = glm::vec3(0,-1,0);
     vertex.color_ = face_colors[3];
     vertex.position_ = glm::vec3(origin.x, origin.y, origin.z);
     vertices[vertex_index++] = vertex;
@@ -102,6 +106,7 @@ void FTCuboid::load(const glm::vec3& origin, const glm::vec3& size, const glm::v
 
     cur_index += 4;
 
+    vertex.normal_ = glm::vec3(0,0,1);
     vertex.color_ = face_colors[4];
     vertex.position_ = glm::vec3(origin.x, origin.y, origin.z + size.z);
     vertices[vertex_index++] = vertex;
@@ -122,6 +127,7 @@ void FTCuboid::load(const glm::vec3& origin, const glm::vec3& size, const glm::v
 
     cur_index += 4;
 
+    vertex.normal_ = glm::vec3(0,0,-1);
     vertex.color_ = face_colors[5];
     vertex.position_ = glm::vec3(origin.x, origin.y, origin.z);
     vertices[vertex_index++] = vertex;
