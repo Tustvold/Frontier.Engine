@@ -1,9 +1,22 @@
 language: c++
 sudo: required
 dist: trusty
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-6
+      - g++-6
+      - cmake
+      - xorg-dev
+      - libgl1-mesa-dev
+      - libfreetype6-dev
+      - libglew-dev
+      - zlib1g-dev
 install:
-  - sudo apt-get -y update
-  - sudo apt-get -y install cmake gcc xorg-dev libgl1-mesa-dev libfreetype6-dev libglew-dev zlib1g-dev
+  - export CC=/usr/bin/gcc-6
+  - export CXX=/usr/bin/g++-6
   - ./Scripts/glfw-install.sh
   - ./Scripts/glm-install.sh
  
