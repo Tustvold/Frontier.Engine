@@ -257,7 +257,7 @@ void FTFont::populateMeshDataForString(FTFontMeshData* data, const std::basic_st
 
     //float r = color->red, g = color->green, b = color->blue, a = color->alpha;
     for (i = 0; i < length; ++i) {
-        wctomb(buffer.data(), text[i]);
+        FTAssert(wctomb(buffer.data(), text[i]) != -1, "Invalid Character");
 
         auto before = atlas->used;
         texture_glyph_t* glyph = texture_font_get_glyph(font_, buffer.data());
@@ -267,7 +267,7 @@ void FTFont::populateMeshDataForString(FTFontMeshData* data, const std::basic_st
         if (glyph != nullptr) {
             float kerning = 0.0f;
             if (i > 0) {
-                wctomb(buffer.data(), text[i - 1]);
+                FTAssert(wctomb(buffer.data(), text[i - 1]) != -1, "Invalid Character");
                 kerning = texture_glyph_get_kerning(glyph, buffer.data());
             }
             pen.x += kerning;

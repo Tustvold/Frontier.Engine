@@ -37,7 +37,7 @@ GLuint FTTextureDDS::loadDDS(const std::string& provided_path) {
 
     /* verify the type of file */
     char filecode[4];
-    fread(filecode, 1, 4, fp);
+    FTAssert(fread(filecode, 1, 4, fp) == 4, "Read Error");
     if (strncmp(filecode, "DDS ", 4) != 0) {
         fclose(fp);
         FTAssert(false, "Not a DDS texture");
@@ -45,7 +45,7 @@ GLuint FTTextureDDS::loadDDS(const std::string& provided_path) {
     }
 
     /* get the surface desc */
-    fread(&header, 124, 1, fp);
+    FTAssert(fread(&header, 124, 1, fp) == 124, "Read Error");
 
     height_ = header[8 / sizeof(uint32_t)];
     width_ = header[12 / sizeof(uint32_t)];
@@ -58,7 +58,7 @@ GLuint FTTextureDDS::loadDDS(const std::string& provided_path) {
     /* how big is it going to be including all mipmaps? */
     bufsize = mipmap_count_ > 1 ? linearSize * 2 : linearSize;
     unsigned char* buffer = new unsigned char[bufsize];
-    fread(buffer, 1, bufsize, fp);
+    FTAssert(fread(buffer, 1, bufsize, fp) == bufsize, "Read Error");
     /* close the file pointer */
     fclose(fp);
 
