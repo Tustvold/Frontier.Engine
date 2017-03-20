@@ -11,3 +11,15 @@ cmake --build . --target Frontier.Engine.Tests
 
 cd bin
 ./Frontier.Engine.Tests
+
+
+cd ..
+cd ..
+mkdir Build-Unix-Release
+cd Build-Unix-Release
+cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RelWithDebInfo
+
+cmake --build . --target Frontier.Engine.Tests
+
+cd bin
+./Frontier.Engine.Tests

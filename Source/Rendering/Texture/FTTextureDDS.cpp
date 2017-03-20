@@ -23,7 +23,7 @@ FTTextureDDS::~FTTextureDDS() {
 
 // Code from http://www.opengl-tutorial.org/beginners-tutorials/tutorial-5-a-textured-cube/
 GLuint FTTextureDDS::loadDDS(const std::string& provided_path) {
-    unsigned char header[124];
+    uint32_t header[124 / sizeof(uint32_t)];
 
     auto imagepath = FTEngine::getFileManager()->getPathToFile(provided_path);
     FTAssert(imagepath != "", "File %s not found", provided_path.c_str());
@@ -47,11 +47,11 @@ GLuint FTTextureDDS::loadDDS(const std::string& provided_path) {
     /* get the surface desc */
     fread(&header, 124, 1, fp);
 
-    height_ = *(unsigned int*)&(header[8]);
-    width_ = *(unsigned int*)&(header[12]);
-    unsigned int linearSize = *(unsigned int*)&(header[16]);
-    mipmap_count_ = *(unsigned int*)&(header[24]);
-    unsigned int fourCC = *(unsigned int*)&(header[80]);
+    height_ = header[8 / sizeof(uint32_t)];
+    width_ = header[12 / sizeof(uint32_t)];
+    unsigned int linearSize = header[16 / sizeof(uint32_t)];
+    mipmap_count_ = header[24 / sizeof(uint32_t)];
+    unsigned int fourCC = header[80 / sizeof(uint32_t)];
 
 
     unsigned int bufsize;
