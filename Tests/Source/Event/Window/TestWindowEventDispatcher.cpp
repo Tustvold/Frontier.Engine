@@ -11,7 +11,7 @@ public:
 
 TEST(TestWindowEventDispatcher, TestWindowResizeEvent) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     MockWindowEventListener listener;
 
     auto resize_delegate = Gallant::Delegate1<const FTWindowResizeEvent&>(&listener, &MockWindowEventListener::windowResizeEvent);

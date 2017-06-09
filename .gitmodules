@@ -4,3 +4,6 @@ url=https://github.com/rougier/freetype-gl.git
 [submodule "ThirdParty/googletest"]
 	path = ThirdParty/googletest
 	url = https://github.com/google/googletest.git
+[submodule "ThirdParty/ttvfs"]
+	path = ThirdParty/ttvfs
+	url = https://github.com/fgenesis/ttvfs.git

@@ -16,36 +16,24 @@ FTTextureDDS::~FTTextureDDS() {
 #define FOURCC_DXT3 0x33545844 // Equivalent to "DXT3" in ASCII
 #define FOURCC_DXT5 0x35545844 // Equivalent to "DXT5" in ASCII
 
-/* HACK: no fopen_s on non-Windows systems */
-#ifndef WIN32
-#   define fopen_s(pFile,filename,mode) ((*(pFile))=fopen((filename),(mode)))==NULL
-#endif
-
-// Code from http://www.opengl-tutorial.org/beginners-tutorials/tutorial-5-a-textured-cube/
 GLuint FTTextureDDS::loadDDS(const std::string& provided_path) {
     uint32_t header[124 / sizeof(uint32_t)];
 
-    auto imagepath = FTEngine::getFileManager()->getPathToFile(provided_path);
-    FTAssert(imagepath != "", "File %s not found", provided_path.c_str());
+    auto file = FTEngine::getFileManager()->getFile(provided_path);
 
-    FILE* fp;
-
-    /* try to open the file */
-    auto err = fopen_s(&fp, imagepath.c_str(), "rb");
-    FTAssert(err == 0, "File %s could not be opened!", imagepath.c_str());
-
+    FTAssert(file && file->open("rb"), "File %s could not be opened!", provided_path.c_str());
 
     /* verify the type of file */
     char filecode[4];
-    FTAssert(fread(filecode, 1, 4, fp) == 4, "Read Error");
+    FTAssert(file->read(filecode, 4) == 4, "Read Error");
     if (strncmp(filecode, "DDS ", 4) != 0) {
-        fclose(fp);
+        file->close();
         FTAssert(false, "Not a DDS texture");
         return 0;
     }
 
     /* get the surface desc */
-    FTAssert(fread(&header, 124, 1, fp) == 124, "Read Error");
+    FTAssert(file->read(&header, 124) == 124, "Read Error");
 
     height_ = header[8 / sizeof(uint32_t)];
     width_ = header[12 / sizeof(uint32_t)];
@@ -58,9 +46,9 @@ GLuint FTTextureDDS::loadDDS(const std::string& provided_path) {
     /* how big is it going to be including all mipmaps? */
     bufsize = mipmap_count_ > 1 ? linearSize * 2 : linearSize;
     unsigned char* buffer = new unsigned char[bufsize];
-    FTAssert(fread(buffer, 1, bufsize, fp) == bufsize, "Read Error");
-    /* close the file pointer */
-    fclose(fp);
+    FTAssert(file->read(buffer, bufsize) == bufsize, "Read Error");
+
+    file->close();
 
     unsigned int format;
     switch (fourCC) {

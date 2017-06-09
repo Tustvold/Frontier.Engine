@@ -10,9 +10,7 @@
 #include FT_FREETYPE_H
 #include "FTFontUtils.h"
 
-FTFont::FTFont(const std::string& filename, const char* cache) : font_texture_(nullptr) {
-    auto path = FTEngine::getFileManager()->getPathToFile(filename);
-    FTAssert(path != "", "Font doesn't exist at path");
+FTFont::FTFont(const std::string& path, const char* cache) : font_texture_(nullptr) {
 
     auto extension = path.substr(path.find_last_of(".") + 1);
 
@@ -27,9 +25,10 @@ FTFont::FTFont(const std::string& filename, const char* cache) : font_texture_(n
             iter++;
         }
     } else if (extension == "ftfont") {
-        FILE *fr = fopen(path.c_str(), "r");
+        ttvfs::File *fr = FTEngine::getFileManager()->getFile(path);
+        FTAssert(fr && fr->open("rb"), "Failed to find Font %s", path.c_str());
         auto readBuffer = CompressionBuffer::readFile(fr);
-        fclose(fr);
+        fr->close();
 
         auto tag = std::make_unique<Tag>(readBuffer.get());
 

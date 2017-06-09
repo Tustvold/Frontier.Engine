@@ -16,7 +16,7 @@ public:
 
 TEST(TestMouseEventDispatcher, TestMouseMove) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     MockMouseEventListener listener;
 
     auto move_delegate = Gallant::Delegate1<const FTMouseMoveEvent&>(&listener, &MockMouseEventListener::mouseMoveEvent);
@@ -37,7 +37,7 @@ TEST(TestMouseEventDispatcher, TestMouseMove) {
 
 TEST(TestMouseEventDispatcher, TestMouseEnterExitEventEvent) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     MockMouseEventListener listener;
 
     auto enter_delegate = Gallant::Delegate1<const FTMouseEnterEvent&>(&listener, &MockMouseEventListener::mouseEnterEvent);
@@ -58,7 +58,7 @@ TEST(TestMouseEventDispatcher, TestMouseEnterExitEventEvent) {
 
 TEST(TestMouseEventDispatcher, TestEnterExitPosPurge) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     MockMouseEventListener listener;
 
     auto enter_delegate = Gallant::Delegate1<const FTMouseEnterEvent&>(&listener, &MockMouseEventListener::mouseEnterEvent);
@@ -90,7 +90,7 @@ TEST(TestMouseEventDispatcher, TestEnterExitPosPurge) {
 
 TEST(TestMouseEventDispatcher, TestMouseButtonSimple) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     MockMouseEventListener listener;
 
     auto move_delegate = Gallant::Delegate1<const FTMouseMoveEvent&>(&listener, &MockMouseEventListener::mouseMoveEvent);
@@ -122,7 +122,7 @@ TEST(TestMouseEventDispatcher, TestMouseButtonSimple) {
 
 TEST(TestMouseEventDispatcher, TestMouseButtonExit) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     MockMouseEventListener listener;
 
     auto move_delegate = Gallant::Delegate1<const FTMouseMoveEvent&>(&listener, &MockMouseEventListener::mouseMoveEvent);
@@ -155,7 +155,7 @@ TEST(TestMouseEventDispatcher, TestMouseButtonExit) {
 
 TEST(TestMouseEventDispatcher, TestMouseScroll) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     MockMouseEventListener listener;
 
     auto move_delegate = Gallant::Delegate1<const FTMouseMoveEvent&>(&listener, &MockMouseEventListener::mouseMoveEvent);

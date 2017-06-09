@@ -8,7 +8,7 @@ MockLoader::MockLoader() {
     mock_engine_event_dispatcher_ = std::make_shared<MockEngineEventDispatcher>();
     FTEngine::getEventManager()->registerDispatcher(std::static_pointer_cast<FTEngineEventDispatcher>(mock_engine_event_dispatcher_));
 
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 }
 
 MockLoader::~MockLoader() {

@@ -30,3 +30,5 @@ target_link_libraries(Frontier.Engine.Tests
 add_custom_command(TARGET Frontier.Engine.Tests POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/Resources ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/TestResources)
+
+NewResourceBundle(Frontier.Engine.Tests Resources)

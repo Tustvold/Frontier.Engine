@@ -38,7 +38,7 @@ public:
 
 TEST(TestInputManager, TestKeyStatePressed) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     auto state = FTEngine::getInputManager()->getKeyState("Forward", GLFW_KEY_0);
 
@@ -56,7 +56,7 @@ TEST(TestInputManager, TestKeyStateReleased) {
     FTEngine::init();
     auto engine_event_dispatcher = std::make_shared<MockEngineEventDispatcher>();
     FTEngine::getEventManager()->registerDispatcher(std::static_pointer_cast<FTEngineEventDispatcher>(engine_event_dispatcher));
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     auto state = FTEngine::getInputManager()->getKeyState("Forward", GLFW_KEY_0);
 
@@ -78,7 +78,7 @@ TEST(TestInputManager, TestKeyStateMultiMap) {
     FTEngine::init();
     auto engine_event_dispatcher = std::make_shared<MockEngineEventDispatcher>();
     FTEngine::getEventManager()->registerDispatcher(std::static_pointer_cast<FTEngineEventDispatcher>(engine_event_dispatcher));
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     auto state = FTEngine::getInputManager()->getKeyState("Forward", GLFW_KEY_0);
     state->addMapping(GLFW_KEY_1, 0);
@@ -111,7 +111,7 @@ TEST(TestInputManager, TestKeyStateMultiMap2) {
     FTEngine::init();
     auto engine_event_dispatcher = std::make_shared<MockEngineEventDispatcher>();
     FTEngine::getEventManager()->registerDispatcher(std::static_pointer_cast<FTEngineEventDispatcher>(engine_event_dispatcher));
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     auto state = FTEngine::getInputManager()->getKeyState("Forward", GLFW_KEY_0);
     state->addMapping(GLFW_KEY_1, 0);
@@ -140,7 +140,7 @@ TEST(TestInputManager, TestKeyStateMods) {
     FTEngine::init();
     auto engine_event_dispatcher = std::make_shared<MockEngineEventDispatcher>();
     FTEngine::getEventManager()->registerDispatcher(std::static_pointer_cast<FTEngineEventDispatcher>(engine_event_dispatcher));
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     auto state = FTEngine::getInputManager()->getKeyState("Forward", GLFW_KEY_0, GLFW_MOD_ALT | GLFW_MOD_CONTROL);
 
@@ -166,7 +166,7 @@ TEST(TestInputManager, TestKeyStateMods) {
 
 TEST(TestInputManager, TestMouseDown) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     MockMouseDelegate del1(5);
     MockMouseDelegate del2(8);
@@ -192,7 +192,7 @@ TEST(TestInputManager, TestMouseDown) {
 
 TEST(TestInputManager, TestMouseDownChained) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     MockMouseDelegate del1(5);
     MockMouseDelegate del2(8);
@@ -221,7 +221,7 @@ TEST(TestInputManager, TestMouseDownChained) {
 
 TEST(TestInputManager, TestMouseExit) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     MockMouseDelegate del1(5);
     MockMouseDelegate del2(8);
@@ -270,7 +270,7 @@ TEST(TestInputManager, TestMouseExit) {
 
 TEST(TestInputManager, TestMultipleMouseButtons) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     MockMouseDelegate del(5);
 
@@ -324,7 +324,7 @@ TEST(TestInputManager, TestMultipleMouseButtons) {
 
 TEST(TestInputManager, TestMouseDelegateExit) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     MockMouseDelegate del(5);
 
@@ -356,7 +356,7 @@ TEST(TestInputManager, TestMouseDelegateExit) {
 
 TEST(TestInputManager, TestMouseDelegatePriorityChange) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     MockMouseDelegate del1(9);
     MockMouseDelegate del2(7);
@@ -391,7 +391,7 @@ TEST(TestInputManager, TestMouseDelegatePriorityChange) {
 
 TEST(TestInputManager, TestKeyboardDelegate) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     MockKeyboardDelegate del1(5);
     MockKeyboardDelegate del2(8);
@@ -420,7 +420,7 @@ TEST(TestInputManager, TestKeyboardDelegate) {
 
 TEST(TestInputManager, TestKeyboardDelegateMulti) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     MockKeyboardDelegate del1(5);
     MockKeyboardDelegate del2(8);
@@ -453,7 +453,7 @@ TEST(TestInputManager, TestKeyboardDelegateMulti) {
 
 TEST(TestInputManager, TestKeyboardDelegateRepeat) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     MockKeyboardDelegate del1(5);
     MockKeyboardDelegate del2(8);
@@ -486,7 +486,7 @@ TEST(TestInputManager, TestKeyboardDelegateRepeat) {
 
 TEST(TestInputManager, TestKeyboardDelegateRelease) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     MockKeyboardDelegate del1(5);
     MockKeyboardDelegate del2(8);
@@ -520,7 +520,7 @@ TEST(TestInputManager, TestKeyboardDelegateRelease) {
 
 TEST(TestInputManager, TestKeyboardDelegatePriorityChange) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     MockKeyboardDelegate del1(23);
     MockKeyboardDelegate del2(2);
@@ -565,7 +565,7 @@ TEST(TestInputManager, TestKeyboardDelegatePriorityChange) {
 
 TEST(TestInputManager, TestKeyboardDelegateSwallow) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
 
     MockKeyboardDelegate del1(5);
     MockKeyboardDelegate del2(8);

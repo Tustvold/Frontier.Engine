@@ -6,7 +6,7 @@
 #include <Mock/ExpectUtils.h>
 TEST(TestCamera, TestRaycast2D) {
     GlfwMock mock;
-    FTEngine::setup(true); {
+    FTEngine::setup(true, true); {
         auto camera = std::make_unique<FTCamera2D>();
 
         // Call this to update matrices
@@ -25,7 +25,7 @@ TEST(TestCamera, TestRaycast2D) {
 
 TEST(TestCamera, TestRaycast2DDrawRect) {
     GlfwMock mock;
-    FTEngine::setup(true); {
+    FTEngine::setup(true, true); {
         auto camera = std::make_unique<FTCamera2D>();
         camera->setDrawRectRelative(FTRect<float>(0.25f, 0.25f, 0.75f, 0.75f));
 
@@ -54,7 +54,7 @@ TEST(TestCamera, TestRaycast2DDrawRect) {
 
 TEST(TestCamera, TestRaycast3D) {
     GlfwMock mock;
-    FTEngine::setup(true); {
+    FTEngine::setup(true, true); {
 
         auto camera = std::make_unique<FTCamera3D>();
         camera->setClippingPlanes(1.0f, 10.0f);

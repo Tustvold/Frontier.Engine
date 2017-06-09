@@ -14,7 +14,7 @@ public:
 
 TEST(TestKeyboardEventDispatcher, TestKeyPressedEvent) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     MockKeyboardEventListener listener;
 
     auto pressed_delegate = Gallant::Delegate1<const FTKeyPressedEvent&>(&listener, &MockKeyboardEventListener::keyPressedEvent);
@@ -29,7 +29,7 @@ TEST(TestKeyboardEventDispatcher, TestKeyPressedEvent) {
 
 TEST(TestKeyboardEventDispatcher, TestKeyRepeatEvent) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     MockKeyboardEventListener listener;
 
     FTEngine::getEventManager()->registerDelegate<FTKeyboardEventDispatcher>(&listener, &MockKeyboardEventListener::keyRepeatEvent);
@@ -42,7 +42,7 @@ TEST(TestKeyboardEventDispatcher, TestKeyRepeatEvent) {
 }
 TEST(TestKeyboardEventDispatcher, TestKeyReleasedEvent) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     MockKeyboardEventListener listener;
 
     auto released_delegate = Gallant::Delegate1<const FTKeyReleasedEvent&>(&listener, &MockKeyboardEventListener::keyReleasedEvent);
@@ -57,7 +57,7 @@ TEST(TestKeyboardEventDispatcher, TestKeyReleasedEvent) {
 
 TEST(TestKeyboardEventDispatcher, TestCharInputEvent) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     MockKeyboardEventListener listener;
 
     FTEngine::getEventManager()->registerDelegate<FTKeyboardEventDispatcher>(&listener, &MockKeyboardEventListener::charEvent);

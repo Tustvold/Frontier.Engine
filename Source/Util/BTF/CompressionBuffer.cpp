@@ -46,7 +46,7 @@ static std::unique_ptr<CompressionBuffer> compress(const void *mem, size_t len) 
 }
 
 static std::unique_ptr<CompressionBuffer> decompress(const void *mem, size_t len) {
-	auto ret = std::make_unique<CompressionBuffer>();
+     	auto ret = std::make_unique<CompressionBuffer>();
 
 	z_stream stream;
 

@@ -14,6 +14,8 @@ addons:
       - libfreetype6-dev
       - libglew-dev
       - zlib1g-dev
+      - rapidjson-dev
+      - libboost-all-dev
 install:
   - export CC=/usr/bin/gcc-6
   - export CXX=/usr/bin/g++-6

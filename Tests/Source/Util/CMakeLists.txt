@@ -1,10 +1,9 @@
 
-set (SOURCES ${SOURCES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/TestFileManager.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/TestStringUtils.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/TestBTF.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/TestFontUtils.cpp
-    PARENT_SCOPE)
+set(SOURCES ${SOURCES}
+        ${CMAKE_CURRENT_SOURCE_DIR}/TestStringUtils.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/TestBTF.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/TestFontUtils.cpp
+        PARENT_SCOPE)
 
-set (HEADERS ${HEADERS}
-    PARENT_SCOPE)
+set(HEADERS ${HEADERS}
+        PARENT_SCOPE)

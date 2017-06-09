@@ -23,7 +23,7 @@ public:
 
 TEST(TestButton2D, TestContainsPosition) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     {
        
 
@@ -53,7 +53,7 @@ TEST(TestButton2D, TestContainsPosition) {
 
 TEST(TestButton2D, TestContainsPositionScale) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     {
         auto node = std::make_shared<FTNode>();
         node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
@@ -86,7 +86,7 @@ TEST(TestButton2D, TestContainsPositionScale) {
 
 TEST(TestButton2D, TestContainsPositionScaleAnchorPoint) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     {
         auto node = std::make_shared<FTNode>();
 
@@ -120,7 +120,7 @@ TEST(TestButton2D, TestContainsPositionScaleAnchorPoint) {
 
 TEST(TestButton2D, TestEnterExitDelegates) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     {
         FTButton2DTestDelegates testDelegates;
         auto node = std::make_shared<FTNode>();
@@ -198,7 +198,7 @@ TEST(TestButton2D, TestEnterExitDelegates) {
 
 TEST(TestButton2D, TestPressDelegates) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     {
         FTButton2DTestDelegates testDelegates;
         auto node = std::make_shared<FTNode>();
@@ -295,7 +295,7 @@ TEST(TestButton2D, TestPressDelegates) {
 
 TEST(TestButton2D, TestDisconnectedDelegates) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     {
         auto node = std::make_shared<FTNode>();
 
@@ -330,7 +330,7 @@ TEST(TestButton2D, TestDisconnectedDelegates) {
 
 TEST(TestButton2D, TestEnabledDelegate) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     {
         FTButton2DTestDelegates testDelegates;
         auto node = std::make_shared<FTNode>();
@@ -369,7 +369,7 @@ TEST(TestButton2D, TestEnabledDelegate) {
 
 TEST(TestButton2D, TestSelectDelegatesSimple) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     {
         FTButton2DTestDelegates testDelegates;
         auto node = std::make_shared<FTNode>();
@@ -432,7 +432,7 @@ TEST(TestButton2D, TestSelectDelegatesSimple) {
 
 TEST(TestButton2D, TestDeselectDelegates) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     {
         FTButton2DTestDelegates testDelegates;
 
@@ -495,7 +495,7 @@ TEST(TestButton2D, TestDeselectDelegates) {
 
 TEST(TestButton2D, TestSelectMultiple) {
     GlfwMock mock;
-    FTEngine::setup(true);
+    FTEngine::setup(true, true);
     {
         FTButton2DTestDelegates testDelegates;
         FTButton2DTestDelegates other_testDelegates;

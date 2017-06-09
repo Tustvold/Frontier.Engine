@@ -27,7 +27,7 @@ public:
 
     static bool cleanup();
 
-    static bool setup(bool is_mocked = false);
+    static bool setup(bool no_window = false, bool is_mocked = false);
 
     static void init();
 
@@ -51,7 +51,7 @@ private:
     FTEngine();
     ~FTEngine();
 
-    bool _setup(bool is_mocked);
+    bool _setup(bool no_window, bool is_mocked);
 
     int _run();
 

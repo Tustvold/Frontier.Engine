@@ -34,8 +34,8 @@ FTEngine::~FTEngine() {
     delete event_manager_;
 }
 
-bool FTEngine::_setup(bool is_mocked) {
-    if (!is_mocked) {
+bool FTEngine::_setup(bool no_window, bool is_mocked) {
+    if (!no_window) {
 
         FTAssert(glfwInit(), "Failed to initialize GLFW\n");
 
@@ -61,12 +61,15 @@ bool FTEngine::_setup(bool is_mocked) {
         glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
     }
 
+    if (!no_window || is_mocked) {
+        input_manager_->setup();
+
+        getEventManager()->registerDelegate<FTWindowEventDispatcher>(this, &FTEngine::screensizeChanged);
+    }
+
     file_manager_->setup();
-    input_manager_->setup();
 
     director_->setup();
-
-    getEventManager()->registerDelegate<FTWindowEventDispatcher>(this, &FTEngine::screensizeChanged);
 
     return true;
 }
@@ -77,12 +80,12 @@ void FTEngine::setWindowsSize(const glm::tvec2<int>& size) {
 }
 
 
-bool FTEngine::setup(bool is_mocked) {
+bool FTEngine::setup(bool no_window, bool is_mocked) {
     if (s_instance == nullptr) {
         init();
     }
     FTAssert(!s_instance->setup_, "FTEngine already setup");
-    if (s_instance->_setup(is_mocked)) {
+    if (s_instance->_setup(no_window, is_mocked)) {
         return true;
     }
     cleanup();
