@@ -4,12 +4,9 @@
 #include "Event/Input/FTInputManager.h"
 #include "Rendering/Shader/FTShaderCache.h"
 #include "Rendering/Text/FTFontCache.h"
-#include "Event/FTEventManager.h"
 #include "Util/FTFileManager.h"
-#include "Rendering/Action/FTActionManager.h"
 #include "Event/Engine/FTEngineEventDispatcher.h"
 #include <sstream>
-#include "Event/Window/FTWindowEventDispatcher.h"
 
 static FTEngine* s_instance = nullptr;
 

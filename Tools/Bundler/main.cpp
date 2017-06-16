@@ -7,6 +7,8 @@
 #include <boost/filesystem.hpp>
 #include <Rendering/Text/FTFont.h>
 #include <Rendering/Text/FTFontUtils.h>
+#include <Util/FTFileManager.h>
+
 
 using namespace boost::filesystem;
 
@@ -49,9 +51,10 @@ bool ttfProcessor(const path &input, const path &tmpDir, const path &input_dir) 
     auto buffer = std::make_unique<CompressionBuffer>();
     write->writeToBuffer(buffer.get());
 
-    FILE *fp = fopen(output.string().c_str(), "w");
+    ttvfs::File *fp = FTEngine::getFileManager()->getOrCreateFile(output.string());
+    fp->open("wb");
     buffer->writeFile(fp);
-    fclose(fp);
+    fp->close();
 
     return true;
 }

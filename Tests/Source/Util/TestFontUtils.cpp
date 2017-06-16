@@ -5,6 +5,8 @@
 #include "Rendering/Text/FTFontUtils.h"
 #include "Rendering/Text/FTFont.h"
 #include "Mock/MockLoader.h"
+#include <FTEngine.h>
+#include<Util/FTFileManager.h>
 
 void expectVectorEqual(vector_t*a, vector_t*b) {
     EXPECT_EQ(a->size, b->size);
@@ -126,9 +128,10 @@ TEST(TestFontUtils, FTFontFile) {
     auto buffer = std::make_unique<CompressionBuffer>();
     write->writeToBuffer(buffer.get());
 
-    FILE *fp = fopen("TestResources/Vera.ftfont", "w");
-    buffer->writeFile(fp);
-    fclose(fp);
+    ttvfs::File *file = FTEngine::getFileManager()->getOrCreateFile("TestResources/Vera.ftfont");
+    file->open("wb");
+    buffer->writeFile(file);
+    file->close();
 
     auto font_test = std::make_shared<FTFont>("TestResources/Vera.ftfont");
     font_test.reset();

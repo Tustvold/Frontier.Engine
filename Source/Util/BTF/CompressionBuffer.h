@@ -22,22 +22,9 @@ struct CompressionBuffer : public Buffer {
 		return temp->decompressBuffer();
 	}
 
-    static std::unique_ptr<CompressionBuffer> readFile(FILE *fp) {
-        auto temp = std::make_unique<CompressionBuffer>();
 
-        size_t bytesRead = 0;
 
-        do {
-            if (temp->buffer_reserve(temp->len + CHUNK_SIZE))
-                FTAssert(false, "Buffer out of memory");
-            bytesRead = fread(temp->data + temp->len, 1, CHUNK_SIZE, fp);
-            temp->len += bytesRead;
-        } while (!feof(fp));
-
-        return temp->decompressBuffer();
-    }
-
-	int writeFile(FILE *fp) {
+	int writeFile(ttvfs::File *fp) {
         auto ret = compressBuffer();
         return ret->Buffer::writeFile(fp);
 	}

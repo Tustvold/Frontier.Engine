@@ -1,8 +1,12 @@
 #include <Util/BTF/Tag.h>
 #include <gtest/gtest.h>
+#include <FTEngine.h>
+#include <Util/FTFileManager.h>
+#include <Mock/MockLoader.h>
 
 
 TEST(TestBTF, BigTest) {
+    MockLoader loader;
 
     auto master = new Tag(Tag::TAG_Compound);
 
@@ -118,15 +122,17 @@ TEST(TestBTF, BigTest) {
 	master->writeToBuffer(buffer.get());
 
     remove("TestResources/btf-output");
-	FILE *fp = fopen("TestResources/btf-output", "w");
+	ttvfs::File *fp = FTEngine::getFileManager()->getOrCreateFile("TestResources/btf-output");
+    fp->open("wb");
 	buffer->writeFile(fp);
-	fclose(fp);
+	fp->close();
 
 	delete master;
 
-	FILE *fr = fopen("TestResources/btf-output", "r");
+    ttvfs::File *fr = FTEngine::getFileManager()->getOrCreateFile("TestResources/btf-output");
+    fr->open("r");
 	auto readBuffer = CompressionBuffer::readFile(fr);
-	fclose(fr);
+	fr->close();
 
     std::stringstream in_ss;
 

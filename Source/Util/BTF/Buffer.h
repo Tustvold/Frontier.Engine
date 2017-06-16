@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdio.h>
+#include <VFSFile.h>
 #include "Frontier.h"
 
 //The number of bytes to process at once
@@ -29,7 +30,7 @@ public:
      */
 	int buffer_append(const void *data, size_t n);
 
-	static Buffer *readFile(FILE *fp) {
+	static Buffer *readFile(ttvfs::File* fp) {
 		Buffer *ret = new Buffer();
 
 		size_t bytesRead = 0;
@@ -37,22 +38,21 @@ public:
 		do {
 			if (ret->buffer_reserve(ret->len + CHUNK_SIZE))
 			FTAssert(false, "Buffer out of memory");
-			bytesRead = fread(ret->data + ret->len, 1, CHUNK_SIZE, fp);
+			bytesRead = fp->read(ret->data + ret->len, CHUNK_SIZE);
 			ret->len += bytesRead;
-		} while (!feof(fp));
+		} while (!fp->iseof());
 
 		return ret;
 	}
 
-	virtual int writeFile(FILE *fp) {
+	virtual int writeFile(ttvfs::File* fp) {
 		const char *cdata = (const char *) data;
 		size_t bytes_left = len;
 
 		size_t bytes_written = 0;
 
 		do {
-			bytes_written = fwrite(cdata, 1, bytes_left, fp);
-			if (ferror(fp)) FTAssert(false, "Error reading file");
+			bytes_written = fp->write(cdata, bytes_left);
 
 			bytes_left -= bytes_written;
 			cdata += bytes_written;
