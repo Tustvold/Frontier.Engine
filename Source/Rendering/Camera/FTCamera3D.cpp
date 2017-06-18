@@ -84,7 +84,7 @@ static inline float floatAnd(float f) {
 bool FTCamera3D::testBoundingBox(const glm::vec3& aab_center, const glm::vec3& aab_half_extents) const {
     for (int i = 0; i < 6; i++) {
         glm::vec3 res = aab_center + vec3xor(aab_half_extents, frustrum_planes_sign_flipped_[i]);
-        if (glm::dot(res, *(glm::vec3*)&(frustrum_planes_[i])) <= -frustrum_planes_[i].w)
+        if (glm::dot(res, glm::vec3(frustrum_planes_[i])) <= -frustrum_planes_[i].w)
             return false;
     }
     return true;
