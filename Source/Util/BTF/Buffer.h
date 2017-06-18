@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <VFSFile.h>
 #include "Frontier.h"
+#include <cstring>
 
 //The number of bytes to process at once
 #define CHUNK_SIZE 4096
@@ -21,7 +22,7 @@ public:
 
 	Buffer();
 
-	~Buffer();
+	virtual ~Buffer();
 
     /*
      * Copies `n' bytes from `data' into the buffer. Returns non-zero if an
@@ -70,6 +71,28 @@ public:
 	void resetIndex() {
 		cpos = 0;
 	}
+
+	template <typename T>
+	void read(T* output, size_t n = 1) {
+		memcpy(output, readBytes(sizeof(T) * n), sizeof(T) * n);
+	}
+
+    template <typename T>
+    void write(T* input, size_t n = 1) {
+        buffer_append(input, sizeof(T) * n);
+    }
+
+    size_t length() {
+        return len;
+    }
+
+	void seek(size_t pos) {
+		cpos = pos;
+	}
+
+    size_t getPos() {
+        return cpos;
+    }
 
     /*
 * Ensures there's enough room in the buffer for at least `reserved_amount'

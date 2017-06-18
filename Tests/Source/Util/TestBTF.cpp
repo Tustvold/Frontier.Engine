@@ -3,7 +3,7 @@
 #include <FTEngine.h>
 #include <Util/FTFileManager.h>
 #include <Mock/MockLoader.h>
-
+#include "Util/BTF/TagBase.h"
 
 TEST(TestBTF, BigTest) {
     MockLoader loader;
@@ -142,4 +142,34 @@ TEST(TestBTF, BigTest) {
 	delete readMaster;
 
     EXPECT_STREQ(in_ss.str().c_str(), out_ss.str().c_str());
+}
+
+TEST(TestBTF, TestNewAPI) {
+    Buffer* buffer = new Buffer();
+
+    std::vector<int> foo({23,52,14, 56});
+
+    std::vector<std::vector<int>> foo2({{23,52,14, 56}, {23,52,14, 56}});
+
+    TagBase::write(foo2, buffer);
+
+    buffer->seek(0);
+    auto bar = TagBase::read<std::vector<std::vector<int>>>(buffer);
+
+    delete buffer;
+
+}
+
+TEST(TestBTF, TestNewAPI2) {
+    Buffer* buffer = new Buffer();
+
+    std::vector<std::string> foo({"Hello", "Helloasd", "Helloasfdg"});
+
+    TagBase::write(foo, buffer);
+
+    buffer->seek(0);
+    auto bar = TagBase::read<std::vector<std::string>>(buffer);
+
+    delete buffer;
+
 }
