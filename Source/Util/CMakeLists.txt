@@ -1,20 +1,18 @@
 add_subdirectory(BTF)
 add_subdirectory(Serialization)
 
-set (SOURCES ${SOURCES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTLog.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTFileManager.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTStringUtils.cpp
-    PARENT_SCOPE)
+set(SOURCES ${SOURCES}
+        ${CMAKE_CURRENT_SOURCE_DIR}/FTLog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/FTFileManager.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/FTStringUtils.cpp
+        PARENT_SCOPE)
 
-set (HEADERS ${HEADERS}
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTRect.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTMath.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTStringUtils.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTTimer.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTLog.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTCircularBuffer.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTTemplateUtils.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTFileManager.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTAssert.h
-    PARENT_SCOPE)
+set(HEADERS ${HEADERS}
+        ${CMAKE_CURRENT_SOURCE_DIR}/FTRect.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/FTMath.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/FTStringUtils.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/FTTimer.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/FTLog.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/FTFileManager.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/FTAssert.h
+        PARENT_SCOPE)

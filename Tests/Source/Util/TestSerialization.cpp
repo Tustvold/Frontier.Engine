@@ -20,9 +20,10 @@ struct TestStruct {
 };
 
 TEST(TestBTF, TestNewAPI) {
+    MockLoader loader;
 
-    std::ostringstream obuf;
-    std::basic_ostream<char> ostream(obuf.rdbuf());
+    ttvfs::File *fp = FTEngine::getFileManager()->getOrCreateFile("Test.hex");
+    fp->open("wb");
 
     const int num_tests = 1000;
 
@@ -44,13 +45,14 @@ TEST(TestBTF, TestNewAPI) {
 
     t.bar = {"Hello", "Helloasd", "Helloasfdg"};
 
-    OutputSerializer out(&ostream);
+    OutputSerializer out(fp);
     out & t;
 
-    std::istringstream ibuf(obuf.str());
-    std::basic_istream<char> istream(ibuf.rdbuf());
+    fp->close();
 
-    InputSerializer in(&istream);
+    fp->open("rb");
+
+    InputSerializer in(fp);
 
     TestStruct t2;
 

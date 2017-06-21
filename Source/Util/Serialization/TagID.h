@@ -13,49 +13,49 @@ namespace detail {
 
 #define TAGID_ASSIGNMENT(type, _id) \
     template <> struct TagID<type> : public std::true_type { \
-        static void readID(std::istream* istream) {\
+        static void readID(ttvfs::File* file) {\
             const char id = _id;\
             char in_id;\
-            istream->read(&in_id, 1);\
+            file->read(&in_id, 1);\
             FTAssert(in_id == id, "Invalid ID - expected %i got %i", id, in_id);\
         }\
-        static void writeID(std::ostream* ostream) {\
+        static void writeID(ttvfs::File* file) {\
             const char id = _id;\
-            ostream->write(&id, 1);\
+            file->write(&id, 1);\
         }\
     }
 
 #define T_TAGID_ASSIGNMENT(type, _id) \
     template <typename T> struct TagID<type<T>> : public std::true_type { \
-        static void readID(std::istream* istream) {\
+        static void readID(ttvfs::File* file) {\
             const char id = _id;\
             char in_id;\
-            istream->read(&in_id, 1);\
+            file->read(&in_id, 1);\
             FTAssert(in_id == id, "Invalid ID - expected %i got %i", id, in_id);\
-            TagID<T>::readID(istream);\
+            TagID<T>::readID(file);\
         }\
-        static void writeID(std::ostream* ostream) {\
+        static void writeID(ttvfs::File* file) {\
             const char id = _id;\
-            ostream->write(&id, 1);\
-            TagID<T>::writeID(ostream);\
+            file->write(&id, 1);\
+            TagID<T>::writeID(file);\
         }\
     }
 
 #define T2_TAGID_ASSIGNMENT(type, _id) \
     template <typename T1, typename T2> struct TagID<type<T1,T2>> : public std::true_type { \
-        static void readID(std::istream* istream) {\
+        static void readID(ttvfs::File* file) {\
             const char id = _id;\
             char in_id;\
-            istream->read(&in_id, 1);\
+            file->read(&in_id, 1);\
             FTAssert(in_id == id, "Invalid ID - expected %i got %i", id, in_id);\
-            TagID<T1>::readID(istream);\
-            TagID<T2>::readID(istream);\
+            TagID<T1>::readID(file);\
+            TagID<T2>::readID(file);\
         }\
-        static void writeID(std::ostream* ostream) {\
+        static void writeID(ttvfs::File* file) {\
             const char id = _id;\
-            ostream->write(&id, 1);\
-            TagID<T1>::writeID(ostream);\
-            TagID<T2>::writeID(ostream);\
+            file->write(&id, 1);\
+            TagID<T1>::writeID(file);\
+            TagID<T2>::writeID(file);\
         }\
     }
 
@@ -86,28 +86,28 @@ namespace detail {
 
     template<typename T>
     struct TagID<std::tuple<T>> : public std::true_type {
-        static void readID(std::istream* istream) {
-            TagID<T>::readID(istream);
+        static void readID(ttvfs::File* file) {
+            TagID<T>::readID(file);
         }
 
-        static void writeID(std::ostream *ostream) {
-            TagID<T>::writeID(ostream);
+        static void writeID(ttvfs::File *file) {
+            TagID<T>::writeID(file);
         }
 
     };
 
     template<typename T, typename... Others>
     struct TagID<std::tuple<T, Others...>> : public std::true_type {
-        static void readID(std::istream* istream) {
-            TagID<T>::readID(istream);
+        static void readID(ttvfs::File* file) {
+            TagID<T>::readID(file);
             TagID<std::tuple<Others...>>
-            ::readID(istream);
+            ::readID(file);
         }
 
-        static void writeID(std::ostream *ostream) {
-            TagID<T>::writeID(ostream);
+        static void writeID(ttvfs::File *file) {
+            TagID<T>::writeID(file);
             TagID<std::tuple<Others...>>
-            ::writeID(ostream);
+            ::writeID(file);
         }
 
     };
