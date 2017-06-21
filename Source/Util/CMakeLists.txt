@@ -1,4 +1,5 @@
 add_subdirectory(BTF)
+add_subdirectory(Serialization)
 
 set (SOURCES ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/FTLog.cpp

@@ -4,7 +4,8 @@
 #include <Util/FTFileManager.h>
 #include <Mock/MockLoader.h>
 #include <chrono>
-#include "Util/BTF/Serialization.h"
+#include "Util/Serialization/Serialization.h"
+#include <fstream>
 
 TEST(TestBTF, BigTest) {
     MockLoader loader;
@@ -144,108 +145,3 @@ TEST(TestBTF, BigTest) {
 
     EXPECT_STREQ(in_ss.str().c_str(), out_ss.str().c_str());
 }
-
-TEST(TestBTF, TestNewAPI) {
-    Buffer *buffer = new Buffer();
-
-    std::vector<int> foo({23, 52, 14, 56});
-
-    std::vector<std::vector<int>> foo2({{23, 52, 14, 56},
-                                        {23, 52, 14, 56}});
-
-    OutputSerializer out(buffer);
-    out & foo2;
-    out & foo2;
-
-    buffer->seek(0);
-
-    InputSerializer in(buffer);
-
-    std::vector<std::vector<int>> foo3;
-    std::vector<std::vector<int>> foo4;
-
-    in & foo3;
-    in & foo4;
-
-    for (auto& a : foo3)
-        for (auto& b : a)
-            printf("%i\n", b);
-
-    printf("Asd\n");
-
-    for (auto& a : foo4)
-        for (auto& b : a)
-            printf("%i\n", b);
-
-    delete buffer;
-
-}
-//
-//TEST(TestBTF, TestNewAPI2) {
-//    Buffer *buffer = new Buffer();
-//
-//    std::vector<std::string> foo({"Hello", "Helloasd", "Helloasfdg"});
-//
-//    TagBase::write(foo, buffer);
-//
-//    buffer->seek(0);
-//    auto bar = TagBase::read<std::vector<std::string>>(buffer);
-//
-//    delete buffer;
-//
-//}
-//
-//TEST(TestBTF, TestNewAPI3) {
-//    Buffer *buffer = new Buffer();
-//
-//    std::vector<std::string> foo({"Hello", "Helloasd", "Helloasfdg"});
-//
-//    std::vector<int> foo2({23, 52, 14, 56});
-//
-//    std::tuple<std::vector<std::string>, std::vector<int>> foo3 = std::make_pair(foo, foo2);
-//
-//    TagBase::write(foo3, buffer);
-//
-//    buffer->seek(0);
-//    auto bar = TagBase::read<std::tuple<std::vector<std::string>, std::vector<int>>>(buffer);
-//
-//    delete buffer;
-//
-//}
-//
-//struct CustomTest {
-//    std::vector<float> a;
-//    float b;
-//
-//    CustomTest(const std::vector<float> &a, float b) : a(a), b(b) {}
-//
-//    CustomTest(std::vector<float> &&a, float b) : a(std::move(a)), b(b) {}
-//};
-//
-//TEST(TestBTF, TestNewAPI4) {
-//
-//    Buffer *buffer = new Buffer();
-//
-//    std::vector<float> foo;
-//    for (int i = 0; i < 10000; i++)
-//        foo.push_back(rand());
-//
-//
-//    std::unordered_map<std::string, std::vector<float>> map_test = {{"Hello", foo},
-//                                                                    {"foo",   foo}};
-//
-//
-//    TagBase::write(map_test, buffer);
-//
-//    buffer->seek(0);
-//    auto begin = std::chrono::high_resolution_clock::now();
-//
-//    auto bar = TagBase::read<std::unordered_map<std::string, std::vector<float>>>(buffer);
-//
-//    auto end = std::chrono::high_resolution_clock::now();
-//
-//    delete buffer;
-//
-//    std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << std::endl;
-//
-//}
