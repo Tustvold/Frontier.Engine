@@ -1,11 +1,11 @@
 #include <Mock/MockLoader.h>
-#include <Rendering/Action/FTAction.h>
-#include <FTEngine.h>
-#include <Rendering/FTNode.h>
+#include <Rendering/Action/Action.h>
+#include <Engine.h>
+#include <Rendering/Node.h>
 #include <Mock/MockEngineEventDispatcher.h>
-#include <Rendering/Action/FTActionManager.h>
-#include <Rendering/FTDirector.h>
-#include <Rendering/FTScene.h>
+#include <Rendering/Action/ActionManager.h>
+#include <Rendering/Director.h>
+#include <Rendering/Scene.h>
 #include <Mock/MockAction.h>
 
 USING_NS_FT
@@ -14,19 +14,19 @@ TEST(TestActionManager, TestAddRemove) {
     MockLoader loader;
    
     auto engine_event_dispatcher = loader.getMockEngineEventDispatcher();
-    auto action_manager = FTEngine::getDirector()->getActionManager(); 
-    auto node = std::make_shared<FTNode>();
+    auto action_manager = Engine::getDirector()->getActionManager();
+    auto node = std::make_shared<Node>();
 
-    auto view = std::make_shared<FTView>();
-    auto scene = std::make_shared<FTScene>();
-    auto empty_scene = std::make_shared<FTScene>();
+    auto view = std::make_shared<View>();
+    auto scene = std::make_shared<Scene>();
+    auto empty_scene = std::make_shared<Scene>();
     scene->addView(view);
     view->addChild(node);
 
     auto action = std::make_unique<MockAction>();
     auto action_ptr = action.get();
 
-    FTUpdateEvent updateEvent;
+    UpdateEvent updateEvent;
 
     EXPECT_CALL(*action_ptr, onStart(node.get())).Times(1);
 
@@ -34,7 +34,7 @@ TEST(TestActionManager, TestAddRemove) {
 
     testing::Mock::VerifyAndClearExpectations(action_ptr);
 
-    FTEngine::getDirector()->setCurrentScene(scene, true);
+    Engine::getDirector()->setCurrentScene(scene, true);
 
     EXPECT_CALL(*action_ptr, onUpdate(node.get(), updateEvent));
 
@@ -42,7 +42,7 @@ TEST(TestActionManager, TestAddRemove) {
 
     testing::Mock::VerifyAndClearExpectations(action_ptr);
 
-    FTEngine::getDirector()->setCurrentScene(empty_scene, true);
+    Engine::getDirector()->setCurrentScene(empty_scene, true);
 
     // We don't expect the action to be run unless the node belongs to the hierarchy of the active scene
     EXPECT_CALL(*action_ptr, onUpdate(node.get(), updateEvent)).Times(0);
@@ -51,7 +51,7 @@ TEST(TestActionManager, TestAddRemove) {
 
     testing::Mock::VerifyAndClearExpectations(action_ptr);
 
-    FTEngine::getDirector()->setCurrentScene(scene, true);
+    Engine::getDirector()->setCurrentScene(scene, true);
 
     EXPECT_CALL(*action_ptr, onUpdate(node.get(), updateEvent));
 
@@ -109,18 +109,18 @@ TEST(TestActionManager, TestNoUpdate) {
     MockLoader loader;
 
     auto engine_event_dispatcher = loader.getMockEngineEventDispatcher();
-    auto node = std::make_shared<FTNode>();
+    auto node = std::make_shared<Node>();
 
-    auto view = std::make_shared<FTView>();
-    auto scene = std::make_shared<FTScene>();
-    auto empty_scene = std::make_shared<FTScene>();
+    auto view = std::make_shared<View>();
+    auto scene = std::make_shared<Scene>();
+    auto empty_scene = std::make_shared<Scene>();
     scene->addView(view);
     view->addChild(node);
 
     auto action = std::make_unique<MockAction>();
     auto action_ptr = action.get();
 
-    FTUpdateEvent updateEvent;
+    UpdateEvent updateEvent;
 
     
     EXPECT_CALL(*action_ptr, onStart(node.get())).Times(1).WillOnce(testing::InvokeWithoutArgs(action_ptr, &MockAction::setCompleted));

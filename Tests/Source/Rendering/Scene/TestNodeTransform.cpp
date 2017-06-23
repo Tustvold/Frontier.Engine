@@ -1,22 +1,22 @@
 #include <Mock/MockLoader.h>
-#include <FTEngine.h>
-#include <Rendering/FTShaderNode.h>
+#include <Engine.h>
+#include <Rendering/ShaderNode.h>
 #include <Mock/ExpectUtils.h>
-#include <Rendering/BoundingShape/FTBoundingCuboid.h>
+#include <Rendering/BoundingShape/BoundingCuboid.h>
 
 USING_NS_FT
 
-class MockNodeTransform : public FTNode {
+class MockNodeTransform : public Node {
 public:
-    std::unique_ptr<FTTransformScale>& getScaleTransform() {
+    std::unique_ptr<TransformScale>& getScaleTransform() {
         return scale_transform_;
     }
 
-    std::unique_ptr<FTTransformPosition>& getPositionTransform() {
+    std::unique_ptr<TransformPosition>& getPositionTransform() {
         return position_transform_;
     }
 
-    std::unique_ptr<FTTransformRotation>& getRotationTransform() {
+    std::unique_ptr<TransformRotation>& getRotationTransform() {
         return rotation_transform_;
     }
 };
@@ -24,7 +24,7 @@ public:
 TEST(TestNodeTransform, TestGetSet) {
     MockLoader mock;
 
-    auto node = std::make_shared<FTNode>();
+    auto node = std::make_shared<Node>();
 
     node->setPosition(glm::vec3(1, 5, 21));
     EXPECT_EQ(node->getPosition(), glm::vec3(1, 5, 21));
@@ -92,7 +92,7 @@ TEST(TestNodeTransform, TestAnchorPointSimple) {
 
     expectMatrixEqual(node->getPositionTransform()->getTransformMatrix(), glm::mat4());
     node->setPosition(glm::vec3(5, 3, 9));
-    node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(48, 24, 96)));
+    node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(48, 24, 96)));
     node->setAnchorPoint(glm::vec3(0.25f, 0.75f, 0.3f));
     node->visit(glm::mat4(), false);
 
@@ -113,7 +113,7 @@ TEST(TestNodeTransform, TestAnchorPointScale) {
 
     expectMatrixEqual(node->getPositionTransform()->getTransformMatrix(), glm::mat4());
     node->setPosition(glm::vec3(5, 3, 9));
-    node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(48, 24, 96)));
+    node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(48, 24, 96)));
     node->setScale(glm::vec3(56, 3, 9));
     node->setAnchorPoint(glm::vec3(0.25f, 0.75f, 0.3f));
     node->visit(glm::mat4(), false);
@@ -135,7 +135,7 @@ TEST(TestNodeTransform, TestAnchorPointRotate) {
 
     expectMatrixEqual(node->getPositionTransform()->getTransformMatrix(), glm::mat4());
     node->setPosition(glm::vec3(5, 3, 9));
-    node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(48, 24, 96)));
+    node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(48, 24, 96)));
     node->setScale(glm::vec3(56, 3, 9));
     auto quat = glm::angleAxis((float)M_PI_2, glm::vec3(0, 0, 1));
 

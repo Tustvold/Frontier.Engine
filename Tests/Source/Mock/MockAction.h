@@ -1,13 +1,13 @@
 #pragma once
-#include <Rendering/Action/FTAction.h>
+#include <Rendering/Action/Action.h>
 
 NS_FT_BEGIN
 
-class MockAction : public FTAction {
+class MockAction : public Action {
 
 public:
-    MOCK_METHOD1(onStart, void(FTNode* node));
-    MOCK_METHOD2(onUpdate, void(FTNode* node, const FTUpdateEvent& event));
+    MOCK_METHOD1(onStart, void(Node* node));
+    MOCK_METHOD2(onUpdate, void(Node* node, const UpdateEvent& event));
     MOCK_METHOD0(destroyed, void());
 
 
@@ -15,8 +15,8 @@ public:
         destroyed();
     }
 
-    void callParentOnStart(FTNode* node) {
-        FTAction::onStart(node);
+    void callParentOnStart(Node* node) {
+        Action::onStart(node);
     }
 };
 

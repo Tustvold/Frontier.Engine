@@ -1,17 +1,17 @@
 #pragma once
 
-#include <Event/FTEventDispatcher.h>
-#include <Event/FTEvent.h>
+#include <Event/EventDispatcher.h>
+#include <Event/Event.h>
 
 NS_FT_BEGIN
 
-class MockEvent1 : public FTEvent {
+class MockEvent1 : public Event {
 };
 
-class MockEvent2 : public FTEvent {
+class MockEvent2 : public Event {
 };
 
-class MockEventDispatcher : public FTEventDispatcher<MockEvent1> {
+class MockEventDispatcher : public EventDispatcher<MockEvent1> {
 public:
     void sendMockEvent1() {
         MockEvent1 event;
@@ -24,12 +24,12 @@ public:
     MOCK_METHOD1(callback, void(const MockEvent1&));
 };
 
-class MockEventDispatcher2 : public FTEventDispatcher<MockEvent1, MockEvent2> {
+class MockEventDispatcher2 : public EventDispatcher<MockEvent1, MockEvent2> {
 public:
 
     void sendMockEvent2() {
         MockEvent2 event;
-        FTEventDispatcher<MockEvent2>::raiseEvent(event);
+        EventDispatcher<MockEvent2>::raiseEvent(event);
     }
 };
 

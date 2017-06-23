@@ -7,7 +7,7 @@ class GlfwMock;
 
 NS_FT_BEGIN
 
-// Sets up GlfwMock and FTEngine in its constructor
+// Sets up GlfwMock and Engine in its constructor
 // and cleans them up in its destructor
 // This largely exists to speed up compilation by preventing
 // test files having to include GlfwMock unless they really need to

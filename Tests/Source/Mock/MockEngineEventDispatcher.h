@@ -1,11 +1,11 @@
 #pragma once
-#include <Event/Engine/FTEngineEventDispatcher.h>
-#include <FTEngine.h>
-#include <Event/FTEventManager.h>
+#include <Event/Engine/EngineEventDispatcher.h>
+#include <Engine.h>
+#include <Event/EventManager.h>
 
 NS_FT_BEGIN
 
-class MockEngineEventDispatcher : public FTEngineEventDispatcher {
+class MockEngineEventDispatcher : public EngineEventDispatcher {
 public:
     MockEngineEventDispatcher() {
 
@@ -17,7 +17,7 @@ public:
 
     template <typename T>
     void raiseEvent(const T& event) {
-        FTEngineEventDispatcher::raiseEvent<T>(event);
+        EngineEventDispatcher::raiseEvent<T>(event);
     }
 };
 

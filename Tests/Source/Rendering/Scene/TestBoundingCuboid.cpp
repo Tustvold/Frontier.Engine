@@ -1,17 +1,17 @@
 #include <Mock/MockLoader.h>
-#include <FTEngine.h>
-#include <Rendering/FTShaderNode.h>
+#include <Engine.h>
+#include <Rendering/ShaderNode.h>
 #include <Mock/ExpectUtils.h>
-#include <Rendering/BoundingShape/FTBoundingCuboid.h>
+#include <Rendering/BoundingShape/BoundingCuboid.h>
 
 USING_NS_FT
 
 TEST(TestBoundingCuboid, TestAABSimple) {
     MockLoader mock;
 
-    auto node = std::make_shared<FTNode>();
-    auto bounding_shape = new FTBoundingCuboid(glm::vec3(), glm::vec3(34, 88, 22));
-    node->setBoundingShape(std::unique_ptr<FTBoundingShape>(bounding_shape));
+    auto node = std::make_shared<Node>();
+    auto bounding_shape = new BoundingCuboid(glm::vec3(), glm::vec3(34, 88, 22));
+    node->setBoundingShape(std::unique_ptr<BoundingShape>(bounding_shape));
 
     node->visit(glm::mat4(), false);
     EXPECT_EQ(bounding_shape->getAABCenter(), glm::vec3(17, 44, 11));
@@ -40,9 +40,9 @@ TEST(TestBoundingCuboid, TestAABSimple) {
 TEST(TestBoundingCuboid, TestAABAnchorPoint) {
     MockLoader mock;
 
-    auto node = std::make_shared<FTNode>();
-    auto bounding_shape = new FTBoundingCuboid(glm::vec3(), glm::vec3(34, 88, 22));
-    node->setBoundingShape(std::unique_ptr<FTBoundingShape>(bounding_shape));
+    auto node = std::make_shared<Node>();
+    auto bounding_shape = new BoundingCuboid(glm::vec3(), glm::vec3(34, 88, 22));
+    node->setBoundingShape(std::unique_ptr<BoundingShape>(bounding_shape));
 
     node->setAnchorPoint(glm::vec3(0.3f, 0.5f, 0.7f));
 

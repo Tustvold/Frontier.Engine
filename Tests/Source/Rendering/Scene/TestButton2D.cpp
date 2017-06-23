@@ -1,41 +1,41 @@
 #include <glfwmock.h>
-#include <FTEngine.h>
-#include <Event/FTEventManager.h>
-#include <Event/Mouse/FTMouseEventDispatcher.h>
-#include <Rendering/FTNode.h>
-#include <Rendering/FTView.h>
-#include <Rendering/Camera/FTCamera2D.h>
-#include <Rendering/FTScene.h>
-#include <Rendering/FTDirector.h>
-#include <Rendering/BoundingShape/FTBoundingCuboid.h>
+#include <Engine.h>
+#include <Event/EventManager.h>
+#include <Event/Mouse/MouseEventDispatcher.h>
+#include <Rendering/Node.h>
+#include <Rendering/View.h>
+#include <Rendering/Camera/Camera2D.h>
+#include <Rendering/Scene.h>
+#include <Rendering/Director.h>
+#include <Rendering/BoundingShape/BoundingCuboid.h>
 #include <gmock/gmock.h>
 
 USING_NS_FT
 
-class FTButton2DTestDelegates {
+class Button2DTestDelegates {
 public:
-    MOCK_METHOD1(enterDelegate, void(FTButton*));
-    MOCK_METHOD1(exitDelegate, void(FTButton*));
-    MOCK_METHOD1(selectDelegate, void(FTButton*));
-    MOCK_METHOD1(deselectDelegate, void(FTButton*));
-    MOCK_METHOD2(pressedDelegate, void(FTButton*, const FTMouseButtonPressedEvent&));
-    MOCK_METHOD2(releasedDelegate, void(FTButton*, const FTMouseButtonReleasedEvent&));
-    MOCK_METHOD1(enabledDelegate, bool(const FTButton*));
+    MOCK_METHOD1(enterDelegate, void(Button*));
+    MOCK_METHOD1(exitDelegate, void(Button*));
+    MOCK_METHOD1(selectDelegate, void(Button*));
+    MOCK_METHOD1(deselectDelegate, void(Button*));
+    MOCK_METHOD2(pressedDelegate, void(Button*, const MouseButtonPressedEvent&));
+    MOCK_METHOD2(releasedDelegate, void(Button*, const MouseButtonReleasedEvent&));
+    MOCK_METHOD1(enabledDelegate, bool(const Button*));
 };
 
 TEST(TestButton2D, TestContainsPosition) {
     GlfwMock mock;
-    FTEngine::setup(true, true);
+    Engine::setup(true, true);
     {
        
 
-        auto node = std::make_shared<FTNode>();
-        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(100, 200, 0)));
+        auto node = std::make_shared<Node>();
+        node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(100, 200, 0)));
 
         node->setPosition(glm::vec2(50, 60));
 
-        auto view = std::make_shared<FTView>();
-        view->setCamera(std::make_shared<FTCamera2D>());
+        auto view = std::make_shared<View>();
+        view->setCamera(std::make_shared<Camera2D>());
         view->addChild(node);
 
         view->visit(glm::mat4(), false);
@@ -50,25 +50,25 @@ TEST(TestButton2D, TestContainsPosition) {
         EXPECT_FALSE(node->containsMousePosition(glm::vec2(60, 261)));
     }
 
-    FTEngine::cleanup();
+    Engine::cleanup();
 }
 
 TEST(TestButton2D, TestContainsPositionScale) {
     GlfwMock mock;
-    FTEngine::setup(true, true);
+    Engine::setup(true, true);
     {
-        auto node = std::make_shared<FTNode>();
-        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        auto node = std::make_shared<Node>();
+        node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(50, 60));
 
-        auto view = std::make_shared<FTView>();
-        view->setCamera(std::make_shared<FTCamera2D>());
+        auto view = std::make_shared<View>();
+        view->setCamera(std::make_shared<Camera2D>());
         view->addChild(node);
 
-        auto scene = std::make_shared<FTScene>();
+        auto scene = std::make_shared<Scene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene, true);
+        Engine::getDirector()->setCurrentScene(scene, true);
         
         scene->visit();
 
@@ -82,28 +82,28 @@ TEST(TestButton2D, TestContainsPositionScale) {
         EXPECT_FALSE(node->containsMousePosition(glm::vec2(60,261)));
     }
 
-    FTEngine::cleanup();
+    Engine::cleanup();
 }
 
 
 TEST(TestButton2D, TestContainsPositionScaleAnchorPoint) {
     GlfwMock mock;
-    FTEngine::setup(true, true);
+    Engine::setup(true, true);
     {
-        auto node = std::make_shared<FTNode>();
+        auto node = std::make_shared<Node>();
 
-        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
 
-        auto view = std::make_shared<FTView>();
-        view->setCamera(std::make_shared<FTCamera2D>());
+        auto view = std::make_shared<View>();
+        view->setCamera(std::make_shared<Camera2D>());
         view->addChild(node);
 
-        auto scene = std::make_shared<FTScene>();
+        auto scene = std::make_shared<Scene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene, true);
+        Engine::getDirector()->setCurrentScene(scene, true);
 
         scene->visit();
 
@@ -117,35 +117,35 @@ TEST(TestButton2D, TestContainsPositionScaleAnchorPoint) {
         EXPECT_FALSE(node->containsMousePosition(glm::vec2(60,261)));
     }
 
-    FTEngine::cleanup();
+    Engine::cleanup();
 }
 
 TEST(TestButton2D, TestEnterExitDelegates) {
     GlfwMock mock;
-    FTEngine::setup(true, true);
+    Engine::setup(true, true);
     {
-        FTButton2DTestDelegates testDelegates;
-        auto node = std::make_shared<FTNode>();
+        Button2DTestDelegates testDelegates;
+        auto node = std::make_shared<Node>();
 
-        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
         auto& button = node->getButton();
 
         button->setUseSceneGraphPriority(false);
-        button->bindMouseEnterDelegate(&testDelegates, &FTButton2DTestDelegates::enterDelegate);
-        button->bindMouseExitDelegate(&testDelegates, &FTButton2DTestDelegates::exitDelegate);
-        button->bindMousePressedDelegate(&testDelegates, &FTButton2DTestDelegates::pressedDelegate);
-        button->bindMouseReleasedDelegate(&testDelegates, &FTButton2DTestDelegates::releasedDelegate);
+        button->bindMouseEnterDelegate(&testDelegates, &Button2DTestDelegates::enterDelegate);
+        button->bindMouseExitDelegate(&testDelegates, &Button2DTestDelegates::exitDelegate);
+        button->bindMousePressedDelegate(&testDelegates, &Button2DTestDelegates::pressedDelegate);
+        button->bindMouseReleasedDelegate(&testDelegates, &Button2DTestDelegates::releasedDelegate);
 
-        auto view = std::make_shared<FTView>();
-        view->setCamera(std::make_shared<FTCamera2D>());
+        auto view = std::make_shared<View>();
+        view->setCamera(std::make_shared<Camera2D>());
         view->addChild(node);
 
-        auto scene = std::make_shared<FTScene>();
+        auto scene = std::make_shared<Scene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene, true);
+        Engine::getDirector()->setCurrentScene(scene, true);
 
         scene->visit();
 
@@ -160,7 +160,7 @@ TEST(TestButton2D, TestEnterExitDelegates) {
 
         EXPECT_CALL(testDelegates, enterDelegate(button.get())).Times(0);
 
-        auto screensize = FTEngine::getWindowSize();
+        auto screensize = Engine::getWindowSize();
 
         mock.mouse_pos_callback_(nullptr, 0, screensize.y - 0);
 
@@ -195,35 +195,35 @@ TEST(TestButton2D, TestEnterExitDelegates) {
         mock.mouse_enter_callback_(nullptr, GL_FALSE);
     }
 
-    FTEngine::cleanup();
+    Engine::cleanup();
 }
 
 TEST(TestButton2D, TestPressDelegates) {
     GlfwMock mock;
-    FTEngine::setup(true, true);
+    Engine::setup(true, true);
     {
-        FTButton2DTestDelegates testDelegates;
-        auto node = std::make_shared<FTNode>();
+        Button2DTestDelegates testDelegates;
+        auto node = std::make_shared<Node>();
 
-        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
 
         auto& button = node->getButton();
         button->setUseSceneGraphPriority(false);
-        button->bindMouseEnterDelegate(&testDelegates, &FTButton2DTestDelegates::enterDelegate);
-        button->bindMouseExitDelegate(&testDelegates, &FTButton2DTestDelegates::exitDelegate);
-        button->bindMousePressedDelegate(&testDelegates, &FTButton2DTestDelegates::pressedDelegate);
-        button->bindMouseReleasedDelegate(&testDelegates, &FTButton2DTestDelegates::releasedDelegate);
+        button->bindMouseEnterDelegate(&testDelegates, &Button2DTestDelegates::enterDelegate);
+        button->bindMouseExitDelegate(&testDelegates, &Button2DTestDelegates::exitDelegate);
+        button->bindMousePressedDelegate(&testDelegates, &Button2DTestDelegates::pressedDelegate);
+        button->bindMouseReleasedDelegate(&testDelegates, &Button2DTestDelegates::releasedDelegate);
 
-        auto view = std::make_shared<FTView>();
-        view->setCamera(std::make_shared<FTCamera2D>());
+        auto view = std::make_shared<View>();
+        view->setCamera(std::make_shared<Camera2D>());
         view->addChild(node);
 
-        auto scene = std::make_shared<FTScene>();
+        auto scene = std::make_shared<Scene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene, true);
+        Engine::getDirector()->setCurrentScene(scene, true);
 
         scene->visit();
 
@@ -238,7 +238,7 @@ TEST(TestButton2D, TestPressDelegates) {
 
         EXPECT_CALL(testDelegates, enterDelegate(button.get())).Times(0);
         
-        auto screensize = FTEngine::getWindowSize();
+        auto screensize = Engine::getWindowSize();
 
         mock.mouse_pos_callback_(nullptr, 0, screensize.y - 0);
 
@@ -292,32 +292,32 @@ TEST(TestButton2D, TestPressDelegates) {
         mock.mouse_pos_callback_(nullptr, 151, screensize.y - 70);
     }
 
-    FTEngine::cleanup();
+    Engine::cleanup();
 }
 
 TEST(TestButton2D, TestDisconnectedDelegates) {
     GlfwMock mock;
-    FTEngine::setup(true, true);
+    Engine::setup(true, true);
     {
-        auto node = std::make_shared<FTNode>();
+        auto node = std::make_shared<Node>();
 
-        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
         node->getButton();
 
-        auto view = std::make_shared<FTView>();
-        view->setCamera(std::make_shared<FTCamera2D>());
+        auto view = std::make_shared<View>();
+        view->setCamera(std::make_shared<Camera2D>());
         view->addChild(node);
 
-        auto scene = std::make_shared<FTScene>();
+        auto scene = std::make_shared<Scene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene, true);
+        Engine::getDirector()->setCurrentScene(scene, true);
 
         scene->visit();
 
-        auto screensize = FTEngine::getWindowSize();
+        auto screensize = Engine::getWindowSize();
         
         mock.mouse_pos_callback_(nullptr, 51, screensize.y - 61);
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
@@ -326,27 +326,27 @@ TEST(TestButton2D, TestDisconnectedDelegates) {
         mock.mouse_enter_callback_(nullptr, GL_FALSE);
     }
 
-    FTEngine::cleanup();
+    Engine::cleanup();
 }
 
 
 TEST(TestButton2D, TestEnabledDelegate) {
     GlfwMock mock;
-    FTEngine::setup(true, true);
+    Engine::setup(true, true);
     {
-        FTButton2DTestDelegates testDelegates;
-        auto node = std::make_shared<FTNode>();
+        Button2DTestDelegates testDelegates;
+        auto node = std::make_shared<Node>();
 
-        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
         auto& button = node->getButton();
         button->setUseSceneGraphPriority(false);
-        button->bindEnabledDelegate(&testDelegates, &FTButton2DTestDelegates::enabledDelegate);
+        button->bindEnabledDelegate(&testDelegates, &Button2DTestDelegates::enabledDelegate);
 
-        auto view = std::make_shared<FTView>();
-        view->setCamera(std::make_shared<FTCamera2D>());
+        auto view = std::make_shared<View>();
+        view->setCamera(std::make_shared<Camera2D>());
         view->addChild(node);
 
         testing::InSequence s;
@@ -355,9 +355,9 @@ TEST(TestButton2D, TestEnabledDelegate) {
         EXPECT_FALSE(button->getMouseDelegateEnabled());
 
 
-        auto scene = std::make_shared<FTScene>();
+        auto scene = std::make_shared<Scene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene, true);
+        Engine::getDirector()->setCurrentScene(scene, true);
         
         EXPECT_CALL(testDelegates, enabledDelegate(button.get())).WillOnce(testing::Return(false));
         EXPECT_CALL(testDelegates, enabledDelegate(button.get())).WillOnce(testing::Return(true));
@@ -366,35 +366,35 @@ TEST(TestButton2D, TestEnabledDelegate) {
         EXPECT_TRUE(button->getMouseDelegateEnabled());
     }
 
-    FTEngine::cleanup();
+    Engine::cleanup();
 }
 
 TEST(TestButton2D, TestSelectDelegatesSimple) {
     GlfwMock mock;
-    FTEngine::setup(true, true);
+    Engine::setup(true, true);
     {
-        FTButton2DTestDelegates testDelegates;
-        auto node = std::make_shared<FTNode>();
+        Button2DTestDelegates testDelegates;
+        auto node = std::make_shared<Node>();
 
-        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
 
         auto& button = node->getButton();
         button->setUseSceneGraphPriority(false);
-        button->bindMousePressedDelegate(&testDelegates, &FTButton2DTestDelegates::pressedDelegate);
-        button->bindOnSelectDelegate(&testDelegates, &FTButton2DTestDelegates::selectDelegate);
-        button->bindOnDeselectDelegate(&testDelegates, &FTButton2DTestDelegates::deselectDelegate);
-        button->bindMouseReleasedDelegate(&testDelegates, &FTButton2DTestDelegates::releasedDelegate);
+        button->bindMousePressedDelegate(&testDelegates, &Button2DTestDelegates::pressedDelegate);
+        button->bindOnSelectDelegate(&testDelegates, &Button2DTestDelegates::selectDelegate);
+        button->bindOnDeselectDelegate(&testDelegates, &Button2DTestDelegates::deselectDelegate);
+        button->bindMouseReleasedDelegate(&testDelegates, &Button2DTestDelegates::releasedDelegate);
 
-        auto view = std::make_shared<FTView>();
-        view->setCamera(std::make_shared<FTCamera2D>());
+        auto view = std::make_shared<View>();
+        view->setCamera(std::make_shared<Camera2D>());
         view->addChild(node);
 
-        auto scene = std::make_shared<FTScene>();
+        auto scene = std::make_shared<Scene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene, true);
+        Engine::getDirector()->setCurrentScene(scene, true);
 
         scene->visit();
 
@@ -407,7 +407,7 @@ TEST(TestButton2D, TestSelectDelegatesSimple) {
         EXPECT_FALSE(node->containsMousePosition(glm::vec2(151, 70)));
         EXPECT_FALSE(node->containsMousePosition(glm::vec2(60, 261)));
 
-        auto screensize = FTEngine::getWindowSize();
+        auto screensize = Engine::getWindowSize();
 
         mock.mouse_pos_callback_(nullptr, 51, screensize.y - 61);
 
@@ -429,36 +429,36 @@ TEST(TestButton2D, TestSelectDelegatesSimple) {
 
     }
 
-    FTEngine::cleanup();
+    Engine::cleanup();
 }
 
 TEST(TestButton2D, TestDeselectDelegates) {
     GlfwMock mock;
-    FTEngine::setup(true, true);
+    Engine::setup(true, true);
     {
-        FTButton2DTestDelegates testDelegates;
+        Button2DTestDelegates testDelegates;
 
-        auto node = std::make_shared<FTNode>();
+        auto node = std::make_shared<Node>();
 
-        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
 
         auto& button = node->getButton();
         button->setUseSceneGraphPriority(false);
-        button->bindMousePressedDelegate(&testDelegates, &FTButton2DTestDelegates::pressedDelegate);
-        button->bindOnSelectDelegate(&testDelegates, &FTButton2DTestDelegates::selectDelegate);
-        button->bindOnDeselectDelegate(&testDelegates, &FTButton2DTestDelegates::deselectDelegate);
-        button->bindMouseReleasedDelegate(&testDelegates, &FTButton2DTestDelegates::releasedDelegate);
+        button->bindMousePressedDelegate(&testDelegates, &Button2DTestDelegates::pressedDelegate);
+        button->bindOnSelectDelegate(&testDelegates, &Button2DTestDelegates::selectDelegate);
+        button->bindOnDeselectDelegate(&testDelegates, &Button2DTestDelegates::deselectDelegate);
+        button->bindMouseReleasedDelegate(&testDelegates, &Button2DTestDelegates::releasedDelegate);
 
-        auto view = std::make_shared<FTView>();
-        view->setCamera(std::make_shared<FTCamera2D>());
+        auto view = std::make_shared<View>();
+        view->setCamera(std::make_shared<Camera2D>());
         view->addChild(node);
 
-        auto scene = std::make_shared<FTScene>();
+        auto scene = std::make_shared<Scene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene, true);
+        Engine::getDirector()->setCurrentScene(scene, true);
 
         scene->visit();
 
@@ -471,7 +471,7 @@ TEST(TestButton2D, TestDeselectDelegates) {
         EXPECT_FALSE(node->containsMousePosition(glm::vec2(151, 70)));
         EXPECT_FALSE(node->containsMousePosition(glm::vec2(60, 261)));
 
-        auto screensize = FTEngine::getWindowSize();
+        auto screensize = Engine::getWindowSize();
 
         mock.mouse_pos_callback_(nullptr, 51, screensize.y - 61);
 
@@ -492,49 +492,49 @@ TEST(TestButton2D, TestDeselectDelegates) {
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
     }
 
-    FTEngine::cleanup();
+    Engine::cleanup();
 }
 
 TEST(TestButton2D, TestSelectMultiple) {
     GlfwMock mock;
-    FTEngine::setup(true, true);
+    Engine::setup(true, true);
     {
-        FTButton2DTestDelegates testDelegates;
-        FTButton2DTestDelegates other_testDelegates;
+        Button2DTestDelegates testDelegates;
+        Button2DTestDelegates other_testDelegates;
 
-        auto other_node = std::make_shared<FTNode>();
-        other_node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        auto other_node = std::make_shared<Node>();
+        other_node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(50, 50, 0)));
 
-        auto node = std::make_shared<FTNode>();
+        auto node = std::make_shared<Node>();
         
 
-        node->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 50, 0)));
+        node->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(50, 50, 0)));
         node->setScale(glm::vec2(2, 4));
         node->setPosition(glm::vec2(100, 160));
         node->setAnchorPoint(glm::vec2(0.5f, 0.5f));
 
         auto& button = node->getButton();
         button->setUseSceneGraphPriority(false);
-        button->bindMousePressedDelegate(&testDelegates, &FTButton2DTestDelegates::pressedDelegate);
-        button->bindOnSelectDelegate(&testDelegates, &FTButton2DTestDelegates::selectDelegate);
-        button->bindOnDeselectDelegate(&testDelegates, &FTButton2DTestDelegates::deselectDelegate);
-        button->bindMouseReleasedDelegate(&testDelegates, &FTButton2DTestDelegates::releasedDelegate);
+        button->bindMousePressedDelegate(&testDelegates, &Button2DTestDelegates::pressedDelegate);
+        button->bindOnSelectDelegate(&testDelegates, &Button2DTestDelegates::selectDelegate);
+        button->bindOnDeselectDelegate(&testDelegates, &Button2DTestDelegates::deselectDelegate);
+        button->bindMouseReleasedDelegate(&testDelegates, &Button2DTestDelegates::releasedDelegate);
 
         auto& other_button = other_node->getButton();
         other_button->setUseSceneGraphPriority(false);
-        other_button->bindMousePressedDelegate(&other_testDelegates, &FTButton2DTestDelegates::pressedDelegate);
-        other_button->bindOnSelectDelegate(&other_testDelegates, &FTButton2DTestDelegates::selectDelegate);
-        other_button->bindOnDeselectDelegate(&other_testDelegates, &FTButton2DTestDelegates::deselectDelegate);
-        other_button->bindMouseReleasedDelegate(&other_testDelegates, &FTButton2DTestDelegates::releasedDelegate);
+        other_button->bindMousePressedDelegate(&other_testDelegates, &Button2DTestDelegates::pressedDelegate);
+        other_button->bindOnSelectDelegate(&other_testDelegates, &Button2DTestDelegates::selectDelegate);
+        other_button->bindOnDeselectDelegate(&other_testDelegates, &Button2DTestDelegates::deselectDelegate);
+        other_button->bindMouseReleasedDelegate(&other_testDelegates, &Button2DTestDelegates::releasedDelegate);
 
-        auto view = std::make_shared<FTView>();
-        view->setCamera(std::make_shared<FTCamera2D>());
+        auto view = std::make_shared<View>();
+        view->setCamera(std::make_shared<Camera2D>());
         view->addChild(node);
         view->addChild(other_node);
 
-        auto scene = std::make_shared<FTScene>();
+        auto scene = std::make_shared<Scene>();
         scene->addView(view);
-        FTEngine::getDirector()->setCurrentScene(scene, true);
+        Engine::getDirector()->setCurrentScene(scene, true);
 
         scene->visit();
 
@@ -547,7 +547,7 @@ TEST(TestButton2D, TestSelectMultiple) {
         EXPECT_FALSE(node->containsMousePosition(glm::vec2(151, 70)));
         EXPECT_FALSE(node->containsMousePosition(glm::vec2(60, 261)));
 
-        auto screensize = FTEngine::getWindowSize();
+        auto screensize = Engine::getWindowSize();
 
         mock.mouse_pos_callback_(nullptr, 51, screensize.y - 61);
 
@@ -571,5 +571,5 @@ TEST(TestButton2D, TestSelectMultiple) {
         mock.mouse_button_callback_(nullptr, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
     }
 
-    FTEngine::cleanup();
+    Engine::cleanup();
 }

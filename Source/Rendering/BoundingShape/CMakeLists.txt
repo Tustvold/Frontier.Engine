@@ -1,16 +1,16 @@
 set (SOURCES ${SOURCES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTBoundingShape.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTBoundingEllipsoid.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTBoundingCuboid.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTBoundingShapeWrapper.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTCompoundBoundingShape.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BoundingShape.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BoundingEllipsoid.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BoundingCuboid.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BoundingShapeWrapper.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/CompoundBoundingShape.cpp
     
    PARENT_SCOPE)
 
 set (HEADERS ${HEADERS}
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTBoundingShape.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTBoundingEllipsoid.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTBoundingCuboid.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTBoundingShapeWrapper.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTCompoundBoundingShape.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/BoundingShape.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/BoundingEllipsoid.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/BoundingCuboid.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/BoundingShapeWrapper.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/CompoundBoundingShape.h
     PARENT_SCOPE)

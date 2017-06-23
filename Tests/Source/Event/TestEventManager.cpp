@@ -1,8 +1,8 @@
-#include <Event/FTEventDispatcher.h>
+#include <Event/EventDispatcher.h>
 #include <gmock/gmock.h>
 #include "TestEventDispatcherTypes.h"
-#include <Event/FTEventManager.h>
-#include "FTEngine.h"
+#include <Event/EventManager.h>
+#include "Engine.h"
 #include <Mock/MockLoader.h>
 
 USING_NS_FT
@@ -10,7 +10,7 @@ USING_NS_FT
 TEST(TestEventManager, TestRegisterRetrieve) {
     MockLoader mock;
 
-    auto manager = FTEngine::getEventManager();
+    auto manager = Engine::getEventManager();
 
     auto dispatcher = manager->getEventDispatcher<MockEventDispatcher>();
 
@@ -25,7 +25,7 @@ TEST(TestEventManager, TestRegisterDelegate) {
     MockLoader mock;
     auto listener = std::make_shared<MockEventListener1>();
 
-    auto manager = FTEngine::getEventManager();
+    auto manager = Engine::getEventManager();
     auto dispatcher = manager->getEventDispatcher<MockEventDispatcher>();
 
     manager->registerDelegate<MockEventDispatcher>(listener.get(), &MockEventListener1::callback);
@@ -40,7 +40,7 @@ TEST(TestEventManager, TestUnregisterDelegate) {
 
     auto listener = std::make_shared<MockEventListener1>();
 
-    auto manager = FTEngine::getEventManager();
+    auto manager = Engine::getEventManager();
     auto dispatcher = manager->getEventDispatcher<MockEventDispatcher>();
 
     manager->registerDelegate<MockEventDispatcher>(listener.get(), &MockEventListener1::callback);

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "FTTransformPosition.h"
-#include "FTTransformScale.h"
-#include "FTTransformRotation.h"
-#include "FTCompositeTransform.h"
+#include "TransformPosition.h"
+#include "TransformScale.h"
+#include "TransformRotation.h"
+#include "CompositeTransform.h"
 
 NS_FT_BEGIN
 
-class FTTransformPositionScaleRotation : public FTCompositeTransform3<FTTransformPosition, FTTransformRotation, FTTransformScale> {
+class TransformPositionScaleRotation : public CompositeTransform3<TransformPosition, TransformRotation, TransformScale> {
 public:
-    FTTransformPositionScaleRotation() : FTCompositeTransform3() {
+    TransformPositionScaleRotation() : CompositeTransform3() {
 
     }
 

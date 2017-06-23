@@ -1,16 +1,16 @@
 #include <Frontier.h>
 #include <glfwmock.h>
-#include <Rendering/Camera/FTCamera.h>
-#include <Rendering/Camera/FTCamera2D.h>
-#include <Rendering/Camera/FTCamera3D.h>
+#include <Rendering/Camera/Camera.h>
+#include <Rendering/Camera/Camera2D.h>
+#include <Rendering/Camera/Camera3D.h>
 #include <Mock/ExpectUtils.h>
 
 USING_NS_FT
 
 TEST(TestCamera, TestRaycast2D) {
     GlfwMock mock;
-    FTEngine::setup(true, true); {
-        auto camera = std::make_unique<FTCamera2D>();
+    Engine::setup(true, true); {
+        auto camera = std::make_unique<Camera2D>();
 
         // Call this to update matrices
         camera->visit();
@@ -22,18 +22,18 @@ TEST(TestCamera, TestRaycast2D) {
         EXPECT_EQ(near_vector, glm::vec3(50, 123, 0));
         EXPECT_EQ(direction, glm::vec3(0, 0, -1.0f));
     }
-    FTEngine::cleanup();
+    Engine::cleanup();
 }
 
 
 TEST(TestCamera, TestRaycast2DDrawRect) {
     GlfwMock mock;
-    FTEngine::setup(true, true); {
-        auto camera = std::make_unique<FTCamera2D>();
-        camera->setDrawRectRelative(FTRect<float>(0.25f, 0.25f, 0.75f, 0.75f));
+    Engine::setup(true, true); {
+        auto camera = std::make_unique<Camera2D>();
+        camera->setDrawRectRelative(Rect<float>(0.25f, 0.25f, 0.75f, 0.75f));
 
         // Call this to update matrices
-        auto screensize = FTEngine::getWindowSize();
+        auto screensize = Engine::getWindowSize();
 
         camera->visit();
 
@@ -51,15 +51,15 @@ TEST(TestCamera, TestRaycast2DDrawRect) {
         EXPECT_EQ(near_vector, glm::vec3(20, 40, 0));
         EXPECT_EQ(direction, glm::vec3(0, 0, -1.0f));    
     }
-    FTEngine::cleanup();
+    Engine::cleanup();
 }
 
 
 TEST(TestCamera, TestRaycast3D) {
     GlfwMock mock;
-    FTEngine::setup(true, true); {
+    Engine::setup(true, true); {
 
-        auto camera = std::make_unique<FTCamera3D>();
+        auto camera = std::make_unique<Camera3D>();
         camera->setClippingPlanes(1.0f, 10.0f);
         camera->setFov((float)M_PI_2);
         camera->setPosition(glm::vec3(50, 30, 20));
@@ -67,7 +67,7 @@ TEST(TestCamera, TestRaycast3D) {
 
         // Call this to update matrices
 
-        auto screensize = FTEngine::getWindowSize();
+        auto screensize = Engine::getWindowSize();
         camera->visit();
 
         auto raycast = camera->generateRaycastForMousePos(screensize.x / 2.0f, screensize.y / 2.0f);
@@ -95,5 +95,5 @@ TEST(TestCamera, TestRaycast3D) {
         glm::vec3 delta = glm::normalize(glm::vec3(-9.0f * tanf(45.0f * DEG2RAD) * aspect, 0, -9));
         expectVectorEqual(direction, delta);
     }
-    FTEngine::cleanup();
+    Engine::cleanup();
 }

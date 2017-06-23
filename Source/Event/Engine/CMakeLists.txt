@@ -3,6 +3,6 @@ set(SOURCES ${SOURCES}
 
 
 set (HEADERS ${HEADERS}
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTEngineEventDispatcher.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/EngineEventDispatcher.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FTEngineEvents.h
     PARENT_SCOPE)

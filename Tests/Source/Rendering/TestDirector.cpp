@@ -1,48 +1,48 @@
 #include <Mock/MockLoader.h>
-#include <Rendering/FTScene.h>
-#include <Rendering/FTDirector.h>
+#include <Rendering/Scene.h>
+#include <Rendering/Director.h>
 
 USING_NS_FT
 
-class MockSceneEnterExit : public FTScene {
+class MockSceneEnterExit : public Scene {
 public:
     MOCK_METHOD0(onEnter, void());
     MOCK_METHOD0(onExit, void());
 
     void callParentOnEnter() {
-        FTScene::onEnter();
+        Scene::onEnter();
     }
 
     void callParentOnExit() {
-        FTScene::onExit();
+        Scene::onExit();
     }
 };
 
-class MockViewEnterExit : public FTView {
+class MockViewEnterExit : public View {
 public:
     MOCK_METHOD0(onEnter, void());
     MOCK_METHOD0(onExit, void());
 
     void callParentOnEnter() {
-        FTView::onEnter();
+        View::onEnter();
     }
 
     void callParentOnExit() {
-        FTView::onExit();
+        View::onExit();
     }
 };
 
-class MockNodeEnterExit : public FTNode {
+class MockNodeEnterExit : public Node {
 public:
     MOCK_METHOD0(onEnter, void());
     MOCK_METHOD0(onExit, void());
 
     void callParentOnEnter() {
-        FTNode::onEnter();
+        Node::onEnter();
     }
 
     void callParentOnExit() {
-        FTNode::onExit();
+        Node::onExit();
     }
 };
 
@@ -57,7 +57,7 @@ TEST(TestDirector, TestEnterExit) {
     
     
 
-    FTEngine::getDirector()->setCurrentScene(scene);
+    Engine::getDirector()->setCurrentScene(scene);
 
     scene->addView(view);
 
@@ -68,18 +68,18 @@ TEST(TestDirector, TestEnterExit) {
     EXPECT_CALL(*node1, onEnter()).WillOnce(testing::Invoke(node1.get(), &MockNodeEnterExit::callParentOnEnter));
     EXPECT_CALL(*node2, onEnter()).WillOnce(testing::Invoke(node2.get(), &MockNodeEnterExit::callParentOnEnter));
 
-    loader.getMockEngineEventDispatcher()->raiseEvent(FTPreTickEvent());
+    loader.getMockEngineEventDispatcher()->raiseEvent(PreTickEvent());
 
     
-    auto nextScene = std::make_shared<FTScene>();
-    FTEngine::getDirector()->setCurrentScene(nextScene);
+    auto nextScene = std::make_shared<Scene>();
+    Engine::getDirector()->setCurrentScene(nextScene);
 
     EXPECT_CALL(*scene, onExit()).WillOnce(testing::Invoke(scene.get(), &MockSceneEnterExit::callParentOnExit));
     EXPECT_CALL(*view, onExit()).WillOnce(testing::Invoke(view.get(), &MockViewEnterExit::callParentOnExit));
     EXPECT_CALL(*node1, onExit()).WillOnce(testing::Invoke(node1.get(), &MockNodeEnterExit::callParentOnExit));
     EXPECT_CALL(*node2, onExit()).WillOnce(testing::Invoke(node2.get(), &MockNodeEnterExit::callParentOnExit));
 
-    loader.getMockEngineEventDispatcher()->raiseEvent(FTPreTickEvent());
+    loader.getMockEngineEventDispatcher()->raiseEvent(PreTickEvent());
 
 }
 
@@ -91,32 +91,32 @@ TEST(TestDirector, TestPushScene) {
 
 
 
-    FTEngine::getDirector()->setCurrentScene(scene);
+    Engine::getDirector()->setCurrentScene(scene);
 
     EXPECT_CALL(*scene, onEnter()).WillOnce(testing::Invoke(scene.get(), &MockSceneEnterExit::callParentOnEnter));
 
-    loader.getMockEngineEventDispatcher()->raiseEvent(FTPreTickEvent());
+    loader.getMockEngineEventDispatcher()->raiseEvent(PreTickEvent());
 
     auto nextScene = std::make_shared<MockSceneEnterExit>();
 
-    FTEngine::getDirector()->pushScene(nextScene);
+    Engine::getDirector()->pushScene(nextScene);
 
     EXPECT_CALL(*scene, onExit()).WillOnce(testing::Invoke(scene.get(), &MockSceneEnterExit::callParentOnExit));
     EXPECT_CALL(*nextScene, onEnter()).WillOnce(testing::Invoke(nextScene.get(), &MockSceneEnterExit::callParentOnEnter));
 
-    loader.getMockEngineEventDispatcher()->raiseEvent(FTPreTickEvent());
+    loader.getMockEngineEventDispatcher()->raiseEvent(PreTickEvent());
 
 
 
     
-    FTEngine::getDirector()->popScene();
+    Engine::getDirector()->popScene();
 
     EXPECT_CALL(*nextScene, onExit()).WillOnce(testing::Invoke(nextScene.get(), &MockSceneEnterExit::callParentOnExit));
 
     EXPECT_CALL(*scene, onEnter()).WillOnce(testing::Invoke(scene.get(), &MockSceneEnterExit::callParentOnEnter));
 
-    loader.getMockEngineEventDispatcher()->raiseEvent(FTPreTickEvent());
+    loader.getMockEngineEventDispatcher()->raiseEvent(PreTickEvent());
 
     EXPECT_CALL(*scene, onExit()).WillOnce(testing::Invoke(scene.get(), &MockSceneEnterExit::callParentOnExit));
-    // We expect a call when FTDirector is cleaned up
+    // We expect a call when Director is cleaned up
 }

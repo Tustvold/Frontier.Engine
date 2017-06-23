@@ -1,9 +1,9 @@
 #include <Mock/MockLoader.h>
 #include <Mock/MockAction.h>
-#include <Rendering/FTView.h>
-#include <Rendering/FTScene.h>
-#include <Rendering/FTDirector.h>
-#include <Rendering/Action/FTRepeatAction.h>
+#include <Rendering/View.h>
+#include <Rendering/Scene.h>
+#include <Rendering/Director.h>
+#include <Rendering/Action/RepeatAction.h>
 
 USING_NS_FT
 
@@ -14,16 +14,16 @@ TEST(TestRepeatAction, TestSimple) {
     auto mock1 = std::make_unique<MockAction>();
     auto mock1_ptr = mock1.get();
 
-    auto repeat = std::make_unique<FTRepeatAction>(std::move(mock1), 2);
+    auto repeat = std::make_unique<RepeatAction>(std::move(mock1), 2);
 
-    auto node = std::make_shared<FTNode>();
-    auto view = std::make_shared<FTView>();
-    auto scene = std::make_shared<FTScene>();
+    auto node = std::make_shared<Node>();
+    auto view = std::make_shared<View>();
+    auto scene = std::make_shared<Scene>();
     scene->addView(view);
-    FTEngine::getDirector()->setCurrentScene(scene, true);
+    Engine::getDirector()->setCurrentScene(scene, true);
     view->addChild(node);
 
-    FTUpdateEvent update_event;
+    UpdateEvent update_event;
 
     EXPECT_CALL(*mock1_ptr, onStart(node.get())).WillOnce(testing::Invoke(mock1_ptr, &MockAction::callParentOnStart));
     node->runAction(std::move(repeat));
@@ -66,17 +66,17 @@ TEST(TestRepeatAction, TestNested) {
     auto mock1 = std::make_unique<MockAction>();
     auto mock1_ptr = mock1.get();
 
-    auto repeat = std::make_unique<FTRepeatAction>(std::move(mock1), 2);
-    auto repeat_parent = std::make_unique<FTRepeatAction>(std::move(repeat), 3);
+    auto repeat = std::make_unique<RepeatAction>(std::move(mock1), 2);
+    auto repeat_parent = std::make_unique<RepeatAction>(std::move(repeat), 3);
 
-    auto node = std::make_shared<FTNode>();
-    auto view = std::make_shared<FTView>();
-    auto scene = std::make_shared<FTScene>();
+    auto node = std::make_shared<Node>();
+    auto view = std::make_shared<View>();
+    auto scene = std::make_shared<Scene>();
     scene->addView(view);
-    FTEngine::getDirector()->setCurrentScene(scene, true);
+    Engine::getDirector()->setCurrentScene(scene, true);
     view->addChild(node);
 
-    FTUpdateEvent update_event;
+    UpdateEvent update_event;
 
     testing::InSequence s;
 

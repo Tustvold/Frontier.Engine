@@ -5,11 +5,11 @@ add_subdirectory(Util)
 add_subdirectory(Event)
 
 set(SOURCES ${SOURCES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTEngine.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Engine.cpp
     PARENT_SCOPE)
 
 
 set (HEADERS ${HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/Frontier.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/FTEngine.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/Engine.h
     PARENT_SCOPE)

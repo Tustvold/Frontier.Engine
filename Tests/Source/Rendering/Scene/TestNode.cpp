@@ -1,56 +1,56 @@
 #include <Mock/MockLoader.h>
-#include <FTEngine.h>
-#include <Rendering/FTShaderNode.h>
+#include <Engine.h>
+#include <Rendering/ShaderNode.h>
 #include <Mock/ExpectUtils.h>
-#include <Rendering/Camera/FTCamera2D.h>
-#include <Rendering/FTView.h>
-#include <Rendering/FTScene.h>
-#include <Rendering/BoundingShape/FTBoundingCuboid.h>
+#include <Rendering/Camera/Camera2D.h>
+#include <Rendering/View.h>
+#include <Rendering/Scene.h>
+#include <Rendering/BoundingShape/BoundingCuboid.h>
 
 USING_NS_FT
 
-class MockNodeDraw : public FTNode {
+class MockNodeDraw : public Node {
 
 public:
-    MOCK_METHOD1(pre_draw, void(const FTCamera* camera));
+    MOCK_METHOD1(pre_draw, void(const Camera* camera));
     MOCK_METHOD0(draw, void());
     MOCK_METHOD0(post_draw, void());
-    MOCK_METHOD1(onAddedToView, void(FTView* view));
-    MOCK_METHOD1(onAddedToScene, void(FTScene* scene));
+    MOCK_METHOD1(onAddedToView, void(View* view));
+    MOCK_METHOD1(onAddedToScene, void(Scene* scene));
     MOCK_METHOD0(onRemovedFromScene, void());
     MOCK_METHOD0(onRemovedFromView, void());
 
 
     MockNodeDraw() {
-        setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(1, 1, 1)));
+        setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(1, 1, 1)));
     }
 
-    void callParentAddedToView(FTView* view) {
-        FTNode::onAddedToView(view);
+    void callParentAddedToView(View* view) {
+        Node::onAddedToView(view);
     }
 
-    void callParentAddedToScene(FTScene* scene) {
-        FTNode::onAddedToScene(scene);
+    void callParentAddedToScene(Scene* scene) {
+        Node::onAddedToScene(scene);
     }
 
     void callParentRemoveFromView() {
-        FTNode::onRemovedFromView();
+        Node::onRemovedFromView();
     }
 
     void callParentRemoveFromScene() {
-        FTNode::onRemovedFromScene();
+        Node::onRemovedFromScene();
     }
 
-    FTView* getView() {
+    View* getView() {
         return view_;
     }
 
-    FTScene* getScene() {
+    Scene* getScene() {
         return scene_;
     }
 };
 
-class MockNodeChildren : public FTNode {
+class MockNodeChildren : public Node {
 public:
 
     MOCK_METHOD0(draw, void());
@@ -60,9 +60,9 @@ public:
 TEST(TestNode, TestCallOrder) {
     MockLoader mock;
 
-    auto camera = std::static_pointer_cast<FTCamera>(std::make_shared<FTCamera2D>());
-    auto screensize = FTEngine::getWindowSize();
-    camera->setDrawRectRelative(FTRect<float>(0, 0, 100.0f / screensize.x, 100.0f / screensize.y));
+    auto camera = std::static_pointer_cast<Camera>(std::make_shared<Camera2D>());
+    auto screensize = Engine::getWindowSize();
+    camera->setDrawRectRelative(Rect<float>(0, 0, 100.0f / screensize.x, 100.0f / screensize.y));
     glm::mat4 parent_matrix;
     MockNodeDraw node;
 
@@ -84,13 +84,13 @@ TEST(TestNode, TestCallOrder) {
 TEST(TestNode, TestCulling) {
     MockLoader loader;
 
-    auto camera = std::static_pointer_cast<FTCamera>(std::make_shared<FTCamera2D>());
+    auto camera = std::static_pointer_cast<Camera>(std::make_shared<Camera2D>());
 
-    auto screensize = FTEngine::getWindowSize();
-    camera->setDrawRectRelative(FTRect<float>(0, 0, 100.0f / screensize.x, 100.0f / screensize.y));
+    auto screensize = Engine::getWindowSize();
+    camera->setDrawRectRelative(Rect<float>(0, 0, 100.0f / screensize.x, 100.0f / screensize.y));
     glm::mat4 parent_matrix;
     MockNodeChildren node;
-    node.setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 80, 0)));
+    node.setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(50, 80, 0)));
 
     uint32_t draw_order = 0;
 
@@ -161,14 +161,14 @@ TEST(TestNode, TestCulling) {
 TEST(TestNode, TestCullingHierarchy) {
     MockLoader mock;
 
-    auto camera = std::static_pointer_cast<FTCamera>(std::make_shared<FTCamera2D>());
-    auto screensize = FTEngine::getWindowSize();
-    camera->setDrawRectRelative(FTRect<float>(0, 0, 100.0f / screensize.x, 100.0f / screensize.y));
+    auto camera = std::static_pointer_cast<Camera>(std::make_shared<Camera2D>());
+    auto screensize = Engine::getWindowSize();
+    camera->setDrawRectRelative(Rect<float>(0, 0, 100.0f / screensize.x, 100.0f / screensize.y));
     glm::mat4 parent_matrix;
     MockNodeChildren parent;
     auto child = std::make_shared<MockNodeChildren>();
-    parent.addChild(std::static_pointer_cast<FTNode>(child));
-    child->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(50, 80, 0)));
+    parent.addChild(std::static_pointer_cast<Node>(child));
+    child->setBoundingShape(std::make_unique<BoundingCuboid>(glm::vec3(50, 80, 0)));
     EXPECT_CALL(parent, draw()).Times(testing::AnyNumber());
 
 
@@ -245,8 +245,8 @@ TEST(TestNode, TestCullingHierarchy) {
 TEST(TestNode, TestOnAdded) {
     MockLoader loader;
 
-    auto scene = std::make_shared<FTScene>();
-    auto view = std::make_shared<FTView>();
+    auto scene = std::make_shared<Scene>();
+    auto view = std::make_shared<View>();
     scene->addView(view);
 
     auto node1 = std::make_shared<MockNodeDraw>();
@@ -294,8 +294,8 @@ TEST(TestNode, TestMouseInput) {
 TEST(TestNode, TestOnRemoveFromView) {
     MockLoader loader;
 
-    auto scene = std::make_shared<FTScene>();
-    auto view = std::make_shared<FTView>();
+    auto scene = std::make_shared<Scene>();
+    auto view = std::make_shared<View>();
     scene->addView(view);
 
     auto node1 = std::make_shared<MockNodeDraw>();

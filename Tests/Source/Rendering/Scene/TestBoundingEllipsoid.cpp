@@ -1,17 +1,17 @@
 #include <Mock/MockLoader.h>
-#include <FTEngine.h>
-#include <Rendering/FTShaderNode.h>
+#include <Engine.h>
+#include <Rendering/ShaderNode.h>
 #include <Mock/ExpectUtils.h>
-#include <Rendering/BoundingShape/FTBoundingEllipsoid.h>
+#include <Rendering/BoundingShape/BoundingEllipsoid.h>
 
 USING_NS_FT
 
 TEST(TestBoundingEllipsoid, TestAAB) {
     MockLoader mock;
 
-    auto node = std::make_shared<FTNode>();
-    auto bounding_shape = new FTBoundingEllipsoid(glm::vec3(17, 44, 11));
-    node->setBoundingShape(std::unique_ptr<FTBoundingShape>(bounding_shape));
+    auto node = std::make_shared<Node>();
+    auto bounding_shape = new BoundingEllipsoid(glm::vec3(17, 44, 11));
+    node->setBoundingShape(std::unique_ptr<BoundingShape>(bounding_shape));
 
     node->visit(glm::mat4(), false);
     EXPECT_EQ(bounding_shape->getAABCenter(), glm::vec3(17, 44, 11));
@@ -32,7 +32,7 @@ TEST(TestBoundingEllipsoid, TestAAB) {
 
 
 TEST(TestBoundingEllipsoid, TestShapeSimple) {
-    auto bounding_shape = std::make_shared<FTBoundingEllipsoid>(glm::vec3(17, 44, 11));
+    auto bounding_shape = std::make_shared<BoundingEllipsoid>(glm::vec3(17, 44, 11));
 
     EXPECT_TRUE(bounding_shape->containsLocalPosition(glm::vec3(17, 44, 11)));
     

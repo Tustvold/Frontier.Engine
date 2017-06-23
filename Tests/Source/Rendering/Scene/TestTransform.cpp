@@ -7,7 +7,7 @@ USING_NS_FT
 
 TEST(TestTransform, TestTranslate) {
 
-    auto transform = std::make_unique<FTTransformPosition>();
+    auto transform = std::make_unique<TransformPosition>();
     transform->setPosition(glm::vec3(0, 0, 0));
 
     auto& matrix = transform->getTransformMatrix();
@@ -39,7 +39,7 @@ TEST(TestTransform, TestTranslate) {
 }
 
 TEST(TestTransform, TestRotate) {
-    auto transform = std::make_unique<FTTransformRotation>();
+    auto transform = std::make_unique<TransformRotation>();
     transform->setRotationQuaterion(glm::quat());
 
     auto matrix = transform->getTransformMatrix();
@@ -89,7 +89,7 @@ TEST(TestTransform, TestScale) {
     srand((unsigned int)time(nullptr));
 
     glm::vec3 scale = glm::vec3(rand() % 100, rand() % 100, rand() % 100);
-    auto transform = std::make_unique<FTTransformScale>();
+    auto transform = std::make_unique<TransformScale>();
 
     transform->setScale(scale);
 
@@ -103,7 +103,7 @@ TEST(TestTransform, TestScale) {
 }
 
 TEST(TestTransform, TestTransformPositionScaleRotation) {
-    auto transform = std::make_unique<FTTransformPositionScaleRotation>();
+    auto transform = std::make_unique<TransformPositionScaleRotation>();
     srand((unsigned int)time(nullptr));
 
     for (int i = 0; i < 10; i++) {
@@ -124,7 +124,7 @@ TEST(TestTransform, TestTransformPositionScaleRotation) {
 }
 
 TEST(TestTransform, TestTransformGetters) {
-    auto transform = std::make_unique<FTTransformPositionScaleRotation>();
+    auto transform = std::make_unique<TransformPositionScaleRotation>();
     srand((unsigned int)time(nullptr));
 
     for (int i = 0; i < 10; i++) {

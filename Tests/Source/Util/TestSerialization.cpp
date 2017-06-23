@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <FTEngine.h>
-#include <Util/FTFileManager.h>
+#include <Engine.h>
+#include <Util/FileManager.h>
 #include <Mock/MockLoader.h>
 #include <chrono>
 #include "Util/Serialization/Serialization.h"
@@ -24,7 +24,7 @@ struct TestStruct {
 TEST(TestBTF, TestNewAPI) {
     MockLoader loader;
 
-    ttvfs::File *fp = FTEngine::getFileManager()->getOrCreateFile("Test.hex");
+    ttvfs::File *fp = Engine::getFileManager()->getOrCreateFile("Test.hex");
     fp->open("wb");
 
     const int num_tests = 1000;
@@ -102,7 +102,7 @@ struct Serializer <Archiver, TestStruct2> {
 TEST(TestBTF, TestNewAPI2) {
     MockLoader loader;
 
-    ttvfs::File *fp = FTEngine::getFileManager()->getOrCreateFile("Test.hex");
+    ttvfs::File *fp = Engine::getFileManager()->getOrCreateFile("Test.hex");
     fp->open("wb");
 
     const int num_tests = 1000;

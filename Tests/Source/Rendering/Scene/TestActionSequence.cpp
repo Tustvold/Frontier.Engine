@@ -1,10 +1,10 @@
 #include <Mock/MockLoader.h>
 #include <Mock/MockAction.h>
-#include <Rendering/Action/FTActionSequence.h>
-#include <Rendering/FTDirector.h>
-#include <Rendering/FTNode.h>
-#include <Rendering/FTView.h>
-#include <Rendering/FTScene.h>
+#include <Rendering/Action/ActionSequence.h>
+#include <Rendering/Director.h>
+#include <Rendering/Node.h>
+#include <Rendering/View.h>
+#include <Rendering/Scene.h>
 
 USING_NS_FT
 
@@ -12,20 +12,20 @@ TEST(TestActionSequence, TestSimple) {
     MockLoader loader;
     auto engine_event_dispatcher = loader.getMockEngineEventDispatcher();
 
-    auto sequence = std::make_unique<FTActionSequence>();
+    auto sequence = std::make_unique<ActionSequence>();
     auto mock1 = std::make_unique<MockAction>();
     auto mock1_ptr = mock1.get();
     auto mock2 = std::make_unique<MockAction>();
     auto mock2_ptr = mock2.get();
-    auto node = std::make_shared<FTNode>();
-    auto view = std::make_shared<FTView>();
-    auto scene = std::make_shared<FTScene>();
+    auto node = std::make_shared<Node>();
+    auto view = std::make_shared<View>();
+    auto scene = std::make_shared<Scene>();
     scene->addView(view);
-    FTEngine::getDirector()->setCurrentScene(scene, true);
+    Engine::getDirector()->setCurrentScene(scene, true);
     view->addChild(node);
 
 
-    FTUpdateEvent update_event;
+    UpdateEvent update_event;
 
     EXPECT_CALL(*mock1_ptr, onStart(node.get())).WillOnce(testing::Invoke(mock1_ptr, &MockAction::callParentOnStart));
 

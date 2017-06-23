@@ -1,24 +1,24 @@
 set(SOURCES ${SOURCES}
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTFontShader.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTShaderCache.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexColorShaderProgram.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexShaderProgram.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexTextureShaderProgram.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleShaderProgram.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleBorderShaderProgram.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexShaderProgramColor.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexShaderProgramLighting.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/FontShader.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ShaderCache.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/VertexColorShaderProgram.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/VertexShaderProgram.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/VertexTextureShaderProgram.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/CircleShaderProgram.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/CircleBorderShaderProgram.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/VertexShaderProgramColor.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/VertexShaderProgramLighting.cpp
         PARENT_SCOPE)
 
 set(HEADERS ${HEADERS}
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTFontShader.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTShaderCache.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTShaderProgram.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexColorShaderProgram.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexShaderProgram.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexTextureShaderProgram.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleShaderProgram.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTCircleBorderShaderProgram.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexShaderProgramColor.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTVertexShaderProgramLighting.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/FontShader.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/ShaderCache.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/ShaderProgram.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/VertexColorShaderProgram.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/VertexShaderProgram.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/VertexTextureShaderProgram.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/CircleShaderProgram.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/CircleBorderShaderProgram.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/VertexShaderProgramColor.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/VertexShaderProgramLighting.h
         PARENT_SCOPE)

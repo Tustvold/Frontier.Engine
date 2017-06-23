@@ -1,29 +1,29 @@
 #include "gmock/gmock.h"
-#include <Rendering/Mesh/FTMesh.h>
+#include <Rendering/Mesh/Mesh.h>
 
 USING_NS_FT
 
 TEST(TestMeshData, TestPreAllocate) {
-    FTMeshData<FTVertexColor<glm::vec3>> mesh(40);
+    MeshData<VertexColor<glm::vec3>> mesh(40);
     EXPECT_EQ(mesh.getVertices().capacity(), (size_t)40);
     EXPECT_EQ(mesh.getVertexCount(), (size_t)0);
 }
 
 TEST(TestMeshData, TestDynamic) {
-    FTMeshData<FTVertexColor<glm::vec3>> mesh(10);
+    MeshData<VertexColor<glm::vec3>> mesh(10);
     auto& vertices = mesh.getVertices();
 
     for (int i = 0; i < 15; i++) {
-        vertices.push_back(FTVertexColor<glm::vec3>(glm::vec3(i, i, i), glm::vec3(0, 0, 0)));
+        vertices.push_back(VertexColor<glm::vec3>(glm::vec3(i, i, i), glm::vec3(0, 0, 0)));
     }
     EXPECT_EQ(mesh.getVertexCount(), (size_t)15);
 }
 
 TEST(TestMeshData, TestData) {
-    FTMeshData<FTVertexColor<glm::vec3>> mesh(10);
+    MeshData<VertexColor<glm::vec3>> mesh(10);
     auto vertices = mesh.getVertices().data();
     for (int i = 0; i < 10; i++) {
-        vertices[i] = FTVertexColor<glm::vec3>(glm::vec3(i, i, i), glm::vec3(0, 0, 0));
+        vertices[i] = VertexColor<glm::vec3>(glm::vec3(i, i, i), glm::vec3(0, 0, 0));
     }
     EXPECT_EQ(mesh.getVertexCount(), (size_t)0);
     mesh.setVertexCount(10);

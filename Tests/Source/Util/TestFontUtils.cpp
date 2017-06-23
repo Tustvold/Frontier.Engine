@@ -1,35 +1,35 @@
 #include <gtest/gtest.h>
-#include "Rendering/Text/FTFontUtils.h"
-#include "Rendering/Text/FTFont.h"
+#include "Rendering/Text/FontUtils.h"
+#include "Rendering/Text/Font.h"
 #include "Mock/MockLoader.h"
-#include<Util/FTFileManager.h>
+#include<Util/FileManager.h>
 
 USING_NS_FT
 
 TEST(TestFontUtils, FTFontFile) {
     MockLoader mock;
-    auto font = std::make_shared<FTFont>("TestResources/Fonts/Vera.ttf");
+    auto font = std::make_shared<Font>("TestResources/Fonts/Vera.ttf");
 
-    ttvfs::File *file = FTEngine::getFileManager()->getOrCreateFile("TestResources/Vera.ftfont");
+    ttvfs::File *file = Engine::getFileManager()->getOrCreateFile("TestResources/Vera.ftfont");
     file->open("wb");
-    FTFontUtils::serializeFont(font->getTextureFont(), file);
+    FontUtils::serializeFont(font->getTextureFont(), file);
     file->close();
 
-    auto font_test = std::make_shared<FTFont>("TestResources/Vera.ftfont");
+    auto font_test = std::make_shared<Font>("TestResources/Vera.ftfont");
     font_test.reset();
 }
 
 TEST(TestFontUtils, Serialization) {
     MockLoader loader;
 
-    auto font = std::make_shared<FTFont>("TestResources/Fonts/Vera.ttf", "@!");
+    auto font = std::make_shared<Font>("TestResources/Fonts/Vera.ttf", "@!");
 
-    ttvfs::File *fp = FTEngine::getFileManager()->getOrCreateFile("ASD.ftfont");
+    ttvfs::File *fp = Engine::getFileManager()->getOrCreateFile("ASD.ftfont");
     fp->open("wb");
 
     OutputSerializer s(fp);
 
-    FTFontUtils::serializeFont(font->getTextureFont(), fp);
+    FontUtils::serializeFont(font->getTextureFont(), fp);
 
     fp->close();
 }

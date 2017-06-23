@@ -5,9 +5,9 @@
 #include <regex>
 
 #include <boost/filesystem.hpp>
-#include <Rendering/Text/FTFont.h>
-#include <Rendering/Text/FTFontUtils.h>
-#include <Util/FTFileManager.h>
+#include <Rendering/Text/Font.h>
+#include <Rendering/Text/FontUtils.h>
+#include <Util/FileManager.h>
 
 USING_NS_FT
 using namespace boost::filesystem;
@@ -45,12 +45,12 @@ bool ttfProcessor(const path &input, const path &tmpDir, const path &input_dir) 
 
     create_directories(output.parent_path());
 
-    auto font = std::make_shared<FTFont>(input.string());
+    auto font = std::make_shared<Font>(input.string());
 
-    ttvfs::File *fp = FTEngine::getFileManager()->getOrCreateFile(output.string());
+    ttvfs::File *fp = Engine::getFileManager()->getOrCreateFile(output.string());
     fp->open("wb");
 
-    FTFontUtils::serializeFont(font->getTextureFont(), fp);
+    FontUtils::serializeFont(font->getTextureFont(), fp);
 
     fp->close();
 
@@ -144,7 +144,7 @@ static void compress(const path &input_name, const path &temporary_dir_name, con
 }
 
 int main(int argc, const char *argv[]) {
-    FTEngine::setup(true, false);
+    Engine::setup(true, false);
 
     if (argc != 4) {
         print_help();
@@ -160,7 +160,7 @@ int main(int argc, const char *argv[]) {
     if (!exists(output_file_name) || modified)
         compress(input_name, temporary_dir_name, output_file_name);
 
-    FTEngine::cleanup();
+    Engine::cleanup();
 
     return 0;
 }

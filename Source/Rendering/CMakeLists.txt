@@ -11,21 +11,21 @@ add_subdirectory(Lighting)
 add_subdirectory(Material)
 
 set(SOURCES ${SOURCES}
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTDirector.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTNode.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTButton.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTShaderNode.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Director.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Node.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Button.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ShaderNode.cpp
         PARENT_SCOPE)
 
 set(HEADERS ${HEADERS}
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTDirector.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTDrawable.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTDrawableNode.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTNode.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTScene.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTView.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTLayoutNode.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTShaderNode.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTWindowSizeNode.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTButton.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/Director.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/Drawable.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/DrawableNode.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/Node.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/Scene.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/View.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/LayoutNode.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/ShaderNode.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/WindowSizeNode.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/Button.h
         PARENT_SCOPE)
