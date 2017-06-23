@@ -3,6 +3,7 @@ add_subdirectory(Rendering)
 add_subdirectory(ThirdParty)
 add_subdirectory(Util)
 add_subdirectory(Event)
+add_subdirectory(IO)
 
 set(SOURCES ${SOURCES}
         ${CMAKE_CURRENT_SOURCE_DIR}/Engine.cpp

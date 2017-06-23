@@ -7,7 +7,7 @@
 #include <boost/filesystem.hpp>
 #include <Rendering/Text/Font.h>
 #include <Rendering/Text/FontUtils.h>
-#include <Util/FileManager.h>
+#include <IO/FileManager.h>
 
 USING_NS_FT
 using namespace boost::filesystem;

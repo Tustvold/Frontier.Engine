@@ -50,7 +50,7 @@ if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-long-long -Werror -Wno-unused-local-typedefs")
 endif ()
 
-add_library(Frontier.Engine STATIC ${SOURCES} ${HEADERS} Source/Util/Serialization/Serialization.h)
+add_library(Frontier.Engine STATIC ${SOURCES} ${HEADERS} Source/IO/Serialization/Serialization.h)
 
 SET(FRONTIER_ENGINE_INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/Source
