@@ -12,7 +12,7 @@ public:
 
     bool load() override;
 
-    void updateUniforms(const FTCamera *camera, const FTShaderNode *node) override;
+    void updateUniforms(const FTCamera *camera, FTShaderNode *node) override;
 
 protected:
     GLint fill_color_uniform_id_;

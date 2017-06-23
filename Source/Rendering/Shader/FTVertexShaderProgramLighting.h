@@ -16,7 +16,7 @@ public:
         return createShaderProgram(vertex_shader_source_, fragment_shader_source_);
     }
 
-    void updateUniforms(const FTCamera *camera, const FTShaderNode *node) override;
+    void updateUniforms(const FTCamera *camera, FTShaderNode *node) override;
 
 private:
     static const char* fragment_shader_source_;
@@ -26,6 +26,7 @@ private:
     GLint material_shininess_uniform_;
     GLint material_specular_color_uniform_;
     GLint model_matrix_uniform_;
+    GLint normal_matrix_uniform_;
     GLint camera_position_uniform_;
 
     GLint position_uniforms_[LightManager::MaxLights];

@@ -51,7 +51,7 @@ bool FTVertexTextureShaderProgram::load() {
     return texture_uniform_id_ != -1;
 }
 
-void FTVertexTextureShaderProgram::updateUniforms(const FTCamera *camera, const FTShaderNode *node) {
+void FTVertexTextureShaderProgram::updateUniforms(const FTCamera *camera, FTShaderNode *node) {
     FTVertexShaderProgram::updateUniforms(camera, node);
     auto& texture = node->getMaterial()->texture;
 

@@ -15,7 +15,7 @@ public:
 
     virtual bool load() override;
 
-    void updateUniforms(const FTCamera *camera, const FTShaderNode *node) override;
+    void updateUniforms(const FTCamera *camera, FTShaderNode *node) override;
 
     virtual bool compile() override {
         return createShaderProgram(vertex_shader_source_, fragment_shader_source_);

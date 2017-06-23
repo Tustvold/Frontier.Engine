@@ -154,9 +154,18 @@ public:
     }
 
     const glm::mat4& getModelMatrixInverse() {
-        if (model_matrix_inv_dirty_)
+        if (model_matrix_inv_dirty_) {
             model_matrix_inv_ = glm::inverse(model_matrix_);
+            normal_matrix_dirty_ = true;
+        }
         return model_matrix_inv_;
+    }
+
+    const glm::mat3& getNormalMatrix() {
+        if (model_matrix_inv_dirty_ || normal_matrix_dirty_) {
+            normal_matrix_ = glm::transpose(getModelMatrixInverse());
+        }
+        return normal_matrix_;
     }
 
     void removeChild(FTNode* node);
@@ -238,6 +247,8 @@ protected:
     glm::mat4 model_matrix_;
     glm::mat4 model_matrix_inv_;
     bool model_matrix_inv_dirty_;
+    glm::mat3 normal_matrix_;
+    bool normal_matrix_dirty_;
 
     std::vector<std::shared_ptr<FTNode>> children_;
 

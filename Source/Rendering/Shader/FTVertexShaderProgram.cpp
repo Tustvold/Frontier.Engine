@@ -42,7 +42,7 @@ bool FTVertexShaderProgram::load() {
     return mvp_uniform_ != -1;
 }
 
-void FTVertexShaderProgram::updateUniforms(const FTCamera *camera, const FTShaderNode *node) {
+void FTVertexShaderProgram::updateUniforms(const FTCamera *camera, FTShaderNode *node) {
     glm::mat4 mvp = camera->getViewProjectionMatrix() * node->getModelMatrix();
     glUniformMatrix4fv(mvp_uniform_, 1, GL_FALSE, (const GLfloat *)&mvp);
 }

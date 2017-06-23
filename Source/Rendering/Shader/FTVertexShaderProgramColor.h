@@ -15,7 +15,7 @@ public:
         return createShaderProgram(vertex_shader_source_, fragment_shader_source_);
     }
 
-    void updateUniforms(const FTCamera *camera, const FTShaderNode *node) override;
+    void updateUniforms(const FTCamera *camera, FTShaderNode *node) override;
 
 private:
 

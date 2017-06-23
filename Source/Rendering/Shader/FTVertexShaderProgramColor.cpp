@@ -44,7 +44,7 @@ bool FTVertexShaderProgramColor::load() {
     return fill_color_uniform_id_ != -1;
 }
 
-void FTVertexShaderProgramColor::updateUniforms(const FTCamera *camera, const FTShaderNode *node) {
+void FTVertexShaderProgramColor::updateUniforms(const FTCamera *camera, FTShaderNode *node) {
     FTVertexShaderProgram::updateUniforms(camera, node);
 
     auto color = node->getMaterial()->diffuse_color;

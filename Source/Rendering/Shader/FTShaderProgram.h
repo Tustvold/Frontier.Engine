@@ -26,7 +26,7 @@ public:
         glUseProgram(program_id_);
     }
 
-    virtual void updateUniforms(const FTCamera *camera, const FTShaderNode *node) {
+    virtual void updateUniforms(const FTCamera *camera, FTShaderNode *node) {
 
     }
 

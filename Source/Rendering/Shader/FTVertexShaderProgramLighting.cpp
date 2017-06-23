@@ -88,6 +88,7 @@ const char* FTVertexShaderProgramLighting::vertex_shader_source_ = {
 	\n\
     uniform mat4 model;\
 	uniform mat4 MVP;\n\
+    uniform mat3 normal_matrix;\n\
     out vec3 V;\n\
 	out vec3 fragmentColor;\n\
     out vec3 N;\
@@ -96,7 +97,7 @@ const char* FTVertexShaderProgramLighting::vertex_shader_source_ = {
 		\n\
 		gl_Position = MVP * vec4(vertexPosition_modelspace, 1);\n\
         fragmentColor = vertexColor;\n\
-        N = vertexNormal;\n\
+        N = normal_matrix * vertexNormal;\n\
         V = vec3(model * vec4(vertexPosition_modelspace,1));\n\
 		\n\
 	}"
@@ -165,12 +166,13 @@ bool FTVertexShaderProgramLighting::load() {
     material_shininess_uniform_ = glGetUniformLocation(program_id_, "material_shininess");
     material_specular_color_uniform_ = glGetUniformLocation(program_id_, "material_specular_color");
     model_matrix_uniform_ = glGetUniformLocation(program_id_, "model");
+    normal_matrix_uniform_ = glGetUniformLocation(program_id_, "normal_matrix");
     camera_position_uniform_ = glGetUniformLocation(program_id_, "camera_position");
 
-    return num_lights_uniform_ != -1 && material_shininess_uniform_ != -1 && material_specular_color_uniform_ != -1 && model_matrix_uniform_ != -1 && camera_position_uniform_ != -1;
+    return num_lights_uniform_ != -1 && material_shininess_uniform_ != -1 && material_specular_color_uniform_ != -1 && model_matrix_uniform_ != -1 && camera_position_uniform_ != -1 && normal_matrix_uniform_ != -1;
 }
 
-void FTVertexShaderProgramLighting::updateUniforms(const FTCamera *camera, const FTShaderNode *node) {
+void FTVertexShaderProgramLighting::updateUniforms(const FTCamera *camera, FTShaderNode *node) {
     FTVertexShaderProgram::updateUniforms(camera, node);
 
     auto material = node->getMaterial();
@@ -184,6 +186,7 @@ void FTVertexShaderProgramLighting::updateUniforms(const FTCamera *camera, const
     glUniform3f(material_specular_color_uniform_, material->specular_color.x, material->specular_color.y, material->specular_color.z);
 
     glUniformMatrix4fv(model_matrix_uniform_, 1, GL_FALSE, (const GLfloat *)&node->getModelMatrix());
+    glUniformMatrix3fv(normal_matrix_uniform_, 1, GL_FALSE, (const GLfloat *)&node->getNormalMatrix());
 
     auto camera_pos = camera->getPosition();
     glUniform3f(camera_position_uniform_, camera_pos.x, camera_pos.y, camera_pos.z);

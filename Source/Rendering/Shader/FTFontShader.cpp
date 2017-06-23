@@ -65,7 +65,7 @@ bool FTFontShader::load() {
     return fill_color_uniform_id_ != -1;
 }
 
-void FTFontShader::updateUniforms(const FTCamera *camera, const FTShaderNode *node) {
+void FTFontShader::updateUniforms(const FTCamera *camera, FTShaderNode *node) {
     FTVertexShaderProgram::updateUniforms(camera, node);
 
     auto color = node->getMaterial()->diffuse_color;
