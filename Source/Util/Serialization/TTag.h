@@ -3,7 +3,7 @@
 #include "TagID.h"
 #include <ttvfs.h>
 
-namespace detail {
+namespace serialization_detail {
     template <typename T>
     void fileRead(ttvfs::File *file, T *output, uint32_t n = 1) {
         file->read(reinterpret_cast<char*>(output), sizeof(T) * n);
@@ -20,10 +20,8 @@ namespace detail {
 
     public:
 
-        static T readData(ttvfs::File *file) {
-            T value;
+        static void readData(T& value, ttvfs::File *file) {
             fileRead(file, &value);
-            return value;
         }
 
         static void writeData(const T &value, ttvfs::File *file) {
@@ -31,20 +29,35 @@ namespace detail {
         }
     };
 
+    template <typename T, uint32_t N>
+    class TTag<T[N]> {
+    public:
+
+        static void readData(T ret[N], ttvfs::File *file) {
+            for (uint32_t i = 0; i < N; i++) {
+                TTag<T>::readData(ret[i], file);
+            }
+        }
+
+        static void writeData(const T value[N], ttvfs::File *file) {
+            for (uint32_t i = 0; i < N; i++) {
+                TTag<T>::writeData(value[i], file);
+            }
+        }
+    };
+
     template<typename T>
     class TTag<std::vector<T>> {
     public:
 
-        static std::vector<T> readData(ttvfs::File *file) {
-            std::vector<T> value;
+        static void readData(std::vector<T>& ret, ttvfs::File *file) {
             uint32_t size;
 
             fileRead(file, &size);
-            value.reserve(size);
+            ret.resize(size);
             for (uint32_t i = 0; i < size; i++) {
-                value.emplace_back(TTag<T>::readData(file));
+                TTag<T>::readData(ret[i], file);
             }
-            return value;
         }
 
         static void writeData(const std::vector<T> &value, ttvfs::File *file) {
@@ -60,14 +73,12 @@ namespace detail {
     class TTag<std::string> {
     public:
 
-        static std::string readData(ttvfs::File *file) {
+        static void readData(std::string& ret, ttvfs::File *file) {
             uint32_t size;
             fileRead(file, &size);
-            std::string out;
-            out.resize(size);
+            ret.resize(size);
 
-            file->read(&out[0], size);
-            return out;
+            file->read(&ret[0], size);
         }
 
         static void writeData(const std::string &value, ttvfs::File *file) {
@@ -82,16 +93,15 @@ namespace detail {
 
     public:
 
-        static std::unordered_map<T1,T2> readData(ttvfs::File *file) {
+        static void readData(std::unordered_map<T1,T2>& ret, ttvfs::File *file) {
             uint32_t size;
             fileRead(file, &size);
-            std::unordered_map<T1,T2> ret;
             ret.reserve(size);
             for (uint32_t i = 0; i < size; i++) {
-                auto pair = TTag<std::tuple<T1, T2>>::readData(file);
+                std::tuple<T1, T2> pair;
+                TTag<std::tuple<T1, T2>>::readData(pair, file);
                 ret[std::get<0>(pair)] = std::get<1>(pair);
             }
-            return ret;
         }
 
         static void writeData(const std::unordered_map<T1,T2>&value, ttvfs::File *file) {
@@ -129,9 +139,10 @@ namespace detail {
         using Tuple = std::tuple<T>;
 
     public:
-        static std::tuple<T> readData(ttvfs::File *file) {
-            std::tuple<T> ret = std::make_tuple(TTag<T>::readData(file));
-            return ret;
+        static void readData(std::tuple<T>& ret, ttvfs::File *file) {
+            T val;
+            TTag<T>::readData(val, file);
+            ret = std::make_tuple(val);
         }
 
         static void writeData(const Tuple &value, ttvfs::File *file) {
@@ -145,10 +156,12 @@ namespace detail {
 
     public:
 
-        static std::tuple<T, Others...> readData(ttvfs::File *file) {
-            std::tuple<T> ret = std::make_tuple(TTag<T>::readData(file));
-            std::tuple<Others...> others = TTag<std::tuple<Others...>>::readData(file);
-            return std::tuple_cat(ret, others);
+        static void readData(std::tuple<T, Others...>& ret, ttvfs::File *file) {
+            T ret2;
+            TTag<T>::readData(ret2, file);
+            std::tuple<Others...> others;
+            TTag<std::tuple<Others...>>::readData(others, file);
+            ret = std::tuple_cat(std::make_tuple(ret2), others);
         }
 
         static void writeData(const Tuple &value, ttvfs::File *file) {

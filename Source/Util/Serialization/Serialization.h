@@ -2,7 +2,7 @@
 
 #include "TTag.h"
 
-namespace detail {
+namespace serialization_detail {
     template<typename T>
     struct has_serialize {
         struct dummy { /* something */ };
@@ -20,7 +20,7 @@ namespace detail {
 
 template<typename Archiver, typename T>
 struct Serializer {
-    static_assert(detail::has_serialize<T>::value,
+    static_assert(serialization_detail::has_serialize<T>::value,
                   "Doesn't implement serialize - either add serialize member function of provide Serializer specialization");
 
     static void serialize(Archiver &a, T &val) {
@@ -32,37 +32,59 @@ struct Serializer {
 class OutputSerializer {
     ttvfs::File *file;
 public:
+    static const bool is_output = true;
+    static const bool is_input = false;
+
     OutputSerializer(ttvfs::File *file) : file(file) {
 
     }
 
-    template<typename T, typename std::enable_if<detail::TagID<T>::value, int>::type = 0>
+    template<typename T, typename std::enable_if<serialization_detail::TagID<T>::value, int>::type = 0>
     void operator&(const T &value) {
-        detail::TagID<T>::writeID(file);
-        detail::TTag<T>::writeData(value, file);
+        serialization_detail::TagID<T>::writeID(file);
+        serialization_detail::TTag<T>::writeData(value, file);
     }
 
-    template<typename T, typename std::enable_if<!detail::TagID<T>::value, int>::type = 0>
+    template<typename T, typename std::enable_if<!serialization_detail::TagID<T>::value, int>::type = 0>
     void operator&(T &value) {
         Serializer<OutputSerializer, T>::serialize(*this, value);
+    }
+
+    template<typename T, typename std::enable_if<serialization_detail::TagID<T>::value, int>::type = 0>
+    void serializePrimitiveArray(T *value, size_t length) {
+        serialization_detail::TagID<T[]>::writeID(file);
+        for (size_t i = 0; i < length; i++) {
+            serialization_detail::TTag<T>::writeData(value[i], file);
+        }
     }
 };
 
 class InputSerializer {
     ttvfs::File *file;
 public:
+    static const bool is_output = false;
+    static const bool is_input = true;
+
     InputSerializer(ttvfs::File *file) : file(file) {
 
     }
 
-    template<typename T, typename std::enable_if<detail::TagID<T>::value, int>::type = 0>
+    template<typename T, typename std::enable_if<serialization_detail::TagID<T>::value, int>::type = 0>
     void operator&(T &value) {
-        detail::TagID<T>::readID(file);
-        value = detail::TTag<T>::readData(file);
+        serialization_detail::TagID<T>::readID(file);
+        serialization_detail::TTag<T>::readData(value, file);
     }
 
-    template<typename T, typename std::enable_if<!detail::TagID<T>::value, int>::type = 0>
+    template<typename T, typename std::enable_if<!serialization_detail::TagID<T>::value, int>::type = 0>
     void operator&(T &value) {
         Serializer<InputSerializer, T>::serialize(*this, value);
+    }
+
+    template<typename T, typename std::enable_if<serialization_detail::TagID<T>::value, int>::type = 0>
+    void serializePrimitiveArray(T *value, size_t length) {
+        serialization_detail::TagID<T[]>::readID(file);
+        for (size_t i = 0; i < length; i++) {
+            serialization_detail::TTag<T>::readData(value[i], file);
+        }
     }
 };

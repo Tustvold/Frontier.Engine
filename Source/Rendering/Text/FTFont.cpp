@@ -27,12 +27,10 @@ FTFont::FTFont(const std::string& path, const char* cache) : font_texture_(nullp
     } else if (extension == "ftfont") {
         ttvfs::File *fr = FTEngine::getFileManager()->getFile(path);
         FTAssert(fr && fr->open("rb"), "Failed to find Font %s", path.c_str());
-        auto readBuffer = CompressionBuffer::readFile(fr);
+
+        font_ = FTFontUtils::deserializeFont(fr);
         fr->close();
 
-        auto tag = std::make_unique<Tag>(readBuffer.get());
-
-        font_ = FTFontUtils::createFontForTag(tag.get());
         font_texture_ = std::make_shared<FTFontTexture>(font_->atlas);
     } else {
         FTAssert(false, "Unrecognised extension");

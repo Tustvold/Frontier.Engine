@@ -46,14 +46,12 @@ bool ttfProcessor(const path &input, const path &tmpDir, const path &input_dir) 
     create_directories(output.parent_path());
 
     auto font = std::make_shared<FTFont>(input.string());
-    auto write = FTFontUtils::createTagForFont(font->getTextureFont());
-
-    auto buffer = std::make_unique<CompressionBuffer>();
-    write->writeToBuffer(buffer.get());
 
     ttvfs::File *fp = FTEngine::getFileManager()->getOrCreateFile(output.string());
     fp->open("wb");
-    buffer->writeFile(fp);
+
+    FTFontUtils::serializeFont(font->getTextureFont(), fp);
+
     fp->close();
 
     return true;

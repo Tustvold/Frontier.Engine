@@ -35,7 +35,9 @@ ttvfs::File *FTFileManager::getOrCreateFile(const std::string &path) {
         return ret;
 
     //TODO: Add control of mutable paths??
-    create_directories(boost::filesystem::path(path).parent_path());
+    auto directories = boost::filesystem::path(path).parent_path();
+    if (directories.size() != 0)
+        create_directories(directories);
     ofstream fs;
     fs.open(path);
     fs.close();

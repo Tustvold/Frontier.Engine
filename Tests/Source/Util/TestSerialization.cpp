@@ -77,11 +77,9 @@ struct TestStruct2 {
     std::vector<std::vector<int>> foo;
     std::vector<std::string> bar;
     std::unordered_map<int, std::string> foobar;
-
-    template<typename T>
-    void serialize(T &s) {
-
-    }
+    int bas[5];
+    uint32_t length;
+    int* var_array;
 };
 
 template <typename Archiver>
@@ -90,6 +88,12 @@ struct Serializer <Archiver, TestStruct2> {
         s & val.foo;
         s & val.bar;
         s & val.foobar;
+        s & val.bas;
+        s & val.length;
+        if (Archiver::is_input) {
+            val.var_array = new int[val.length];
+        }
+        s.serializePrimitiveArray(val.var_array, val.length);
     }
 };
 
@@ -102,6 +106,12 @@ TEST(TestBTF, TestNewAPI2) {
     const int num_tests = 1000;
 
     TestStruct2 t;
+
+    t.length = 100;
+    t.var_array = new int[100];
+
+    for (int i = 0; i < 100; i++)
+        t.var_array[i] = rand();
 
     std::vector<int> a;
     std::vector<int> b;
@@ -116,6 +126,9 @@ TEST(TestBTF, TestNewAPI2) {
     t.foobar[rand()] = "asdf";
     t.foobar[rand()] = "asdfgs";
     t.foobar[rand()] = "afsghjwsjs";
+
+    for (int i = 0; i < 5; i++)
+        t.bas[i] = rand();
 
     t.bar = {"Hello", "Helloasd", "Helloasfdg"};
 
@@ -144,4 +157,11 @@ TEST(TestBTF, TestNewAPI2) {
     for (auto& el : t.foobar) {
         EXPECT_EQ(t2.foobar[el.first], el.second);
     }
+
+    for (int i = 0; i < 5; i++) {
+        EXPECT_EQ(t.bas[i], t2.bas[i]);
+    }
+
+    delete [] t.var_array;
+    delete [] t2.var_array;
 }

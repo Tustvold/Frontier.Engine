@@ -1,4 +1,3 @@
-add_subdirectory(BTF)
 add_subdirectory(Serialization)
 
 set(SOURCES ${SOURCES}
