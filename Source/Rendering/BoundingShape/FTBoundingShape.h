@@ -2,6 +2,8 @@
 #include <Frontier.h>
 #include <Rendering/Transform/FTTransformPosition.h>
 
+NS_FT_BEGIN
+
 class FTCamera;
 class FTNode;
     
@@ -60,3 +62,5 @@ protected:
 
     void computeWorldAABFromLocalAAB(const glm::vec3& local_origin, const glm::vec3& local_size, glm::vec3& world_aab_center, glm::vec3& world_aab_half_extents) const;
 };
+
+NS_FT_END

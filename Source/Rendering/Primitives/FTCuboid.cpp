@@ -1,6 +1,7 @@
 #include "FTCuboid.h"
 #include <glm/gtx/quaternion.hpp>
 
+NS_FT_BEGIN
 
 FTCuboid::FTCuboid(const glm::vec3& origin, const glm::vec3& size, const glm::vec3 face_colors[6], FTVertexColorShaderProgram* shader) :
     FTCuboidBase_(shader) {
@@ -155,3 +156,5 @@ void FTCuboid::load(const glm::vec3& origin, const glm::vec3& size, const glm::v
 
     setBoundingShape(std::make_unique<FTBoundingCuboid>(origin, origin + size));
 }
+
+NS_FT_END

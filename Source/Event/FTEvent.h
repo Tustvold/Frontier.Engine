@@ -1,5 +1,9 @@
 #pragma once
 
+#include <Frontier.h>
+
+NS_FT_BEGIN
+
 struct FTEvent {
 public:
 
@@ -12,3 +16,5 @@ protected:
 
     }
 };
+
+NS_FT_END

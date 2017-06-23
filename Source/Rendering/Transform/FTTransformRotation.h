@@ -2,6 +2,8 @@
 #include <Rendering/Transform/FTTransform.h>
 #include <Frontier.h>
 
+NS_FT_BEGIN
+
 class FTTransformRotation : public FTTransform {
 public:
     virtual bool updateMatrices() override {
@@ -25,3 +27,5 @@ public:
 protected:
     glm::quat rotation_quat_;
 };
+
+NS_FT_END

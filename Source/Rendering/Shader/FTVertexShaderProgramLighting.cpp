@@ -2,6 +2,8 @@
 #include "Rendering/FTShaderNode.h"
 #include "Rendering/FTView.h"
 
+NS_FT_BEGIN
+
 const char* FTVertexShaderProgramLighting::fragment_shader_source_ = {
         "#version 140\n"
         "uniform vec3 camera_position;"
@@ -201,3 +203,5 @@ void FTVertexShaderProgramLighting::updateUniforms(const FTCamera *camera, FTSha
         glUniform3f(cone_direction_uniforms_[i], light.coneDirection.x, light.coneDirection.y, light.coneDirection.z);
     }
 }
+
+NS_FT_END

@@ -3,6 +3,8 @@
 #include <Util/FTMath.h>
 #include "BoundingShape/FTBoundingCuboid.h"
 
+NS_FT_BEGIN
+
 class FTLayoutNode : public FTNode {
 public:
     FTLayoutNode() {
@@ -135,3 +137,5 @@ public:
 
 protected:
 };
+
+NS_FT_END

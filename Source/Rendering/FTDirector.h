@@ -3,6 +3,8 @@
 #include <Event/Engine/FTEngineEvents.h>
 #include <vector>
 
+NS_FT_BEGIN
+
 class FTScene;
 class FTCamera;
 class FTShaderCache;
@@ -66,3 +68,5 @@ private:
 
     double fps_time_acc_;
 };
+
+NS_FT_END

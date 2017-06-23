@@ -2,6 +2,8 @@
 #include <vector>
 #include <Frontier.h>
 
+NS_FT_BEGIN
+
 class FTShaderNode;
 class FTCamera;
 
@@ -139,3 +141,5 @@ protected:
         return true;
     }
 };
+
+NS_FT_END

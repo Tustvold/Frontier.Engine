@@ -1,6 +1,8 @@
 #pragma once
 #include "FTBoundingShape.h"
 
+NS_FT_BEGIN
+
 class FTBoundingCuboid : public FTBoundingShape {
 public:
     explicit FTBoundingCuboid(const glm::vec3& size);
@@ -43,3 +45,5 @@ protected:
     glm::vec3 aab_center_;
     glm::vec3 aab_half_extents_;
 };
+
+NS_FT_END

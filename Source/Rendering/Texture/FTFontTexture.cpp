@@ -1,6 +1,7 @@
 ﻿#include "freetype-gl.h"
 #include "FTFontTexture.h"
 
+NS_FT_BEGIN
 
 FTFontTexture::FTFontTexture(ftgl::texture_atlas_t* texture_atlas) : texture_atlas_(texture_atlas) {
     texture_atlas_->id = 0;
@@ -34,3 +35,5 @@ void FTFontTexture::flushData() {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, texture_atlas_->width, texture_atlas_->height,
         0, GL_RED, GL_UNSIGNED_BYTE, texture_atlas_->data);
 }
+
+NS_FT_END

@@ -1,5 +1,7 @@
 #include "FTVertexColorShaderProgram.h"
 
+NS_FT_BEGIN
+
 const char* FTVertexColorShaderProgram::fragment_shader_source_ = {
     "#version 140\n\
 	\n\
@@ -40,3 +42,5 @@ FTVertexColorShaderProgram::FTVertexColorShaderProgram() {
 
 FTVertexColorShaderProgram::~FTVertexColorShaderProgram() {
 }
+
+NS_FT_END

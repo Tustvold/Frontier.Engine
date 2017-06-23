@@ -3,6 +3,8 @@
 #include "FTEvent.h"
 #include "FTEventHelpers.h"
 
+NS_FT_BEGIN
+
 class FTEventDispatcherBase {
 public:
     virtual ~FTEventDispatcherBase() {
@@ -68,3 +70,5 @@ protected:
         selector.getEventHandler(manager)(event);
     }
 };
+
+NS_FT_END

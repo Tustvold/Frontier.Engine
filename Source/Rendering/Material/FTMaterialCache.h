@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <typeindex>
 
+NS_FT_BEGIN
+
 // Caches the GLPrograms allowing their reuse across the application
 class FTMaterialCache {
     friend class FTDirector;
@@ -33,3 +35,5 @@ private:
 
     std::unordered_map<std::string, FTMaterial> store_;
 };
+
+NS_FT_END

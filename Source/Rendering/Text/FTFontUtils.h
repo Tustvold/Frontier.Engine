@@ -4,6 +4,8 @@
 #include "Frontier.h"
 #include "freetype-gl.h"
 
+NS_FT_BEGIN
+
 class FTFontUtils {
 public:
     static void serializeFont(ftgl::texture_font_t *font, ttvfs::File *file);
@@ -11,6 +13,4 @@ public:
     static ftgl::texture_font_t* deserializeFont(ttvfs::File *file);
 };
 
-
-
-
+NS_FT_END

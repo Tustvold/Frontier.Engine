@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Frontier.h"
+
+NS_FT_BEGIN
+
 template <typename T>
 struct FTRect {
     T x_;
@@ -26,3 +30,5 @@ struct FTRect {
         return a.x_ < b.x_ + b.width_ && a.x_ + a.width_ > b.x_ && a.y_ < b.y_ + b.height_ && a.y_ + a.height_ > b.y_;
     }
 };
+
+NS_FT_END

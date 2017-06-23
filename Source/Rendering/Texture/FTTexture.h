@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <Frontier.h>
 
+NS_FT_BEGIN
+
 // TODO Implement system for using multiple texture units
 class FTTexture {
 public:
@@ -26,3 +28,5 @@ protected:
 
     unsigned int mipmap_count_;
 };
+
+NS_FT_END

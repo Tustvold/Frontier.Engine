@@ -3,6 +3,8 @@
 #include <FTEngine.h>
 #include <Event/FTEventManager.h>
 
+NS_FT_BEGIN
+
 class MockEngineEventDispatcher : public FTEngineEventDispatcher {
 public:
     MockEngineEventDispatcher() {
@@ -18,3 +20,5 @@ public:
         FTEngineEventDispatcher::raiseEvent<T>(event);
     }
 };
+
+NS_FT_END

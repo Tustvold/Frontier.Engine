@@ -6,6 +6,8 @@
 #include <Event/Engine/FTEngineEventDispatcher.h>
 #include <Event/FTEventManager.h>
 
+NS_FT_BEGIN
+
 FTCameraFPS::FTCameraFPS() : move_speed_(15.0f), rotation_speed_(0.005f) {
     auto input_manager = FTEngine::getInputManager();
     forward_state_ = input_manager->getKeyState("Forward", GLFW_KEY_W);
@@ -73,3 +75,5 @@ void FTCameraFPS::mouseMoveEvent(const FTMouseMoveEvent& event) {
 
     setRotation(glm::angleAxis(-rotation_euler_radians_.x, up_axis_) * glm::angleAxis(rotation_euler_radians_.y, right_axis_));
 }
+
+NS_FT_END

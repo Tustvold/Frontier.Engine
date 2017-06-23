@@ -2,6 +2,8 @@
 #include "Frontier.h"
 #include "Rendering/Texture/FTTexture.h"
 
+NS_FT_BEGIN
+
 // A store for variables used by shaders
 // Note that not all shaders will use all of these variables
 // However, as material's can be shared, the increased memory footprint
@@ -17,3 +19,5 @@ struct FTMaterial {
 
     }
 };
+
+NS_FT_END

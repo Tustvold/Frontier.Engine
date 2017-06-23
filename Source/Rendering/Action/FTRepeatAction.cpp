@@ -1,5 +1,7 @@
 #include "FTRepeatAction.h"
 
+NS_FT_BEGIN
+
 FTRepeatAction::FTRepeatAction(std::unique_ptr<FTAction>&& action, int repeat_count) : repeat_count_(repeat_count), remaining_count_(repeat_count_), action_(std::move(action)) {
     FTAssert(repeat_count > 0 || repeat_count == -1, "Repeat Count must be either positive or -1");
 }
@@ -32,3 +34,5 @@ void FTRepeatAction::onUpdate(FTNode* node, const FTUpdateEvent& event) {
         action_->onStart(node);
     }
 }
+
+NS_FT_END

@@ -2,6 +2,8 @@
 #include <Frontier.h>
 #include <FTEngine.h>
 
+NS_FT_BEGIN
+
 static Gallant::Delegate5<GLFWwindow*, int, int, int, int> keyPressedEventDelegate;
 static Gallant::Delegate3<GLFWwindow*, unsigned int, int> charInputDelegate;
 
@@ -38,3 +40,5 @@ void FTKeyboardEventDispatcher::charEvent(GLFWwindow* window, unsigned int chara
     wchar_t converted_char = (wchar_t)character;
     raiseEvent(FTCharInputEvent(converted_char, mods));
 }
+
+NS_FT_END

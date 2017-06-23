@@ -1,6 +1,7 @@
 #include <Mock/MockLoader.h>
 #include <Util/FTStringUtils.h>
 
+USING_NS_FT
 
 TEST(TestStringUtils, TestConversion) {
     const std::string a = "Foo";

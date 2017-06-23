@@ -8,6 +8,8 @@
 #include "Event/Engine/FTEngineEventDispatcher.h"
 #include <sstream>
 
+NS_FT_BEGIN
+
 static FTEngine* s_instance = nullptr;
 
 FTEngine* FTEngine::getSharedInstance() {
@@ -173,3 +175,5 @@ bool FTEngine::cleanup() {
     s_instance = nullptr;
     return true;
 }
+
+NS_FT_END

@@ -4,6 +4,8 @@
 #include <Event/FTEventManager.h>
 #include <gmock/gmock.h>
 
+USING_NS_FT
+
 class MockKeyboardEventListener {
 public:
     MOCK_METHOD1(keyPressedEvent, void(const FTKeyPressedEvent&));

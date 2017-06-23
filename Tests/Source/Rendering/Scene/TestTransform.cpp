@@ -3,6 +3,8 @@
 #include <Frontier.h>
 #include <Mock/ExpectUtils.h>
 
+USING_NS_FT
+
 TEST(TestTransform, TestTranslate) {
 
     auto transform = std::make_unique<FTTransformPosition>();

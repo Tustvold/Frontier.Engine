@@ -1,6 +1,8 @@
 #include "FTVertexShaderProgramColor.h"
 #include "Rendering/FTShaderNode.h"
 
+NS_FT_BEGIN
+
 const char* FTVertexShaderProgramColor::fragment_shader_source_ = {
     "#version 140\n\
 	\n\
@@ -50,3 +52,5 @@ void FTVertexShaderProgramColor::updateUniforms(const FTCamera *camera, FTShader
     auto color = node->getMaterial()->diffuse_color;
     glUniform3f(fill_color_uniform_id_, color.x, color.y, color.z);
 }
+
+NS_FT_END

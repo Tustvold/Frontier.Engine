@@ -1,6 +1,8 @@
 #include "FTBoundingShapeWrapper.h"
 #include <Rendering/FTNode.h>
 
+NS_FT_BEGIN
+
 FTBoundingShapeWrapper::FTBoundingShapeWrapper(const std::shared_ptr<FTNode>& wrapped) : wrapped_(wrapped) {
 }
 
@@ -23,3 +25,5 @@ bool FTBoundingShapeWrapper::containsLocalPosition(const glm::vec3& position) {
 bool FTBoundingShapeWrapper::containsMousePosition(const glm::vec2& mouse_pos) {
     return wrapped_->getBoundingShape()->containsMousePosition(mouse_pos);
 }
+
+NS_FT_END

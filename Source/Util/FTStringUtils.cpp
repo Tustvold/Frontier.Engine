@@ -7,6 +7,7 @@
 #include <codecvt>
 #include <locale>
 
+NS_FT_BEGIN
 
 wchar_t* FTWCharUtil::formatString(wchar_t* buff, std::size_t buf_size, const wchar_t* format...) {
     va_list args;
@@ -104,3 +105,4 @@ char* FTCharUtil::formatString(char* buff, std::size_t buf_size, const char* for
     return buff;
 }
 
+NS_FT_END

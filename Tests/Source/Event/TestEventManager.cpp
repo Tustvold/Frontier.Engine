@@ -5,6 +5,8 @@
 #include "FTEngine.h"
 #include <Mock/MockLoader.h>
 
+USING_NS_FT
+
 TEST(TestEventManager, TestRegisterRetrieve) {
     MockLoader mock;
 

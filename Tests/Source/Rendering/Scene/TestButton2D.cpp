@@ -10,6 +10,8 @@
 #include <Rendering/BoundingShape/FTBoundingCuboid.h>
 #include <gmock/gmock.h>
 
+USING_NS_FT
+
 class FTButton2DTestDelegates {
 public:
     MOCK_METHOD1(enterDelegate, void(FTButton*));

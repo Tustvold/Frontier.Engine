@@ -7,6 +7,7 @@
 #include <glm/detail/type_vec2.hpp>
 #include <glm/detail/type_vec4.hpp>
 
+NS_FT_BEGIN
 
 FTCamera3D::FTCamera3D() : rotation_dirty_(true), update_view_frustrum_(true), up_axis_(0,1,0), right_axis_(1,0,0), look_axis_(0,0,-1), fov_((float)M_PI_2) {
     setCullFaceEnabled(true);
@@ -140,3 +141,5 @@ void FTCamera3D::regenerateViewFrustrum() {
     data5 = normalizeVec4(row4 - row2);
     frustrum_planes_sign_flipped_[5] = glm::vec3(floatAnd(data5.x), floatAnd(data5.y), floatAnd(data5.z));
 }
+
+NS_FT_END

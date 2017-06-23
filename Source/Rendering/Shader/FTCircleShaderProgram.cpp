@@ -1,4 +1,7 @@
 ﻿#include "FTCircleShaderProgram.h"
+
+NS_FT_BEGIN
+
 const char* FTCircleShaderProgram::fragment_shader_source_ = {
     "#version 140\n\
 	\n\
@@ -35,3 +38,5 @@ const char* FTCircleShaderProgram::vertex_shader_source_ = {
         \n\
 	}"
 };
+
+NS_FT_END

@@ -10,6 +10,7 @@
 #include <Event/Input/FTInputManager.h>
 #include <Util/FTStringUtils.h>
 
+NS_FT_BEGIN
 
 FTInputLabel::FTInputLabel(const std::wstring& placeholder, const std::wstring& text, int fontsize)
     : cursor_pos_(0), placeholder_(placeholder), input_text_(text)  {
@@ -194,3 +195,4 @@ std::string FTInputLabel::getUTF8Text() const {
     return FTCharUtil::convertString(input_text_);
 }
 
+NS_FT_END

@@ -10,6 +10,8 @@
 #include FT_FREETYPE_H
 #include "FTFontUtils.h"
 
+NS_FT_BEGIN
+
 FTFont::FTFont(const std::string& path, const char* cache) : font_texture_(nullptr) {
 
     auto extension = path.substr(path.find_last_of(".") + 1);
@@ -316,3 +318,5 @@ void FTFont::populateMeshDataForString(FTFontMeshData* data, const std::basic_st
     glyph_starts.push_back(pen.x);
     data->setBoundingShape(std::make_unique<FTBoundingCuboid>(glm::vec3(pen.x, maxHeight, 0)));
 }
+
+NS_FT_END

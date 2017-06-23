@@ -7,6 +7,8 @@
 #include "FTRaycast.h"
 #include <Util/FTMath.h>
 
+NS_FT_BEGIN
+
 class FTNode;
 
 // The base class for all cameras
@@ -126,3 +128,5 @@ protected:
         setDrawRectAbs(FTRect<int>((int)(draw_rect_relative_.x_ * width), (int)(draw_rect_relative_.y_ * height), (int)(draw_rect_relative_.width_ * width), (int)(draw_rect_relative_.height_ * height)));
     }
 };
+
+NS_FT_END

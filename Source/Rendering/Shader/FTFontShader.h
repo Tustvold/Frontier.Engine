@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "FTVertexTextureShaderProgram.h"
 
+NS_FT_BEGIN
+
 class FTFontShader : public FTVertexTextureShaderProgram {
 public:
     FTFontShader();
@@ -21,3 +23,5 @@ protected:
     static const char* vertex_shader_source_;
     static const char* fragment_shader_source_;
 };
+
+NS_FT_END

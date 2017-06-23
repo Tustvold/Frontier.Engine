@@ -6,6 +6,7 @@
 #include <vector>
 #include <unordered_map>
 
+NS_FT_BEGIN
 
 namespace serialization_detail {
     template<typename T>
@@ -155,3 +156,5 @@ namespace serialization_detail {
 
     };
 }
+
+NS_FT_END

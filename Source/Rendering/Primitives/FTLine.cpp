@@ -1,5 +1,7 @@
 #include "FTLine.h"
 
+NS_FT_BEGIN
+
 FTLine::FTLine(const glm::vec2& p1, const glm::vec2& p2, float thickness, const glm::vec3& color, FTVertexShaderProgramColor* shader):
     FTPlane(glm::vec2(glm::length(p2 - p1), thickness), color, shader) {
     auto delta = p2 - p1;
@@ -19,3 +21,5 @@ FTLine::FTLine(const glm::vec2& p1, const glm::vec2& p2, float thickness, const 
     setPosition(p1);
     setRotationQuaternion(quat);
 }
+
+NS_FT_END

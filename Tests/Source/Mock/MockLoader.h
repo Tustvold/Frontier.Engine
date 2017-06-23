@@ -5,6 +5,8 @@
 
 class GlfwMock;
 
+NS_FT_BEGIN
+
 // Sets up GlfwMock and FTEngine in its constructor
 // and cleans them up in its destructor
 // This largely exists to speed up compilation by preventing
@@ -23,3 +25,5 @@ private:
     std::unique_ptr<GlfwMock> mock_;
     std::shared_ptr<MockEngineEventDispatcher> mock_engine_event_dispatcher_;
 };
+
+NS_FT_END

@@ -3,6 +3,8 @@
 #include "TagID.h"
 #include <ttvfs.h>
 
+NS_FT_BEGIN
+
 namespace serialization_detail {
     template <typename T>
     void fileRead(ttvfs::File *file, T *output, uint32_t n = 1) {
@@ -170,3 +172,5 @@ namespace serialization_detail {
 
     };
 }
+
+NS_FT_END

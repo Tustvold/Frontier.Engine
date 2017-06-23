@@ -5,6 +5,8 @@
 
 struct GLFWwindow;
 
+NS_FT_BEGIN
+
 class FTMouseEventDispatcher : public FTEventDispatcher<FTMouseMoveEvent, FTMouseEnterEvent, FTMouseExitEvent, FTMouseButtonPressedEvent, FTMouseButtonReleasedEvent, FTMouseScrollEvent> {
 public:
     FTMouseEventDispatcher();
@@ -18,3 +20,5 @@ private:
     bool has_last_mouse_pos_;
     glm::vec2 last_mouse_pos_;
 };
+
+NS_FT_END

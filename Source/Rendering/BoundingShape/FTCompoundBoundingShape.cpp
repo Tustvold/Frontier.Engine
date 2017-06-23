@@ -1,5 +1,7 @@
 #include "FTCompoundBoundingShape.h"
 
+NS_FT_BEGIN
+
 FTCompoundBoundingShape::FTCompoundBoundingShape() {
 }
 
@@ -46,3 +48,5 @@ bool FTCompoundBoundingShape::visibleInCamera(FTCamera* camera) {
     }
     return false;
 }
+
+NS_FT_END

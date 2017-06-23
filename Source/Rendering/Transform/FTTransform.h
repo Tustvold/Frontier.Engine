@@ -1,5 +1,7 @@
 #pragma once
-#include <glm/glm.hpp>
+#include "Frontier.h"
+
+NS_FT_BEGIN
 
 // Creates and manages a transform
 class FTTransform {
@@ -35,3 +37,5 @@ protected:
     glm::mat4 transform_matrix;
     bool transform_dirty_;
 };
+
+NS_FT_END

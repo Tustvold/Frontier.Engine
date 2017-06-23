@@ -4,6 +4,8 @@
 #include <Mock/MockEngineEventDispatcher.h>
 #include <gmock/gmock.h>
 
+USING_NS_FT
+
 class MockMouseDelegate : public FTMouseDelegate {
 public:
     bool getMouseDelegateEnabled() const override {

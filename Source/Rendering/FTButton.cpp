@@ -4,6 +4,8 @@
 #include "FTView.h"
 #include <Event/Input/FTInputManager.h>
 
+NS_FT_BEGIN
+
 static FTButton* s_selected_button = nullptr;
 
 void FTButton::setSelected() {
@@ -131,3 +133,4 @@ void FTButton::mouseExitEvent(const FTMouseExitEvent& event) {
     }
 }
 
+NS_FT_END

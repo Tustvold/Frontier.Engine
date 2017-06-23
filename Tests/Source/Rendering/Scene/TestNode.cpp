@@ -7,6 +7,8 @@
 #include <Rendering/FTScene.h>
 #include <Rendering/BoundingShape/FTBoundingCuboid.h>
 
+USING_NS_FT
+
 class MockNodeDraw : public FTNode {
 
 public:

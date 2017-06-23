@@ -2,6 +2,8 @@
 #include <Frontier.h>
 #include <vector>
 
+NS_FT_BEGIN
+
 class FTWCharUtil {
 public:
     static wchar_t* formatString(wchar_t* buff, size_t buf_size, const wchar_t* format...);
@@ -27,3 +29,5 @@ public:
 
     static std::vector<std::string> splitString(const std::string& str, char delim);
 };
+
+NS_FT_END

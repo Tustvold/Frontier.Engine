@@ -1,6 +1,8 @@
 #pragma once
 #include "FTMesh.h"
 
+NS_FT_BEGIN
+
 namespace details {
     template <typename IndexType>
     struct FTIndexTypeDescriptor {
@@ -153,3 +155,5 @@ protected:
     GLuint max_num_inidices_;
     GLuint index_buffer_id_;
 };
+
+NS_FT_END

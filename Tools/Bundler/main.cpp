@@ -9,7 +9,7 @@
 #include <Rendering/Text/FTFontUtils.h>
 #include <Util/FTFileManager.h>
 
-
+USING_NS_FT
 using namespace boost::filesystem;
 
 typedef bool (*ProcessFileCallback)(const path &filename, const path &tmpDir, const path &input_dir);

@@ -2,6 +2,8 @@
 #include <Frontier.h>
 #include <FTEngine.h>
 
+NS_FT_BEGIN
+
 static Gallant::Delegate3<GLFWwindow*, double, double> mouse_move_event_delegate;
 static Gallant::Delegate2<GLFWwindow*, int> mouse_enter_event_delegate;
 static Gallant::Delegate4<GLFWwindow*, int, int, int> mouse_button_event_delegate;
@@ -69,3 +71,5 @@ void FTMouseEventDispatcher::mouseScrollEvent(GLFWwindow* window, double scroll_
     auto scroll = glm::vec2((float)scroll_x, (float)scroll_y);
     raiseEvent(FTMouseScrollEvent(last_mouse_pos_, scroll, !has_last_mouse_pos_));
 }
+
+NS_FT_END

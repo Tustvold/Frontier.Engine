@@ -4,6 +4,8 @@
 #include <vector>
 #include <Event/Engine/FTEngineEvents.h>
 
+NS_FT_BEGIN
+
 class FTNode;
 class FTAction;
 
@@ -37,3 +39,5 @@ private:
     bool actions_paused_;
     bool updating_;
 };
+
+NS_FT_END

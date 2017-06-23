@@ -3,6 +3,8 @@
 // When using scene graph priority, the delegate's priority is determined by adding this number to the draw_order of the node
 #define FTBUTTON_BASE_NODE_PRIORITY 256
 
+NS_FT_BEGIN
+
 class FTNode;
 // Wraps around an FTNode and performs intersection tests based on its bounding shape
 // Exposes four delgates:
@@ -143,3 +145,5 @@ protected:
     void mouseExitEvent(const FTMouseExitEvent& event);
     
 };
+
+NS_FT_END

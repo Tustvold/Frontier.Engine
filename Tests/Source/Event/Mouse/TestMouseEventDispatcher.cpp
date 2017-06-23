@@ -4,6 +4,8 @@
 #include <Event/Mouse/FTMouseEventDispatcher.h>
 #include <gmock/gmock.h>
 
+USING_NS_FT
+
 class MockMouseEventListener {
 public:
     MOCK_METHOD1(mouseMoveEvent, void(const FTMouseMoveEvent&));

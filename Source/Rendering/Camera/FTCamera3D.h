@@ -3,7 +3,8 @@
 #include <Rendering/Camera/FTCamera.h>
 #include <Util/FTMath.h>
 
-// Not threadsafe
+NS_FT_BEGIN
+
 class FTCamera3D : public FTCamera {
 public:
     explicit FTCamera3D();
@@ -96,3 +97,5 @@ private:
 
     void regenerateViewFrustrum();
 };
+
+NS_FT_END

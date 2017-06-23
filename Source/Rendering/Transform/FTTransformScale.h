@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <Rendering/Transform/FTTransform.h>
 
+NS_FT_BEGIN
 
 class FTTransformScale : public FTTransform {
 public:
@@ -23,3 +24,5 @@ public:
 protected:
     glm::vec3 scale_;
 };
+
+NS_FT_END

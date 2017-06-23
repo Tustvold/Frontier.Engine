@@ -2,6 +2,8 @@
 #include <Event/Mouse/FTMouseEventDispatcher.h>
 #include <Event/Keyboard/FTKeyboardEventDispatcher.h>
 
+NS_FT_BEGIN
+
 #define DEFAULT_KEYBOARD_INPUT_PRIORITY 128
 
 // A targeted delegate to facilitate UI 
@@ -50,3 +52,5 @@ private:
     bool is_added_;
     bool swallows_events_;
 };
+
+NS_FT_END

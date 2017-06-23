@@ -1,6 +1,8 @@
 #pragma once
 #include <Rendering/FTShaderNode.h>
 
+NS_FT_BEGIN
+
 // A FTShaderNode which renders a provided FTDrawable
 template <typename ShaderProgram>
 class FTDrawableNode : public FTShaderNode {
@@ -20,3 +22,5 @@ public:
 protected:
     std::unique_ptr<FTDrawable> drawable_;
 };
+
+NS_FT_END

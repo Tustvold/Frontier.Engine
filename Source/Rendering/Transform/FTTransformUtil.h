@@ -5,6 +5,7 @@
 #include "FTTransformRotation.h"
 #include "FTCompositeTransform.h"
 
+NS_FT_BEGIN
 
 class FTTransformPositionScaleRotation : public FTCompositeTransform3<FTTransformPosition, FTTransformRotation, FTTransformScale> {
 public:
@@ -36,3 +37,5 @@ public:
         return transform3_->getScale();
     }
 };
+
+NS_FT_END

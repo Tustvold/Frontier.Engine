@@ -1,6 +1,8 @@
 ﻿#include "FTFontShader.h"
 #include "Rendering/FTShaderNode.h"
 
+NS_FT_BEGIN
+
 const char* FTFontShader::fragment_shader_source_ = {
     "#version 140\n\
     precision highp float;\
@@ -71,3 +73,5 @@ void FTFontShader::updateUniforms(const FTCamera *camera, FTShaderNode *node) {
     auto color = node->getMaterial()->diffuse_color;
     glUniform3f(fill_color_uniform_id_, color.x, color.y, color.z);
 }
+
+NS_FT_END

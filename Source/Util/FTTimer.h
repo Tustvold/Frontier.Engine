@@ -2,6 +2,8 @@
 
 #include <GLFW/glfw3.h>
 
+NS_FT_BEGIN
+
 class FTTimer {
 private:
     bool IsRunning;
@@ -31,3 +33,5 @@ public:
         return ElapsedSeconds;
     }
 };
+
+NS_FT_END

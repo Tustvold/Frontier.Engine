@@ -3,7 +3,8 @@
 #include <Rendering/FTView.h>
 #include <vector>
 
-// The root object of every scene, contains a list of the FTViews to be drawn
+NS_FT_BEGIN
+
 class FTScene {
     friend class FTDirector;
 public:
@@ -73,3 +74,5 @@ private:
     std::vector<std::shared_ptr<FTView>> views_;
     bool is_active_;
 };
+
+NS_FT_END

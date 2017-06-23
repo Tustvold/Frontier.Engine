@@ -2,6 +2,8 @@
 #include <FTEngine.h>
 #include <glfwmock.h>
 
+NS_FT_BEGIN
+
 MockLoader::MockLoader() {
     mock_ = std::make_unique<GlfwMock>();
     FTEngine::init();
@@ -14,3 +16,5 @@ MockLoader::MockLoader() {
 MockLoader::~MockLoader() {
     FTEngine::cleanup();
 }
+
+NS_FT_END

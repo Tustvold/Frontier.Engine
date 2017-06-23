@@ -13,5 +13,4 @@ set(HEADERS ${HEADERS}
         ${CMAKE_CURRENT_SOURCE_DIR}/FTTimer.h
         ${CMAKE_CURRENT_SOURCE_DIR}/FTLog.h
         ${CMAKE_CURRENT_SOURCE_DIR}/FTFileManager.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/FTAssert.h
         PARENT_SCOPE)

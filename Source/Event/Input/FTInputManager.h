@@ -7,6 +7,8 @@
 #include "FTKeyboardDelegate.h"
 #include "FTKeyMapping.h"
 
+NS_FT_BEGIN
+
 struct FTKeyReleasedEvent;
 struct FTKeyPressedEvent;
 
@@ -59,3 +61,5 @@ private:
     bool mouse_delegates_protected_;
     bool keyboard_delegates_protected_;
 };
+
+NS_FT_END

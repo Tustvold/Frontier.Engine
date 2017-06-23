@@ -2,6 +2,8 @@
 
 #include "TTag.h"
 
+NS_FT_BEGIN
+
 namespace serialization_detail {
     template<typename T>
     struct has_serialize {
@@ -88,3 +90,5 @@ public:
         }
     }
 };
+
+NS_FT_END

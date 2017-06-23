@@ -4,6 +4,8 @@
 #include <Mock/ExpectUtils.h>
 #include <Rendering/BoundingShape/FTBoundingCuboid.h>
 
+USING_NS_FT
+
 class MockNodeTransform : public FTNode {
 public:
     std::unique_ptr<FTTransformScale>& getScaleTransform() {

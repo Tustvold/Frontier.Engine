@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+NS_FT_BEGIN
+
 namespace details
 {
     template <typename T>
@@ -272,3 +274,5 @@ struct FTVertexColorTexture {
         glEnableVertexAttribArray(kColorAttribLocation);
     };
 };
+
+NS_FT_END

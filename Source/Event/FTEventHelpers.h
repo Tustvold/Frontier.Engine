@@ -1,6 +1,8 @@
 #pragma once
 #include <ThirdParty/Signals/Signal.h>
 
+NS_FT_BEGIN
+
 // Internal utility templates - do not use
 namespace details
 {
@@ -53,3 +55,5 @@ namespace details
         }
     };
 }
+
+NS_FT_END

@@ -1,6 +1,8 @@
 #pragma once
 #include "FTAction.h"
 
+NS_FT_BEGIN
+
 class FTCallFuncAction : public FTAction {
 public:
     explicit FTCallFuncAction(void(*func)(FTNode*));
@@ -10,3 +12,5 @@ public:
 protected:
     void(*func_)(FTNode* node);
 };
+
+NS_FT_END

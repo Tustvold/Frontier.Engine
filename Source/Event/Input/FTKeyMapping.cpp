@@ -1,5 +1,7 @@
 #include "FTKeyMapping.h"
 
+NS_FT_BEGIN
+
 bool FTKeyMapping::onKeyPressed(const FTKeyPressedEvent& event) {
     if (!checkEvent(event))
         return false;
@@ -40,3 +42,5 @@ bool FTKeyMapping::hasMapping(int mapped_key, int mods) {
     }
     return false;
 }
+
+NS_FT_END

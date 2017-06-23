@@ -1,5 +1,7 @@
 #include "FTTexturedPlane.h"
 
+NS_FT_BEGIN
+
 FTTexturedPlane::FTTexturedPlane(const glm::vec2& dimensions, FTVertexTextureShaderProgram* shader) :
     FTTexturedPlaneBase_(shader) {
     auto data = std::make_shared<FTMeshData<FTVertexTexture<glm::vec2>>>(4);
@@ -29,3 +31,5 @@ FTTexturedPlane::FTTexturedPlane(const glm::vec2& dimensions, FTVertexTextureSha
 
 FTTexturedPlane::~FTTexturedPlane() {
 }
+
+NS_FT_END

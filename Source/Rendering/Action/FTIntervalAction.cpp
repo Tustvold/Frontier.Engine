@@ -1,6 +1,8 @@
 #include "FTIntervalAction.h"
 #include <Event/Engine/FTEngineEvents.h>
 
+NS_FT_BEGIN
+
 FTIntervalAction::FTIntervalAction(double time_interval) : time_since_start_(0), time_interval_(time_interval), progress_(0) {
     FTAssert(time_interval >= 0.0, "Cannot create action with negative time interval");
 }
@@ -28,3 +30,5 @@ void FTIntervalAction::onUpdate(FTNode* node, const FTUpdateEvent& event) {
         time_since_start_ = time_interval_;
     }
 }
+
+NS_FT_END

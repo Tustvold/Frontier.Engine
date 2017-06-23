@@ -1,6 +1,8 @@
 #pragma once
 #include <Event/FTEvent.h>
 
+NS_FT_BEGIN
+
 struct FTWindowResizeEvent : public FTEvent {
     FTWindowResizeEvent(int width, int height) : width_(width), height_(height) {
 
@@ -13,3 +15,5 @@ struct FTWindowResizeEvent : public FTEvent {
         return width_ == other.width_ && height_ == other.height_;
     }
 };
+
+NS_FT_END

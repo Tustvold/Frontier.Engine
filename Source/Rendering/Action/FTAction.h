@@ -1,5 +1,8 @@
 #pragma once
 #include <Frontier.h>
+
+NS_FT_BEGIN
+
 struct FTUpdateEvent;
 class FTNode;
 
@@ -49,3 +52,5 @@ private:
     bool is_paused_;
     bool is_completed_;
 };
+
+NS_FT_END

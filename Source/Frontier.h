@@ -21,19 +21,29 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <Util/FTLog.h>
-#include <Util/FTAssert.h>
 
+class FTException : public std::exception {
+public:
+    explicit FTException(const char* message) : msg_(message) {
 
-// Provide constructors for smart pointers which can infer the required type
-// from the provided pointer
-template <typename T>
-std::unique_ptr<T> construct_unique(T* ptr) {
-    return std::unique_ptr<T>(ptr);
-}
+    }
 
-template <typename T>
-std::shared_ptr<T> construct_shared(T* ptr) {
-    return std::shared_ptr<T>(ptr);
+    virtual ~FTException() throw () {
+    }
+
+    virtual const char* what() const throw () override {
+        return msg_.c_str();
+    }
+
+private:
+    std::string msg_;
+};
+
+#define FTAssert(value, ...) if (!(value)) { \
+    FTLogPrint("", false, "Assertion failed with error: "); \
+    FTLogPrint("", false, __VA_ARGS__); \
+    FTLogPrint("", true, " at %s:%i",__FILE__, __LINE__); \
+    throw FTException("Failed FTAssert"); \
 }
 
 // MSVC doesn't appear to set __cplusplus correctly
@@ -56,21 +66,6 @@ static_assert(sizeof(glm::vec2) == sizeof(GLfloat) * 2, "glm::vec2 has been padd
 static_assert(sizeof(glm::vec3) == sizeof(GLfloat) * 3, "glm::vec3 has been padded by the compiler");
 static_assert(sizeof(glm::vec4) == sizeof(GLfloat) * 4, "glm::vec4 has been padded by the compiler");
 
-// Note there is a bug in VS which means that you can't use this on a templated struct
-#if defined(_MSC_VER)
-#define ALIGNED_(x) __declspec(align(x))
-#else
-#if defined(__GNUC__)
-#define ALIGNED_(x) __attribute__ ((aligned(x)))
-#endif
-#endif
-
-
-#ifdef __GNUC__
-#define DEPRECATED __attribute__((deprecated))
-#elif defined(_MSC_VER)
-#define DEPRECATED __declspec(deprecated)
-#else
-#pragma message("WARNING: You need to implement DEPRECATED for this compiler")
-#define DEPRECATED
-#endif
+#define NS_FT_BEGIN namespace frontier {
+#define NS_FT_END }
+#define USING_NS_FT using namespace frontier;

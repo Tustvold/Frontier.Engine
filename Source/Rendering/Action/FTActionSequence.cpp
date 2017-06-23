@@ -1,5 +1,7 @@
 #include "FTActionSequence.h"
 
+NS_FT_BEGIN
+
 FTActionSequence::FTActionSequence() : action_index_(0) {
 }
 
@@ -37,6 +39,6 @@ void FTActionSequence::onUpdate(FTNode* node, const FTUpdateEvent& event) {
         }
         break;
     }
-
-    
 }
+
+NS_FT_END

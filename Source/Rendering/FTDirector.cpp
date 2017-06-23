@@ -7,6 +7,8 @@
 #include "Rendering/Action/FTActionManager.h"
 #include "Text/FTFontCache.h"
 
+NS_FT_BEGIN
+
 void FTDirector::pushScene(const std::shared_ptr<FTScene>& scene, bool immediately) {
     FTAssert(next_scene_ == nullptr, "FTDirector already transitioning between scenes");
     next_scene_ = scene;
@@ -96,3 +98,5 @@ void FTDirector::exchangeScenes() {
 void FTDirector::preTick(const FTPreTickEvent& event) {
     exchangeScenes();
 }
+
+NS_FT_END

@@ -1,6 +1,8 @@
 ﻿#include "FTCircleBorderShaderProgram.h"
 #include "Rendering/FTShaderNode.h"
 
+NS_FT_BEGIN
+
 const char* FTCircleBorderShaderProgram::fragment_shader_source_ = {
     "#version 140\n\
 	\n\
@@ -63,3 +65,5 @@ void FTCircleBorderShaderProgram::updateUniforms(const FTCamera *camera, FTShade
 
     glUniform1f(border_uniform_id_, node->getMaterial()->border_thickness);
 }
+
+NS_FT_END

@@ -8,6 +8,8 @@
 #include <Rendering/FTScene.h>
 #include <Mock/MockAction.h>
 
+USING_NS_FT
+
 TEST(TestActionManager, TestAddRemove) {
     MockLoader loader;
    

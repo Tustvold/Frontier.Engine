@@ -1,6 +1,8 @@
 #include "FTCircleSprite.h"
 #include <Rendering/FTView.h>
 
+NS_FT_BEGIN
+
 FTCircleSprite::FTCircleSprite(float radius, const glm::vec3& color, FTCircleShaderProgram* shader) :
     FTCircleSpriteBase_(shader) {
 
@@ -51,3 +53,5 @@ void FTCircleSprite::pre_draw(const FTCamera* camera) {
 void FTCircleSprite::post_draw() {
     glDisable(GL_BLEND);
 }
+
+NS_FT_END

@@ -2,6 +2,8 @@
 #include "FTLabel.h"
 #include <Event/Input/FTKeyboardDelegate.h>
 
+NS_FT_BEGIN
+
 struct FTKeyRepeatEvent;
 struct FTKeyPressedEvent;
 struct FTCharInputEvent;
@@ -53,3 +55,5 @@ protected:
     void onSelect(FTButton* button);
     void onDeselect(FTButton* button);
 };
+
+NS_FT_END

@@ -1,6 +1,8 @@
 #pragma once
 #include <Event/FTEvent.h>
 
+NS_FT_BEGIN
+
 struct FTKeyPressedEvent : public FTEvent {
 public:
     FTKeyPressedEvent(int key, int scancode, int mods) : key_(key), scancode_(scancode), mods_(mods) {
@@ -59,3 +61,5 @@ public:
         return character_ == other.character_ && mods_ == other.mods_;
     }
 };
+
+NS_FT_END

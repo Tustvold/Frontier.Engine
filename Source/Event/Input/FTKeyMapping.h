@@ -2,6 +2,8 @@
 #include "FTKeyboardDelegate.h"
 #include <vector>
 
+NS_FT_BEGIN
+
 class FTKeyMapping : public FTKeyboardDelegate {
 public:
     explicit FTKeyMapping() : pressed_count_(0) {
@@ -62,3 +64,5 @@ private:
     Gallant::Signal0<> on_pressed_;
     Gallant::Signal0<> on_released_;
 };
+
+NS_FT_END

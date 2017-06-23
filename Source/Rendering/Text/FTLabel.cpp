@@ -4,6 +4,8 @@
 #include "FTFontCache.h"
 #include <Util/FTStringUtils.h>
 
+NS_FT_BEGIN
+
 FTLabel::FTLabel(const std::wstring &text, int font_size, bool is_mutable, const std::string &style,
                  FTFontShader *shader) :
         FTIndexedMesh(shader),
@@ -92,4 +94,4 @@ void FTLabel::updateMesh() {
     }
 }
 
-
+NS_FT_END

@@ -2,6 +2,8 @@
 #include <Rendering/Shader/FTShaderCache.h>
 #include <Rendering/BoundingShape/FTBoundingCuboid.h>
 
+NS_FT_BEGIN
+
 FTCube::FTCube(const glm::vec3& color, FTVertexColorShaderProgram* shader) : FTCuboid(glm::vec3(0,0,0), glm::vec3(1,1,1), color, shader) {
 }
 
@@ -12,3 +14,5 @@ FTCube::FTCube(const glm::vec3 face_colors[6], FTVertexColorShaderProgram* shade
 FTCube::~FTCube() {
 
 }
+
+NS_FT_END

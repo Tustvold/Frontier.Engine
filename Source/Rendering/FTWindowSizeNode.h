@@ -3,6 +3,8 @@
 #include <Rendering/FTNode.h>
 #include <FTEngine.h>
 
+NS_FT_BEGIN
+
 // An FTNode with the same size as the window
 // Useful for positioning 2D elements relative to the window borders
 // For example setting the anchor point to (-0.5,-0.5) would position
@@ -28,3 +30,5 @@ private:
 
     }
 };
+
+NS_FT_END

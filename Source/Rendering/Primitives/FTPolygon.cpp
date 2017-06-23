@@ -1,6 +1,8 @@
 #include "FTPolygon.h"
 #include <Rendering/BoundingShape/FTBoundingEllipsoid.h>
 
+NS_FT_BEGIN
+
 static int wrapSize(int size, int i) {
     if (i >= size)
         return i - size;
@@ -86,3 +88,5 @@ std::unique_ptr<FTPolygon::MeshData> FTPolygon::generateBorderPolygonData(const 
 
     return data;
 }
+
+NS_FT_END

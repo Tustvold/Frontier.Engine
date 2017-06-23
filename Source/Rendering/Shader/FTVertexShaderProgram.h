@@ -3,6 +3,7 @@
 #include <Rendering/Camera/FTCamera.h>
 #include "FTShaderProgram.h"
 
+NS_FT_BEGIN
 
 class FTNode;
 
@@ -28,3 +29,5 @@ private:
 
     GLint mvp_uniform_;
 };
+
+NS_FT_END

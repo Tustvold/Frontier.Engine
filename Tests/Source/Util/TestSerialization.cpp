@@ -6,6 +6,8 @@
 #include "Util/Serialization/Serialization.h"
 #include <fstream>
 
+USING_NS_FT
+
 struct TestStruct {
     std::vector<std::vector<int>> foo;
     std::vector<std::string> bar;

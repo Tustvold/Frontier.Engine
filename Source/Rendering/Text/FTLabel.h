@@ -4,6 +4,8 @@
 #include "FTFont.h"
 #include <Rendering/Shader/FTFontShader.h>
 
+NS_FT_BEGIN
+
 class FTLabel : public FTIndexedMesh<FTVertexTexture<glm::vec2>, uint16_t> {
 private:
     typedef FTIndexedMesh<FTVertexTexture<glm::vec2>, uint16_t> FTLabelBase_;
@@ -41,3 +43,5 @@ private:
 
     void updateMesh();
 };
+
+NS_FT_END

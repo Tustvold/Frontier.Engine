@@ -1,6 +1,8 @@
 ﻿#include "FTFontCache.h"
 #include "Frontier.h"
 
+NS_FT_BEGIN
+
 FTFontCache::FTFontCache() {
     FTLOG("FTFontCache Init");
 }
@@ -28,3 +30,5 @@ void FTFontCache::loadFontStyle(const std::string &style, const std::string &fil
 
     loaded_styles[style] = std::make_pair(it->second.get(), FTEngine::getDirector()->getMaterialCache()->getMaterial(style));
 }
+
+NS_FT_END

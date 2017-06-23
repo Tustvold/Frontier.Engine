@@ -2,6 +2,8 @@
 #include "FTTexture.h"
 #include "Frontier.h"
 
+NS_FT_BEGIN
+
 class FTTextureDDS : public FTTexture {
 public:
     
@@ -28,3 +30,5 @@ protected:
 private:
     GLuint loadDDS(const std::string& filename);
 };
+
+NS_FT_END

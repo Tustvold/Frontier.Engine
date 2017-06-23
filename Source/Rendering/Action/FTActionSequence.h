@@ -3,6 +3,8 @@
 #include "FTAction.h"
 #include <queue>
 
+NS_FT_BEGIN
+
 class FTActionSequence : public FTAction {
 public:
     
@@ -19,3 +21,5 @@ protected:
     std::vector<std::unique_ptr<FTAction>> actions_;
     size_t action_index_;
 };
+
+NS_FT_END

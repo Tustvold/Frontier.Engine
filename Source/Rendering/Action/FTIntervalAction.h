@@ -2,6 +2,8 @@
 #include <Frontier.h>
 #include "FTAction.h"
 
+NS_FT_BEGIN
+
 class FTIntervalAction : public FTAction {
 public:
     explicit FTIntervalAction(double time_interval);
@@ -18,3 +20,5 @@ protected:
 };
 
 using FTDelayAction = FTIntervalAction;
+
+NS_FT_END

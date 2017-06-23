@@ -2,6 +2,8 @@
 
 #include <Frontier.h>
 
+NS_FT_BEGIN
+
 class FTRaycast {
 
 public:
@@ -62,3 +64,5 @@ protected:
     glm::vec3 origin_;
     glm::vec3 direction_;
 };
+
+NS_FT_END

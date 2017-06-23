@@ -1,5 +1,7 @@
 #include "FTCamera.h"
 
+NS_FT_BEGIN
+
 FTCamera::FTCamera() : draw_rect_relative_(0, 0, 1, 1),
                        near_clipping_plane_(0.1f),
                        far_clipping_plane_(10000.0f),
@@ -33,3 +35,5 @@ void FTCamera::preDraw() const {
     else
         glDisable(GL_CULL_FACE);
 }
+
+NS_FT_END

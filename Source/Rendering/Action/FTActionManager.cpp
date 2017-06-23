@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <Rendering/FTNode.h>
 
+NS_FT_BEGIN
+
 void FTActionManager::addAction(FTNode* target, std::unique_ptr<FTAction>&& action) {
     if (!updating_) {
         action->onStart(target);
@@ -66,3 +68,5 @@ void FTActionManager::onUpdate(const FTUpdateEvent& event) {
     }
     actions_pending_add_.clear();
 }
+
+NS_FT_END

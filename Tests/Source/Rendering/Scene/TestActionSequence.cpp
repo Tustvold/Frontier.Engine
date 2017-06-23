@@ -6,6 +6,8 @@
 #include <Rendering/FTView.h>
 #include <Rendering/FTScene.h>
 
+USING_NS_FT
+
 TEST(TestActionSequence, TestSimple) {
     MockLoader loader;
     auto engine_event_dispatcher = loader.getMockEngineEventDispatcher();

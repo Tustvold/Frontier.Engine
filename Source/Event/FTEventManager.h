@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <typeindex>
 
+NS_FT_BEGIN
+
 class FTEventDispatcherBase;
 
 class FTEventManager {
@@ -51,3 +53,5 @@ private:
 
     std::unordered_map<std::type_index, std::shared_ptr<FTEventDispatcherBase>> event_dispatchers_;
 };
+
+NS_FT_END

@@ -1,6 +1,7 @@
 #include "FTBoundingEllipsoid.h"
 #include <Rendering/Camera/FTCamera.h>
 
+NS_FT_BEGIN
 
 FTBoundingEllipsoid::FTBoundingEllipsoid(const glm::vec3& radii) : radii_(radii) {
     FTAssert(radii_.x >= 0.0f && radii_.y >= 0.0f && radii_.z >= 0.0f, "Invalid Radii");
@@ -43,3 +44,5 @@ glm::vec3 FTBoundingEllipsoid::getLayoutSize() const {
 glm::vec3 FTBoundingEllipsoid::computeLocalOffset(const glm::vec3& anchor_point) {
     return getLayoutSize() * anchor_point;
 }
+
+NS_FT_END

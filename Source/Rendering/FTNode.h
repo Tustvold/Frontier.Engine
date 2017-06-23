@@ -6,6 +6,8 @@
 #include "BoundingShape/FTBoundingShape.h"
 #include "FTButton.h"
 
+NS_FT_BEGIN
+
 class FTView;
 class FTScene;
 class FTCamera;
@@ -270,3 +272,5 @@ protected:
 
     virtual void onExit();
 };
+
+NS_FT_END

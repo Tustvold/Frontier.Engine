@@ -3,6 +3,7 @@
 
 #define DEFAULT_MOUSE_INPUT_PRIORITY 128
 
+NS_FT_BEGIN
 
 // A targeted delegate to facilitate UI 
 class FTMouseDelegate {
@@ -47,3 +48,5 @@ private:
     bool is_added_;
     bool swallows_events_;
 };
+
+NS_FT_END

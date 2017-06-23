@@ -4,6 +4,8 @@
 #include <Util/Serialization/Serialization.h>
 #include "FTFontUtils.h"
 
+NS_FT_BEGIN
+
 template<typename Archiver>
 struct Serializer<Archiver, ftgl::texture_glyph_t *> {
     static void serialize(Archiver &a, ftgl::texture_glyph_t *&val) {
@@ -127,3 +129,5 @@ ftgl::texture_font_t *FTFontUtils::deserializeFont(ttvfs::File *file) {
     in & ret;
     return ret;
 }
+
+NS_FT_END

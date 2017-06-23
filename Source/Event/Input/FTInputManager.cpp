@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <FTEngine.h>
 
+NS_FT_BEGIN
+
 FTInputManager::FTInputManager(): mouse_delegates_protected_(false), keyboard_delegates_protected_(false) {
 
 }
@@ -212,3 +214,4 @@ void FTInputManager::removeKeyboardDelegate(FTKeyboardDelegate* delegate) {
     keyboard_delegates_.erase(it);
 }
 
+NS_FT_END

@@ -1,6 +1,8 @@
 #pragma once
 #include <Event/FTEvent.h>
 
+NS_FT_BEGIN
+
 struct FTMouseMoveEvent : public FTEvent {
 public:
     FTMouseMoveEvent(const glm::vec2& pos, const glm::vec2& delta) : cursor_pos_(pos), delta_(delta) {
@@ -95,3 +97,5 @@ struct FTMouseScrollEvent : public FTEvent {
 
     bool outsize_window_;
 };
+
+NS_FT_END

@@ -1,6 +1,8 @@
 #include "gmock/gmock.h"
 #include <Rendering/Mesh/FTIndexedMesh.h>
 
+USING_NS_FT
+
 TEST(TestIndexedMeshData, TestPreAllocate) {
     FTIndexedMeshData<FTVertexColor<glm::vec3>, uint16_t> mesh(40, 80);
     EXPECT_EQ(mesh.getVertices().capacity(), (size_t)40);

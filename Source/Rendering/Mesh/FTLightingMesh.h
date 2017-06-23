@@ -4,6 +4,8 @@
 #include <Rendering/Shader/FTVertexShaderProgramLighting.h>
 #include <Rendering/FTView.h>
 
+NS_FT_BEGIN
+
 template <typename VertexType, typename IndexType>
 class FTLightingMesh : public FTIndexedMesh<VertexType, IndexType> {
 private:
@@ -30,3 +32,5 @@ public:
 protected:
     std::shared_ptr<FTTexture> texture_;
 };
+
+NS_FT_END

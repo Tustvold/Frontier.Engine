@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <Rendering/Transform/FTTransform.h>
 
+NS_FT_BEGIN
+
 class FTTransformPosition : public FTTransform {
 public:
 
@@ -23,3 +25,5 @@ public:
 protected:
     glm::vec3 position_;
 };
+
+NS_FT_END

@@ -3,6 +3,8 @@
 #include <Rendering/FTNode.h>
 #include <Rendering/Lighting/LightManager.h>
 
+NS_FT_BEGIN
+
 // Subclass of FTNode which manages a camera
 class FTView : public FTNode {
 private:
@@ -44,3 +46,5 @@ protected:
     std::shared_ptr<FTCamera> camera_;
     std::shared_ptr<LightManager> light_manager_;
 };
+
+NS_FT_END

@@ -2,6 +2,8 @@
 #include <vector>
 #include "Frontier.h"
 
+NS_FT_BEGIN
+
 struct LightDescriptor{
     // w == 0 indicates a directional light
     glm::vec4 position;
@@ -35,3 +37,5 @@ public:
 protected:
     std::vector<LightDescriptor> lights_;
 };
+
+NS_FT_END

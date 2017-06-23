@@ -1,5 +1,6 @@
 #include "FTPlane.h"
 
+NS_FT_BEGIN
 
 FTPlane::FTPlane(const glm::vec2& dimensions, const glm::vec3& color, FTVertexShaderProgramColor* shader):
     FTPolygon(color, shader) {
@@ -10,3 +11,5 @@ FTPlane::FTPlane(const glm::vec2& dimensions, const glm::vec3& color, FTVertexSh
         glm::vec2(0, dimensions.y)
     }), dimensions);
 }
+
+NS_FT_END

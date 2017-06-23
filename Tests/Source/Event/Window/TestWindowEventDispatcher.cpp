@@ -4,6 +4,8 @@
 #include <Event/Window/FTWindowEventDispatcher.h>
 #include <gmock/gmock.h>
 
+USING_NS_FT
+
 class MockWindowEventListener {
 public:
     MOCK_METHOD1(windowResizeEvent, void(const FTWindowResizeEvent&));

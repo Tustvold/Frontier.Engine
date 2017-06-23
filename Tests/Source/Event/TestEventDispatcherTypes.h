@@ -3,6 +3,8 @@
 #include <Event/FTEventDispatcher.h>
 #include <Event/FTEvent.h>
 
+NS_FT_BEGIN
+
 class MockEvent1 : public FTEvent {
 };
 
@@ -35,3 +37,5 @@ class MockEventListener2 {
 public:
     MOCK_METHOD1(callback, void(const MockEvent2&));
 };
+
+NS_FT_END

@@ -2,6 +2,7 @@
 #include <Util/FTMath.h>
 #include <Rendering/FTNode.h>
 
+NS_FT_BEGIN
 
 void FTBoundingShape::computeWorldAABFromLocalAAB(const glm::vec3& origin, const glm::vec3& size, glm::vec3& world_aab_origin, glm::vec3& world_aab_half_extents) const {
     auto& model_matrix = node_->getModelMatrix();
@@ -45,3 +46,5 @@ bool FTBoundingShape::containsMousePosition(const glm::vec2& mouse_pos) {
 void FTBoundingShape::updateMatrices() {
     anchor_point_transform_->setPosition(-computeLocalOffset(node_->getAnchorPoint()));
 }
+
+NS_FT_END

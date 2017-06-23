@@ -4,6 +4,8 @@
 #include "Mock/MockLoader.h"
 #include<Util/FTFileManager.h>
 
+USING_NS_FT
+
 TEST(TestFontUtils, FTFontFile) {
     MockLoader mock;
     auto font = std::make_shared<FTFont>("TestResources/Fonts/Vera.ttf");

@@ -2,6 +2,8 @@
 #include <Frontier.h>
 #include <Event/FTEvent.h>
 
+NS_FT_BEGIN
+
 struct FTUpdateEvent : public FTEvent {
     FTUpdateEvent() : delta_time_(0) {
 
@@ -37,3 +39,5 @@ struct FTDrawEvent : public FTEvent {
 struct FTPreTickEvent : public FTEvent {
     
 };
+
+NS_FT_END

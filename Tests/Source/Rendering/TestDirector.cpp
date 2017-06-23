@@ -2,6 +2,8 @@
 #include <Rendering/FTScene.h>
 #include <Rendering/FTDirector.h>
 
+USING_NS_FT
+
 class MockSceneEnterExit : public FTScene {
 public:
     MOCK_METHOD0(onEnter, void());

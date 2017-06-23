@@ -3,6 +3,7 @@
 #include "FTCircleSprite.h"
 #include <Rendering/Shader/FTCircleBorderShaderProgram.h>
 
+NS_FT_BEGIN
 
 class FTCircleBorderSprite : public FTCircleSprite {
 public:
@@ -10,3 +11,5 @@ public:
     virtual ~FTCircleBorderSprite();
 protected:
 };
+
+NS_FT_END

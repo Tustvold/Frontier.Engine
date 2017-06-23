@@ -3,6 +3,7 @@
 #include <Util/FTMath.h>
 #include <Rendering/Camera/FTCamera.h>
 
+NS_FT_BEGIN
 
 FTBoundingCuboid::FTBoundingCuboid(const glm::vec3& size) : size_(size) {
 
@@ -31,3 +32,5 @@ bool FTBoundingCuboid::containsLocalPosition(const glm::vec3& in_position) {
     auto pos = in_position - origin_;
     return pos.x >= 0 && pos.y >= 0 && pos.z >= 0 && pos.x <= size_.x && pos.y <= size_.y && pos.z <= size_.z;
 }
+
+NS_FT_END

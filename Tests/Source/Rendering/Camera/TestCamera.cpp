@@ -4,6 +4,9 @@
 #include <Rendering/Camera/FTCamera2D.h>
 #include <Rendering/Camera/FTCamera3D.h>
 #include <Mock/ExpectUtils.h>
+
+USING_NS_FT
+
 TEST(TestCamera, TestRaycast2D) {
     GlfwMock mock;
     FTEngine::setup(true, true); {

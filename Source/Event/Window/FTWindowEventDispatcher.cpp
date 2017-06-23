@@ -2,6 +2,8 @@
 #include <Frontier.h>
 #include <FTEngine.h>
 
+NS_FT_BEGIN
+
 static Gallant::Delegate3<GLFWwindow*, int, int> window_resize_delegate;
 
 FTWindowEventDispatcher::FTWindowEventDispatcher() {
@@ -18,3 +20,5 @@ FTWindowEventDispatcher::~FTWindowEventDispatcher() {
 void FTWindowEventDispatcher::windowResizeEvent(GLFWwindow* window, int width, int height) {
     raiseEvent(FTWindowResizeEvent(width, height));
 }
+
+NS_FT_END

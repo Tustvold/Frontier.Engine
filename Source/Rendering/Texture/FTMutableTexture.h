@@ -3,6 +3,8 @@
 #include <Frontier.h>
 #include "FTTexture.h"
 
+NS_FT_BEGIN
+
 static_assert(sizeof(glm::tvec4<uint8_t>) == 4, "RGBA Pixel has been padded by compiler");
 
 class FTMutableTexture : public FTTexture {
@@ -32,3 +34,5 @@ protected:
     unsigned int width_;
     unsigned int height_;
 };
+
+NS_FT_END

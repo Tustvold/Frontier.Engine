@@ -1,6 +1,8 @@
 ﻿#include "FTVertexTextureShaderProgram.h"
 #include "Rendering/FTShaderNode.h"
 
+NS_FT_BEGIN
+
 const char* FTVertexTextureShaderProgram::fragment_shader_source_ = {
     "#version 140\n\
 	\n\
@@ -60,3 +62,5 @@ void FTVertexTextureShaderProgram::updateUniforms(const FTCamera *camera, FTShad
     glBindTexture(GL_TEXTURE_2D, texture->getTextureId());
     glUniform1i(texture_uniform_id_, 0);
 }
+
+NS_FT_END

@@ -3,6 +3,8 @@
 #include <Rendering/Camera/FTCamera.h>
 #include <glm/gtc/matrix_transform.hpp>
 
+NS_FT_BEGIN
+
 class FTCamera2D : public FTCamera {
 public:
 
@@ -29,3 +31,5 @@ public:
 
     bool testBoundingBox(const glm::vec3& aab_origin, const glm::vec3& aab_half_extents) const override;
 };
+
+NS_FT_END

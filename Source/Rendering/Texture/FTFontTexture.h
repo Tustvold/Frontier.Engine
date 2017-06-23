@@ -6,6 +6,8 @@ namespace ftgl
     struct texture_atlas_t;
 }
 
+NS_FT_BEGIN
+
 class FTFontTexture : public FTTexture {
 public:
     explicit FTFontTexture(ftgl::texture_atlas_t* texture_atlas);
@@ -27,3 +29,5 @@ public:
 protected:
     ftgl::texture_atlas_t* texture_atlas_;
 };
+
+NS_FT_END

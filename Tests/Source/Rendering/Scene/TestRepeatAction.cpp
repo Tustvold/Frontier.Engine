@@ -5,6 +5,8 @@
 #include <Rendering/FTDirector.h>
 #include <Rendering/Action/FTRepeatAction.h>
 
+USING_NS_FT
+
 TEST(TestRepeatAction, TestSimple) {
     MockLoader loader;
     auto engine_event_dispatcher = loader.getMockEngineEventDispatcher();

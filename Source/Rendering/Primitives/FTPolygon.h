@@ -7,6 +7,8 @@
 #include <glm/detail/type_mat.hpp>
 #include <vector>
 
+NS_FT_BEGIN
+
 class FTPolygon : public FTMesh<FTVertex<glm::vec2>> {
 private:
     typedef FTMesh<FTVertex<glm::vec2>> FTPolygonBase_;
@@ -45,3 +47,5 @@ public:
         loadMeshData(generateBorderPolygonData(generateFilledPolygonData(std::move(vertices), size), border_thickness).get(), true);
     }
 };
+
+NS_FT_END

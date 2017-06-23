@@ -4,6 +4,8 @@
 #include "Action/FTActionManager.h"
 #include <Rendering/FTView.h>
 
+NS_FT_BEGIN
+
 FTNode::FTNode() :
     bounding_shape_(new FTBoundingShape()),
     button_(nullptr),
@@ -201,3 +203,4 @@ glm::vec3 FTNode::convertMouseToLocalCoordinates(const glm::vec2& mouse_coords) 
     return glm::vec3(local_pos.x / local_pos.w, local_pos.y / local_pos.w, local_pos.z / local_pos.w);
 }
 
+NS_FT_END

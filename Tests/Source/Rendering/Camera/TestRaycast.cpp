@@ -2,6 +2,8 @@
 #include <Rendering/Camera/FTRaycast.h>
 #include <Mock/ExpectUtils.h>
 
+USING_NS_FT
+
 TEST(TestRaycast, TestPlaneIntersection) {
     FTRaycast ray(glm::vec3(0, 2, 0), glm::vec3(1, 3, 1));
 

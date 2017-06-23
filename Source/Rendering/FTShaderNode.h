@@ -7,6 +7,8 @@
 #include <Rendering/FTDirector.h>
 #include <Rendering/Material/FTMaterial.h>
 
+NS_FT_BEGIN
+
 // A subclass of FTNode which manages a FTVertexShaderProgram
 class FTShaderNode : public FTNode {
 public:
@@ -53,3 +55,5 @@ protected:
     FTVertexShaderProgram* current_shader_program_;
     FTMaterial material_;
 };
+
+NS_FT_END

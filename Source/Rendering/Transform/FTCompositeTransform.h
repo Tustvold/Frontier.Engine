@@ -1,6 +1,8 @@
 #include <Frontier.h>
 #include <Rendering/Transform/FTTransform.h>
 
+NS_FT_BEGIN
+
 // Represents a composite transform
 // The transform is calculated as transform1*transform2*transform3
 // The normal order of multiplication is translation*scale*rotation
@@ -68,3 +70,5 @@ protected:
     std::unique_ptr<T2> transform2_;
     std::unique_ptr<T3> transform3_;
 };
+
+NS_FT_END

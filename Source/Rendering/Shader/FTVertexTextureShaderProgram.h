@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "FTVertexShaderProgram.h"
 
+NS_FT_BEGIN
+
 class FTVertexTextureShaderProgram : public FTVertexShaderProgram {
 public:
     FTVertexTextureShaderProgram();
@@ -21,3 +23,5 @@ protected:
 
     GLint texture_uniform_id_;
 };
+
+NS_FT_END

@@ -1,5 +1,6 @@
 #include "FTCallFuncAction.h"
 
+NS_FT_BEGIN
 
 FTCallFuncAction::FTCallFuncAction(void(*func)(FTNode*)) : func_(func) {
 
@@ -13,3 +14,5 @@ void FTCallFuncAction::onStart(FTNode* node) {
     func_(node);
     setCompleted();
 }
+
+NS_FT_END

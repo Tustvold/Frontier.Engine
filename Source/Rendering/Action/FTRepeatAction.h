@@ -1,6 +1,8 @@
 #pragma once
 #include "FTAction.h"
 
+NS_FT_BEGIN
+
 class FTRepeatAction : public FTAction {
 public:
     
@@ -16,3 +18,5 @@ protected:
     int remaining_count_;
     std::unique_ptr<FTAction> action_;
 };
+
+NS_FT_END

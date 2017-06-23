@@ -3,6 +3,8 @@
 #include "FTBoundingShape.h"
 #include <vector>
 
+NS_FT_BEGIN
+
 class FTCamera;
 class FTNode;
     
@@ -28,3 +30,5 @@ public:
 protected:
     std::vector<std::shared_ptr<FTBoundingShape>> bounding_shapes_;
 };
+
+NS_FT_END

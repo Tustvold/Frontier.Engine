@@ -3,6 +3,8 @@
 #include <Rendering/Lighting/LightManager.h>
 #include "FTVertexColorShaderProgram.h"
 
+NS_FT_BEGIN
+
 class FTVertexShaderProgramLighting : public FTVertexColorShaderProgram {
 public:
 
@@ -36,3 +38,5 @@ private:
     GLint cone_angle_uniforms_[LightManager::MaxLights];
     GLint cone_direction_uniforms_[LightManager::MaxLights];
 };
+
+NS_FT_END

@@ -2,6 +2,8 @@
 #include <Frontier.h>
 #include "FTBoundingShape.h"
 
+NS_FT_BEGIN
+
 class FTBoundingShapeWrapper : public FTBoundingShape {
 public:
     explicit FTBoundingShapeWrapper(const std::shared_ptr<FTNode>& wrapped);
@@ -20,3 +22,5 @@ public:
 protected:
     std::shared_ptr<FTNode> wrapped_;
 };
+
+NS_FT_END

@@ -1,6 +1,8 @@
 #pragma once
 #include <Frontier.h>
 
+NS_FT_BEGIN
+
 struct FTWindowResizeEvent;
 class FTEventManager;
 class FTInputManager;
@@ -73,3 +75,5 @@ private:
     double time_left_after_ticks_;
     double update_timestep_;
 };
+
+NS_FT_END

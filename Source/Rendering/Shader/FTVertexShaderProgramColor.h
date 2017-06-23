@@ -1,6 +1,7 @@
 #pragma once
 #include "FTVertexShaderProgram.h"
 
+NS_FT_BEGIN
 
 class FTVertexShaderProgramColor : public FTVertexShaderProgram {
 public:
@@ -24,3 +25,5 @@ private:
 
     GLint fill_color_uniform_id_;
 };
+
+NS_FT_END

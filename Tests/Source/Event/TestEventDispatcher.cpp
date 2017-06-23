@@ -1,6 +1,8 @@
 #include <gmock/gmock.h>
 #include "TestEventDispatcherTypes.h"
 
+USING_NS_FT
+
 TEST(TestEventDispatcher, TestCallsDelegateSingle) {
     auto listener = new MockEventListener1();
     auto dispatcher = new MockEventDispatcher();

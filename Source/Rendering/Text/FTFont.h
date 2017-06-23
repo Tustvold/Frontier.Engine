@@ -10,7 +10,7 @@ namespace ftgl
     struct texture_font_t;
 }
 
-struct texture_font_t;
+NS_FT_BEGIN
 
 class FTFontMeshData : public FTIndexedMeshData<FTVertexTexture<glm::vec2>, uint16_t> {
 private:
@@ -96,3 +96,5 @@ protected:
 
     void add_glyph(const char *codepoint);
 };
+
+NS_FT_END

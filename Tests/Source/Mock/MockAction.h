@@ -1,6 +1,8 @@
 #pragma once
 #include <Rendering/Action/FTAction.h>
 
+NS_FT_BEGIN
+
 class MockAction : public FTAction {
 
 public:
@@ -17,3 +19,5 @@ public:
         FTAction::onStart(node);
     }
 };
+
+NS_FT_END

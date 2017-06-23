@@ -1,5 +1,7 @@
 #include "FTMutableTexture.h"
 
+NS_FT_BEGIN
+
 FTMutableTexture::FTMutableTexture() : width_(0), height_(0) {
     mipmap_count_ = 1;
 
@@ -32,3 +34,5 @@ void FTMutableTexture::setPixels(glm::tvec4<uint8_t>* pixels, GLuint width, GLui
     GLenum error = glGetError(); 
     FTAssert(error == GL_NO_ERROR, "Error setting texture pixels: %i", error);
 }
+
+NS_FT_END

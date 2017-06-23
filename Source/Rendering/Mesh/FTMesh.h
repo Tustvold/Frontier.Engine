@@ -5,6 +5,7 @@
 #include <Rendering/Mesh/FTVertex.h>
 #include <Rendering/BoundingShape/FTBoundingCuboid.h>
 
+NS_FT_BEGIN
 
 template <typename VertexType>
 class FTMeshData {
@@ -261,3 +262,4 @@ protected:
     bool is_static_;
 };
 
+NS_FT_END

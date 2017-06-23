@@ -4,6 +4,8 @@
 #include <Mock/ExpectUtils.h>
 #include <Rendering/BoundingShape/FTBoundingEllipsoid.h>
 
+USING_NS_FT
+
 TEST(TestBoundingEllipsoid, TestAAB) {
     MockLoader mock;
 

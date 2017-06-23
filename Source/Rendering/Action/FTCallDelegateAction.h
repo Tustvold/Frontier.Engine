@@ -2,6 +2,8 @@
 #include "FTAction.h"
 #include <ThirdParty/Signals/Delegate.h>
 
+NS_FT_BEGIN
+
 class FTCallDelegateAction : public FTAction {
 public:
     
@@ -26,3 +28,5 @@ public:
 protected:
     Gallant::Delegate0<> delegate_;
 };
+
+NS_FT_END

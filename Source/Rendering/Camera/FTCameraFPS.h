@@ -2,6 +2,8 @@
 #include <Event/Input/FTInputManager.h>
 #include "FTCamera3D.h"
 
+NS_FT_BEGIN
+
 struct FTMouseMoveEvent;
 
 class FTCameraFPS : public FTCamera3D {
@@ -27,3 +29,5 @@ private:
     void update(const FTUpdateEvent& event);
     void mouseMoveEvent(const FTMouseMoveEvent& event);
 };
+
+NS_FT_END

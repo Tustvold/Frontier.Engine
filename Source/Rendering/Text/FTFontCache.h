@@ -2,6 +2,8 @@
 #include <Frontier.h>
 #include <Rendering/Text/FTFont.h>
 
+NS_FT_BEGIN
+
 class FTFontCache {
     friend class FTDirector;
 public:
@@ -21,3 +23,5 @@ protected:
     FTFontCache();
     ~FTFontCache();
 };
+
+NS_FT_END

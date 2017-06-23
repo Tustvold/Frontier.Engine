@@ -3,6 +3,8 @@
 #include <vector>
 #include <ttvfs.h>
 
+NS_FT_BEGIN
+
 class FTFileManager {
     friend class FTEngine;
 public:
@@ -21,3 +23,5 @@ private:
 
     ttvfs::Root filesystem_root;
 };
+
+NS_FT_END

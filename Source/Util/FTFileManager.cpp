@@ -5,6 +5,8 @@
 
 using namespace boost::filesystem;
 
+NS_FT_BEGIN
+
 void FTFileManager::setup() {
     if (!ttvfs::checkCompat()) {
         std::cerr << "ttvfs was compiled with different options than this file!" << std::endl;
@@ -44,3 +46,4 @@ ttvfs::File *FTFileManager::getOrCreateFile(const std::string &path) {
     return getFile(path);
 }
 
+NS_FT_END

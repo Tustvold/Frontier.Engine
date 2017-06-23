@@ -4,6 +4,8 @@
 
 #include <string.h> // for strncmp
 
+NS_FT_BEGIN
+
 FTTextureDDS::FTTextureDDS(const std::string& filename) : width_(0), height_(0) {
     texture_id_ = loadDDS(filename);
 }
@@ -102,3 +104,5 @@ GLuint FTTextureDDS::loadDDS(const std::string& provided_path) {
 
     return textureID;
 }
+
+NS_FT_END

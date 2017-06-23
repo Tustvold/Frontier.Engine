@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "FTCircleShaderProgram.h"
 
+NS_FT_BEGIN
+
 class FTCircleBorderShaderProgram : public FTCircleShaderProgram {
 public:
     FTCircleBorderShaderProgram();
@@ -20,3 +22,5 @@ protected:
     static const char* vertex_shader_source_;
     static const char* fragment_shader_source_;
 };
+
+NS_FT_END

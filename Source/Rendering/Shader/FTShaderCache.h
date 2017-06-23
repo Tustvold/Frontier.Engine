@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <typeindex>
 
+NS_FT_BEGIN
+
 // Caches the GLPrograms allowing their reuse across the application
 class FTShaderCache {
     friend class FTDirector;
@@ -43,3 +45,5 @@ private:
 
     std::unordered_map<std::type_index, std::unique_ptr<FTShaderProgram>> shader_store_;
 };
+
+NS_FT_END
