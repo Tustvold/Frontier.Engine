@@ -4,8 +4,7 @@ add_library(glfwmock STATIC glfwmock.cpp glfwmock.h)
 
 target_link_libraries(glfwmock
         ${FRONTIER_ENGINE_TEST_LIBS}
-        gmock
-)
+        )
 
 target_include_directories(glfwmock PUBLIC
         ${FRONTIER_ENGINE_INCLUDES}

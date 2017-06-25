@@ -103,6 +103,10 @@ ENDFUNCTION()
 add_subdirectory(Tools)
 
 # Testing
-add_subdirectory(ThirdParty/googletest/googlemock)
+find_package(GTest)
+find_package(GMock)
 
-add_subdirectory(Tests)
+if (${GTEST_FOUND} AND ${GMOCK_FOUND})
+    add_subdirectory(Tests)
+endif(${GTEST_FOUND} AND ${GMOCK_FOUND})
+
