@@ -11,6 +11,14 @@ public:
     explicit CameraFPS();
     virtual ~CameraFPS();
 
+    void setMoveSpeed(float speed) {
+        move_speed_ = speed;
+    }
+
+    void setRotationSpeed(float speed) {
+        rotation_speed_ = speed;
+    }
+
 
 private:
 
